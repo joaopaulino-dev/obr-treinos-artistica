@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Treinos Artística | OBR 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/estilo.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="eyebrow" href="/">OBR 2026 · Modalidade Artística</a>
+    <h1>Treinos no <span id="palco">palco</span> · <span class="lvl" id="lvl">Nível</span></h1>
+    <div class="meta">
+      <span class="chip">Slots de 15 min</span>
+      <span class="chip">Até 3 equipes por slot</span>
+      <span class="chip" id="creditChip">Créditos por equipe</span>
+      <span class="chip" id="freeChip">Vagas livres</span>
+    </div>
+  </header>
+
+  <div class="days" id="days" role="group" aria-label="Dia"></div>
+
+  <div class="banner" id="banner" hidden></div>
+
+  <section class="panel" id="admin" hidden aria-label="Coordenação">
+    <form id="adminForm" class="admin-row">
+      <div>
+        <label for="senha">Senha da coordenação</label>
+        <input id="senha" type="password" autocomplete="current-password">
+      </div>
+      <button class="btn primary" type="submit">Entrar</button>
+    </form>
+    <p class="mine" id="adminOk" hidden>Modo coordenação ativo: toque numa vaga ocupada para liberá-la.</p>
+  </section>
+
+  <section class="panel" aria-label="Sua equipe">
+    <div class="panel-row">
+      <div>
+        <label for="team">Sua equipe</label>
+        <select id="team"><option value="">Escolha a equipe…</option></select>
+      </div>
+      <div class="credits" id="credits" hidden>
+        <div class="pips" id="pips"></div>
+        <span class="credits-text" id="creditsText"></span>
+      </div>
+    </div>
+    <div class="mine" id="mine">Escolha a equipe para ver os horários que ela pode reservar.</div>
+    <ul class="rules">
+      <li><strong id="ruleCredits">Cada equipe tem 3 créditos por dia</strong> (1 crédito = 1 slot de 15 min).</li>
+      <li><strong>Não vale reservar dois slots seguidos.</strong></li>
+      <li><strong>Não há remarcação.</strong> Para mudar de horário, a equipe negocia a troca direto com outra equipe e as duas avisam a coordenação.</li>
+      <li>Vagas que sobrarem ficam livres.</li>
+    </ul>
+    <p class="confirm-note"><strong>Confira seus horários.</strong> Depois de reservar, verifique nesta página os slots da sua equipe. Se encontrar qualquer divergência no agendamento, avise a coordenação da modalidade Artística.</p>
+    <div class="legend">
+      <span style="--sw: var(--free)">Vaga livre</span>
+      <span style="--sw: var(--accent)">Sua equipe</span>
+      <span style="--sw: var(--accent-soft)">Ocupada</span>
+      <span style="--sw: var(--off)">Bloqueada para sua equipe</span>
+    </div>
+  </section>
+
+  <section class="grid" id="grid" aria-label="Grade de horários"></section>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-in">
+    <p id="sheetText"></p>
+    <div class="acts">
+      <button class="btn" id="sheetBack" type="button">Voltar</button>
+      <button class="btn primary" id="sheetGo" type="button">Confirmar</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script src="/app.js"></script>
+</body>
+</html>
