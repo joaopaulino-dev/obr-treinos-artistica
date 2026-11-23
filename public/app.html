@@ -16,7 +16,7 @@
     <h1>Treinos no <span id="palco">palco</span> · <span class="lvl" id="lvl">Nível</span></h1>
     <div class="meta">
       <span class="chip">Slots de 15 min</span>
-      <span class="chip">Até 3 equipes por slot</span>
+      <span class="chip" id="porSlotChip">Até 3 equipes por slot</span>
       <span class="chip" id="creditChip">Créditos por equipe</span>
       <span class="chip" id="freeChip">Vagas livres</span>
     </div>
@@ -26,7 +26,7 @@
 
   <div class="banner" id="banner" hidden></div>
 
-  <section class="panel" id="admin" hidden aria-label="Coordenação">
+  <section class="panel admin" id="admin" hidden aria-label="Coordenação">
     <form id="adminForm" class="admin-row">
       <div>
         <label for="senha">Senha da coordenação</label>
@@ -34,7 +34,37 @@
       </div>
       <button class="btn primary" type="submit">Entrar</button>
     </form>
-    <p class="mine" id="adminOk" hidden>Modo coordenação ativo: toque numa vaga ocupada para liberá-la.</p>
+
+    <div id="adminTools" hidden class="admin-tools">
+      <div class="admin-head">
+        <h2>Coordenação</h2>
+        <p class="mine">Toque numa vaga <strong>ocupada</strong> para mover ou liberar. Toque numa vaga <strong>livre</strong> para reservar por uma equipe.</p>
+      </div>
+
+      <form id="gradeForm" class="admin-block">
+        <h3>Grade deste dia</h3>
+        <div class="fields">
+          <div><label for="gPorSlot">Equipes por slot</label><input id="gPorSlot" type="number" min="1" max="10" required></div>
+          <div><label for="gCreditos">Créditos por equipe</label><input id="gCreditos" type="number" min="1" max="40" placeholder="Automático"></div>
+          <div><label for="gInicio">Início</label><select id="gInicio"></select></div>
+          <div><label for="gFim">Fim</label><select id="gFim"></select></div>
+        </div>
+        <p class="hint" id="gHint"></p>
+        <button class="btn primary" type="submit">Salvar grade</button>
+      </form>
+
+      <form id="extraForm" class="admin-block">
+        <h3>Créditos extras por equipe</h3>
+        <div class="fields">
+          <div class="wide"><label for="xEquipe">Equipe</label><select id="xEquipe"></select></div>
+          <div><label for="xValor">Extras no dia</label><input id="xValor" type="number" min="0" max="20" value="1" required></div>
+        </div>
+        <p class="hint" id="xLista"></p>
+        <button class="btn primary" type="submit">Salvar extras</button>
+      </form>
+
+      <button class="btn" id="adminSair" type="button">Sair da coordenação</button>
+    </div>
   </section>
 
   <section class="panel" aria-label="Sua equipe">
@@ -69,11 +99,11 @@
 
 <div class="sheet" id="sheet" hidden>
   <div class="sheet-in">
-    <p id="sheetText"></p>
-    <div class="acts">
-      <button class="btn" id="sheetBack" type="button">Voltar</button>
-      <button class="btn primary" id="sheetGo" type="button">Confirmar</button>
+    <div class="sheet-body">
+      <p id="sheetText"></p>
+      <div id="sheetFields" class="sheet-fields"></div>
     </div>
+    <div class="acts" id="sheetActs"></div>
   </div>
 </div>
 <div class="toast" id="toast" hidden role="status"></div>

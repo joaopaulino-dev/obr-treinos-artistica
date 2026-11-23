@@ -11,8 +11,8 @@ Cada slot dura 15 minutos, das 08:00 às 18:00, e até 3 equipes dividem o palco
 
 ## Regras (aplicadas no servidor)
 
-- **Créditos por dia:** `floor(40 slots × 3 vagas ÷ 36 equipes)`, ou seja, 3 créditos por equipe. As vagas que sobram ficam livres.
-- **Lotação:** no máximo 3 equipes por slot, e a mesma equipe não pode aparecer duas vezes no mesmo slot.
+- **Créditos por dia:** `floor(slots × equipes por slot ÷ 36 equipes)`. Na grade padrão (40 slots × 3) dá 3 créditos por equipe. As vagas que sobram ficam livres. A coordenação pode fixar outro valor para todas as equipes e dar créditos extras a uma equipe.
+- **Lotação:** no máximo N equipes por slot (padrão 3), e a mesma equipe não pode aparecer duas vezes no mesmo slot.
 - **Slots seguidos:** a equipe não pode reservar um slot colado em outro que já tem.
 - **Sem remarcação:** a equipe não consegue cancelar. Trocas são combinadas entre as equipes, e a coordenação libera as vagas.
 
@@ -23,16 +23,16 @@ Cada reserva roda numa transação com uma trava por nível e dia (`pg_advisory_
 ```
 api/estado.js       GET  grade, equipes e reservas de um nível/dia
 api/reservar.js     POST cria uma reserva, se as regras permitirem
-api/liberar.js      POST remove uma reserva (exige senha da coordenação)
-api/coordenacao.js  POST confere a senha da coordenação
-lib/config.js       dias liberados, equipes, palcos e horários
+api/admin.js        POST ações da coordenação (exige senha): reservar, mover, liberar, extra, grade
+lib/config.js       dias liberados, equipes, palcos e grade padrão
+lib/grade.js        grade de cada nível/dia, créditos e montagem do estado
 lib/regras.js       regras de reserva e validação
 lib/db.js           conexão com o Neon e criação da tabela
 public/             páginas estáticas (início, grade, estilo, script)
 test/               testes das regras (node --test)
 ```
 
-A tabela `reservas` é criada sozinha na primeira requisição.
+As tabelas (`reservas`, `grade`, `creditos_extra`, `meta`) são criadas sozinhas na primeira requisição. Os slots são contados a partir da meia-noite em blocos de 15 minutos (08:00 = slot 32).
 
 ## Deploy na Vercel com Neon
 
@@ -43,7 +43,12 @@ A tabela `reservas` é criada sozinha na primeira requisição.
 
 ## Coordenação
 
-Abra `/n1?coordenacao` ou `/n2?coordenacao` e digite a senha. No modo coordenação, tocar numa vaga ocupada abre a opção de liberá-la (usada em trocas combinadas entre equipes ou para corrigir divergências).
+Abra `/n1?coordenacao` ou `/n2?coordenacao` e digite a senha (`ADMIN_PASSWORD`). No modo coordenação:
+
+- **Vaga ocupada:** mover a equipe para outro horário (ignora créditos e slots seguidos) ou liberar a vaga.
+- **Vaga livre:** reservar por qualquer equipe, com a opção de ignorar créditos e slots seguidos.
+- **Grade deste dia:** equipes por slot, créditos por equipe (em branco = automático), início e fim. Não deixa encolher a grade se houver reservas fora dela ou acima da nova lotação.
+- **Créditos extras:** soma créditos a uma equipe naquele dia (0 remove).
 
 ## Liberar mais dias (25 a 28/11)
 

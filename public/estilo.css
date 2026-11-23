@@ -49,7 +49,7 @@ select, input { width: 100%; font: inherit; font-size: 15px; padding: 10px 12px;
 .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted) }
 .legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -2px; background: var(--sw) }
 .grid { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden }
-.row { display: grid; grid-template-columns: 92px repeat(3, minmax(0, 1fr)) 82px; gap: 6px; padding: 6px 10px; border-top: 1px solid var(--line); align-items: center }
+.row { display: grid; grid-template-columns: 92px repeat(var(--vagas, 3), minmax(0, 1fr)) 82px; gap: 6px; padding: 6px 10px; border-top: 1px solid var(--line); align-items: center }
 .row:first-child { border-top: 0 }
 .row.head { background: var(--accent-strong); color: var(--bg); font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding-block: 9px }
 .row.head .status { color: inherit }
@@ -67,7 +67,7 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 3px s
 .status { font-size: 12px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums }
 .status.full { color: var(--off-ink) }
 @media (max-width: 560px) {
-  .row { grid-template-columns: 62px repeat(3, minmax(0, 1fr)); padding-inline: 8px; gap: 4px }
+  .row { grid-template-columns: 62px repeat(var(--vagas, 3), minmax(0, 1fr)); padding-inline: 8px; gap: 4px }
   .status { display: none }
   .seat { font-size: 12px; padding: 5px 4px }
   .time { font-size: 13px }
@@ -85,6 +85,24 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 3px s
 .btn[disabled] { opacity: .6; cursor: progress }
 .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 6; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 13.5px; max-width: calc(100% - 32px) }
 .toast.err { background: var(--bad-soft); color: var(--bad); border: 1px solid var(--bad) }
+/* coordenação */
+.panel.admin { border-color: var(--accent) }
+.admin-tools { display: grid; gap: 16px }
+.admin-head h2, .admin-block h3 { font-family: var(--font-d); margin: 0 0 4px }
+.admin-head h2 { font-size: 20px }
+.admin-block { display: grid; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line) }
+.admin-block h3 { font-size: 15px }
+.admin-block .btn { justify-self: start }
+#adminSair { justify-self: start }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px }
+.fields .wide { grid-column: span 2 }
+@media (max-width: 420px) { .fields .wide { grid-column: auto } }
+.hint { margin: 0; font-size: 12.5px; color: var(--muted) }
+.sheet-body { flex: 1 1 320px; min-width: 0; display: grid; gap: 10px }
+.sheet-fields { display: flex; flex-wrap: wrap; gap: 10px; align-items: center }
+.sheet-fields select { width: auto; min-width: 0; max-width: 100%; flex: 1 1 200px }
+.check { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--ink); text-transform: none; letter-spacing: 0; font-weight: 500; margin: 0 }
+.check input { width: auto }
 /* página inicial */
 .levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px }
 .level { display: grid; gap: 6px; padding: 20px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); text-decoration: none }
