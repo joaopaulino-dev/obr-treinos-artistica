@@ -227,6 +227,6 @@
   render();
   carregar();
   entrarComSenhaSalva();
-  setInterval(() => { if (document.visibilityState === "visible" && !state.busy && !state.pending) carregar(); }, 15000);
+  setInterval(() => { if (document.visibilityState === "visible" && !state.busy && !state.pending) carregar(); }, 30000);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") carregar(); });
 })();

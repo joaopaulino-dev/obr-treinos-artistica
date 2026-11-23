@@ -37,7 +37,7 @@ A tabela `reservas` é criada sozinha na primeira requisição.
 ## Deploy na Vercel com Neon
 
 1. Importe este repositório na Vercel (Add New, Project). Pode deixar o framework como **Other**: não há etapa de build.
-2. Na aba **Storage** do projeto, adicione um banco **Neon**. A integração cria a variável `DATABASE_URL` sozinha. Se preferir usar um banco Neon que já existe, cadastre `DATABASE_URL` à mão com a connection string em modo pooled.
+2. Na aba **Storage** do projeto, adicione um banco **Neon** na região **São Paulo (aws sa-east-1)**, a mesma das funções (`gru1`, definida no `vercel.json`). A integração cria a variável `DATABASE_URL` sozinha. Se preferir usar um banco Neon que já existe, cadastre `DATABASE_URL` à mão com a connection string em modo pooled.
 3. Em **Settings > Environment Variables**, cadastre `ADMIN_PASSWORD` com a senha da coordenação.
 4. Faça o deploy. Depois abra `/n1` e `/n2` para conferir.
 
