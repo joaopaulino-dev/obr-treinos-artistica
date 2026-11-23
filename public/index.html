@@ -3,23 +3,50 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Treinos Artística | OBR 2026</title>
+<meta name="theme-color" content="#7A1C1C">
+<title>OBR 2026 | Mesas e treinos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/estilo.css">
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="eyebrow">OBR 2026 · Modalidade Artística</div>
-    <h1>Reserva de treinos nos palcos</h1>
-    <p class="mine">Escolha o nível da sua equipe. Cada slot dura 10 minutos e uma equipe por vez usa o palco.</p>
+<main class="wrap">
+  <header class="hero">
+    <picture>
+      <source srcset="/assets/logo-obr-2026-branco.png" media="(prefers-color-scheme: dark)">
+      <img class="logo" src="/assets/logo-obr-2026-vinho.png" alt="OBR 2026, Olimpíada Brasileira de Robótica" width="560" height="237">
+    </picture>
+    <p>Encontre a mesa da sua equipe e agende os treinos da modalidade Artística.</p>
   </header>
-  <nav class="levels">
-    <a class="level" href="/n1"><span class="big">Nível 1</span><span>Palco de treino A</span><span class="sub">Mesas 1 a 36</span></a>
-    <a class="level" href="/n2"><span class="big">Nível 2</span><span>Palco de treino B</span><span class="sub">Mesas 37 a 72</span></a>
+
+  <nav class="menu" aria-label="Menu principal">
+    <a class="card-link primary" href="/mapa">
+      <span class="ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg>
+      </span>
+      <span><strong>Mapa da OBR</strong><span class="sub">Mesas das 152 equipes, palcos e arenas</span></span>
+      <span class="go" aria-hidden="true">›</span>
+    </a>
+
+    <div class="menu-group">
+      <div class="menu-label">Agendamento de treinos · Artística</div>
+      <div class="menu-row">
+        <a class="card-link" href="/n1">
+          <span class="ico" aria-hidden="true">N1</span>
+          <span><strong>Nível 1</strong><span class="sub">Palco de treino A · mesas 1 a 36</span></span>
+          <span class="go" aria-hidden="true">›</span>
+        </a>
+        <a class="card-link" href="/n2">
+          <span class="ico" aria-hidden="true">N2</span>
+          <span><strong>Nível 2</strong><span class="sub">Palco de treino B · mesas 37 a 72</span></span>
+          <span class="go" aria-hidden="true">›</span>
+        </a>
+      </div>
+    </div>
   </nav>
-</div>
+
+  <p class="foot">Dúvidas ou divergências? Procure a coordenação da modalidade.</p>
+</main>
 </body>
 </html>

@@ -1,0 +1,914 @@
+[
+{
+"mesa": 1,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Alfa Robóticos - Artística"
+},
+{
+"mesa": 2,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "APOIOBOT IMAGINARTE"
+},
+{
+"mesa": 3,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "BEEONIC"
+},
+{
+"mesa": 4,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Cariacica Lego"
+},
+{
+"mesa": 5,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "CARIRITECH - DANCE"
+},
+{
+"mesa": 6,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "CAV NEO JAZZ"
+},
+{
+"mesa": 7,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "CILM - Labouré"
+},
+{
+"mesa": 8,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Cyber Acalanto"
+},
+{
+"mesa": 9,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Cyber Divas"
+},
+{
+"mesa": 10,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Cyber Panthers"
+},
+{
+"mesa": 11,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Cyber Rex"
+},
+{
+"mesa": 12,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "CZC Tech"
+},
+{
+"mesa": 13,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "DEMOLIDOR"
+},
+{
+"mesa": 14,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Digital Dance"
+},
+{
+"mesa": 15,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Engenheiros do Espetáculo"
+},
+{
+"mesa": 16,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Equipe de Robótica Artística - Maravilha-SC"
+},
+{
+"mesa": 17,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "EXPOARTE ROBOTICS EFAF"
+},
+{
+"mesa": 18,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "FibraTech"
+},
+{
+"mesa": 19,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "GAROTAS DA SUCATA"
+},
+{
+"mesa": 20,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Millennium Bots"
+},
+{
+"mesa": 21,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "OKÀN"
+},
+{
+"mesa": 22,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "PROTOCOLO MATRIX"
+},
+{
+"mesa": 23,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "RASTRO NOTURNO EVO"
+},
+{
+"mesa": 24,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "ROBOBROS"
+},
+{
+"mesa": 25,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Robolokos"
+},
+{
+"mesa": 26,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "ROBOMAC"
+},
+{
+"mesa": 27,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "SESI TO Tucuna Vision"
+},
+{
+"mesa": 28,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "SESI TransformES"
+},
+{
+"mesa": 29,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "SOROBÓTICOS"
+},
+{
+"mesa": 30,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Space Bots Explorer"
+},
+{
+"mesa": 31,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Squad do Hamtaro"
+},
+{
+"mesa": 32,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Stranger Things"
+},
+{
+"mesa": 33,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Talentos da Tancredo"
+},
+{
+"mesa": 34,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "TECHTAIS"
+},
+{
+"mesa": 35,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "The Ducks"
+},
+{
+"mesa": 36,
+"tipo": "Artística",
+"nivel": 1,
+"equipe": "Twister"
+},
+{
+"mesa": 37,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Alice no país das várias pilhas"
+},
+{
+"mesa": 38,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Alien Bot"
+},
+{
+"mesa": 39,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Andromeda"
+},
+{
+"mesa": 40,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Anjos Robot"
+},
+{
+"mesa": 41,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Armadillos"
+},
+{
+"mesa": 42,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "ATOS E EIXOS"
+},
+{
+"mesa": 43,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "CACTOS"
+},
+{
+"mesa": 44,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Curto circuito"
+},
+{
+"mesa": 45,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Cyber Olympians"
+},
+{
+"mesa": 46,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Cyber Panthers Teens"
+},
+{
+"mesa": 47,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Engenheiros do Açaí"
+},
+{
+"mesa": 48,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Equipe CEFEsteam"
+},
+{
+"mesa": 49,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Etnobóticos Íris"
+},
+{
+"mesa": 50,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "GUERREIRO ALAGOANO: A DANÇA QUE GANHA VIDA"
+},
+{
+"mesa": 51,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Imagine Lego"
+},
+{
+"mesa": 52,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "KYRIOS"
+},
+{
+"mesa": 53,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Lovelace"
+},
+{
+"mesa": 54,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "LYMM TECH"
+},
+{
+"mesa": 55,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "MAMONAS ANIMATRONICS"
+},
+{
+"mesa": 56,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "MegaRobert - Artística"
+},
+{
+"mesa": 57,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Modern Times"
+},
+{
+"mesa": 58,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Morpho Jackson"
+},
+{
+"mesa": 59,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "New Atom Art"
+},
+{
+"mesa": 60,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "o saber"
+},
+{
+"mesa": 61,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "PantaBots"
+},
+{
+"mesa": 62,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Pardoboots Art"
+},
+{
+"mesa": 63,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "ROBOLIFE"
+},
+{
+"mesa": 64,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Robot World Woman"
+},
+{
+"mesa": 65,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Robótic Orion"
+},
+{
+"mesa": 66,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "ScriptBot Dance"
+},
+{
+"mesa": 67,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "SESI Red Hammer"
+},
+{
+"mesa": 68,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "SESI TO Tucuna Robotics"
+},
+{
+"mesa": 69,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Space Bots Middle"
+},
+{
+"mesa": 70,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Tamba Tajá Tech"
+},
+{
+"mesa": 71,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "Technocircus"
+},
+{
+"mesa": 72,
+"tipo": "Artística",
+"nivel": 2,
+"equipe": "The Tchukas"
+},
+{
+"mesa": 73,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "AIROM"
+},
+{
+"mesa": 74,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Apollo"
+},
+{
+"mesa": 75,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Astro Tech 1"
+},
+{
+"mesa": 76,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "ATABOTICA INOVAR 01"
+},
+{
+"mesa": 77,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Brainbots"
+},
+{
+"mesa": 78,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "CMET"
+},
+{
+"mesa": 79,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Cusco"
+},
+{
+"mesa": 80,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Cyber Rush"
+},
+{
+"mesa": 81,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "DIONINAS"
+},
+{
+"mesa": 82,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "DoGo Warriors"
+},
+{
+"mesa": 83,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "ELETRIC QUARTET"
+},
+{
+"mesa": 84,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "F5 CONNECTION"
+},
+{
+"mesa": 85,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Furious"
+},
+{
+"mesa": 86,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "G.D.A"
+},
+{
+"mesa": 87,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Gira Bagre"
+},
+{
+"mesa": 88,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "GLITCH"
+},
+{
+"mesa": 89,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Laranja High Tech"
+},
+{
+"mesa": 90,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "LITERATO II"
+},
+{
+"mesa": 91,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Macuxi Sapiens 2"
+},
+{
+"mesa": 92,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Manna Roosters"
+},
+{
+"mesa": 93,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Mega Mentes 3"
+},
+{
+"mesa": 94,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "ORA PRO BOTS"
+},
+{
+"mesa": 95,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Paladins"
+},
+{
+"mesa": 96,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "PaTecItapoa02"
+},
+{
+"mesa": 97,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "RAIDENS"
+},
+{
+"mesa": 98,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Ro-BOT"
+},
+{
+"mesa": 99,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "ROBOCOE"
+},
+{
+"mesa": 100,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "RoboEcus"
+},
+{
+"mesa": 101,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "ROBOT ONE"
+},
+{
+"mesa": 102,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "SESI TO Tucuna 02"
+},
+{
+"mesa": 103,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Shockwave"
+},
+{
+"mesa": 104,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Star Bots"
+},
+{
+"mesa": 105,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Storm"
+},
+{
+"mesa": 106,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "TECFLOR"
+},
+{
+"mesa": 107,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "The Fúrias"
+},
+{
+"mesa": 108,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Titãs da Robótica - Boberto"
+},
+{
+"mesa": 109,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Tractor Robots"
+},
+{
+"mesa": 110,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Unimate Robotics"
+},
+{
+"mesa": 111,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "VERUS"
+},
+{
+"mesa": 112,
+"tipo": "Resgate",
+"nivel": 2,
+"equipe": "Zafir"
+},
+{
+"mesa": 113,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "ATOMIC BOTS"
+},
+{
+"mesa": 114,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Autobots_JB"
+},
+{
+"mesa": 115,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Belobots Robix"
+},
+{
+"mesa": 116,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Big Hero"
+},
+{
+"mesa": 117,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "C3PMAX"
+},
+{
+"mesa": 118,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "CCPA Tech"
+},
+{
+"mesa": 119,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "CMS-HVL"
+},
+{
+"mesa": 120,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "CYBERBOT KIDS 02"
+},
+{
+"mesa": 121,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "CYBERZUKAS YELLOW"
+},
+{
+"mesa": 122,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Dreams"
+},
+{
+"mesa": 123,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Ex-Makers"
+},
+{
+"mesa": 124,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Fusion Robotics"
+},
+{
+"mesa": 125,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "FUTUREBOT"
+},
+{
+"mesa": 126,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "HEXABOTS - ELITE"
+},
+{
+"mesa": 127,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "iatom 5.0"
+},
+{
+"mesa": 128,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "InovaTech"
+},
+{
+"mesa": 129,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Major Bots 5"
+},
+{
+"mesa": 130,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Maratech"
+},
+{
+"mesa": 131,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Mente Mecânica"
+},
+{
+"mesa": 132,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Morpho Tech"
+},
+{
+"mesa": 133,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "NETUNO ENSV"
+},
+{
+"mesa": 134,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Orion_Bernoulli"
+},
+{
+"mesa": 135,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Potato"
+},
+{
+"mesa": 136,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Protocolo X SPZ"
+},
+{
+"mesa": 137,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Quarteto Fantástico"
+},
+{
+"mesa": 138,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "R2-D2"
+},
+{
+"mesa": 139,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Roboticlegends"
+},
+{
+"mesa": 140,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Robotronic 2.0"
+},
+{
+"mesa": 141,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Robyte"
+},
+{
+"mesa": 142,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Sesi Level Up 1"
+},
+{
+"mesa": 143,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "SESI TO Tucuna X"
+},
+{
+"mesa": 144,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Star Maker Juniors"
+},
+{
+"mesa": 145,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Tech Vikings Two"
+},
+{
+"mesa": 146,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Tecno Champions"
+},
+{
+"mesa": 147,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "TEJIVORTEX"
+},
+{
+"mesa": 148,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Time de milhões"
+},
+{
+"mesa": 149,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "USB Bots"
+},
+{
+"mesa": 150,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "VilaTechN1"
+},
+{
+"mesa": 151,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "WARRIORS ROBOCEP"
+},
+{
+"mesa": 152,
+"tipo": "Resgate",
+"nivel": 1,
+"equipe": "Xucro"
+}
+]

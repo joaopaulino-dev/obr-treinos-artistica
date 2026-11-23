@@ -1,12 +1,32 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": "public",
-  "regions": ["gru1"],
+  "regions": [
+    "gru1"
+  ],
   "rewrites": [
-    { "source": "/n1", "destination": "/app.html" },
-    { "source": "/n2", "destination": "/app.html" }
+    {
+      "source": "/mapa",
+      "destination": "/mapa/index.html"
+    },
+    {
+      "source": "/n1",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/n2",
+      "destination": "/app.html"
+    }
   ],
   "headers": [
-    { "source": "/api/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
   ]
 }

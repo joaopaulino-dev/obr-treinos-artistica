@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7A1C1C">
+<title>Mapa da OBR 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/estilo.css">
+</head>
+<body class="mapa-page">
+<header class="mapa-top">
+  <div class="topbar">
+    <a href="/" aria-label="Voltar ao menu">
+      <picture>
+        <source srcset="/assets/logo-obr-2026-branco.png" media="(prefers-color-scheme: dark)">
+        <img class="logo" src="/assets/logo-obr-2026-vinho.png" alt="OBR 2026" width="560" height="237">
+      </picture>
+    </a>
+    <div class="titles">
+      <span class="eyebrow">OBR 2026</span>
+      <h1>Mapa das mesas</h1>
+    </div>
+    <a class="back" href="/">Menu</a>
+  </div>
+
+  <div class="search" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="sugestoes" id="busca">
+    <svg class="lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="Nome da equipe ou número da mesa" autocomplete="off" aria-autocomplete="list" aria-controls="sugestoes" aria-label="Buscar equipe ou mesa">
+    <ul class="suggest" id="sugestoes" role="listbox" hidden></ul>
+  </div>
+
+  <div class="chips" aria-label="Atalhos">
+    <button class="chip-btn" type="button" data-ir="palco-a">Palco A · N1</button>
+    <button class="chip-btn" type="button" data-ir="palco-b">Palco B · N2</button>
+    <button class="chip-btn" type="button" data-ir="palco-principal">Palco principal</button>
+    <button class="chip-btn" type="button" data-ir="arena-treino-n1">Arena treino N1</button>
+    <button class="chip-btn" type="button" data-ir="arena-treino-n2">Arena treino N2</button>
+    <a class="chip-btn pdf" href="/mapa/mapa-mesas-A4.pdf" target="_blank" rel="noopener">Baixar PDF</a>
+  </div>
+
+  <details class="legend-map">
+    <summary>Legenda</summary>
+    <div class="legend">
+      <span style="--sw:#3b4cc0">Artística (1–72)</span>
+      <span style="--sw:#2f8a5f">Resgate (73–152)</span>
+      <span style="--sw:#f1ecfb">Palco de treino</span>
+      <span style="--sw:#3b2a6b">Palco principal</span>
+      <span style="--sw:#fbf0e4">Arena de treino</span>
+      <span style="--sw:#f6dcc0">Arena oficial</span>
+      <span style="--sw:#eef3f6">Coordenação e avaliação</span>
+      <span style="--sw:#fbe4e4">Sala dos juízes (restrita)</span>
+    </div>
+  </details>
+</header>
+
+<div class="stage" id="stage" aria-label="Mapa interativo. Arraste para mover e use a pinça ou os botões para ampliar.">
+  <div class="zoom">
+    <button type="button" id="zin" aria-label="Ampliar">+</button>
+    <button type="button" id="zout" aria-label="Reduzir">−</button>
+    <button type="button" id="zfit" class="fit" aria-label="Ver o mapa inteiro">Tudo</button>
+  </div>
+  <div class="info" id="info" hidden role="status"></div>
+</div>
+
+<script src="/mapa/mapa.js"></script>
+</body>
+</html>
