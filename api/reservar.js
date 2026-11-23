@@ -2,7 +2,7 @@
 import { validar, motivoBloqueio, erro } from "../lib/regras.js";
 import { comBanco, emTransacao } from "../lib/db.js";
 import { carregarDia, montarEstado } from "../lib/grade.js";
-import { responderErro, corpo } from "../lib/http.js";
+import { responderErro, corpo, origemDe } from "../lib/http.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ erro: "Use POST." });
@@ -14,8 +14,8 @@ export default async function handler(req, res) {
         const motivo = motivoBloqueio(atual, p.equipe, p.slot);
         if (motivo) throw erro(409, `Não foi possível reservar: ${motivo.toLowerCase()}.`);
         await client.query(
-          "INSERT INTO reservas (nivel, dia, slot, equipe) VALUES ($1, $2, $3, $4)",
-          [p.nivel, p.dia, p.slot, p.equipe],
+          "INSERT INTO reservas (nivel, dia, slot, equipe, origem) VALUES ($1, $2, $3, $4, $5)",
+          [p.nivel, p.dia, p.slot, p.equipe, origemDe(req)],
         );
         return carregarDia(client, p.nivel, p.dia);
       }),

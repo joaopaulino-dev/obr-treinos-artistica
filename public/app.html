@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7A1C1C">
 <title>Treinos Artística | OBR 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,20 +11,22 @@
 <link rel="stylesheet" href="/estilo.css">
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <a class="eyebrow" href="/">OBR 2026 · Modalidade Artística</a>
-    <h1>Treinos no <span id="palco">palco</span> · <span class="lvl" id="lvl">Nível</span></h1>
-    <div class="meta">
-      <span class="chip" id="duracaoChip">Slots de 10 min</span>
-      <span class="chip" id="porSlotChip">1 equipe por slot</span>
-      <span class="chip" id="creditChip">Créditos por equipe</span>
-      <span class="chip" id="freeChip">Vagas livres</span>
+<main class="wrap">
+  <header class="topbar">
+    <a href="/" aria-label="Voltar ao menu">
+      <picture>
+        <source srcset="/assets/logo-obr-2026-branco.png" media="(prefers-color-scheme: dark)">
+        <img class="logo" src="/assets/logo-obr-2026-vinho.png" alt="OBR 2026" width="560" height="237">
+      </picture>
+    </a>
+    <div class="titles">
+      <span class="eyebrow">Treinos · Artística</span>
+      <h1 id="titulo">Nível</h1>
     </div>
+    <a class="back" id="linkMapa" href="/mapa">Ver no mapa</a>
   </header>
 
   <div class="days" id="days" role="group" aria-label="Dia"></div>
-
   <div class="banner" id="banner" hidden></div>
 
   <section class="panel admin" id="admin" hidden aria-label="Coordenação">
@@ -39,6 +42,12 @@
       <div class="admin-head">
         <h2>Coordenação</h2>
         <p class="mine">Toque numa vaga <strong>ocupada</strong> para mover ou liberar. Toque numa vaga <strong>livre</strong> para reservar por uma equipe.</p>
+      </div>
+
+      <div class="admin-block">
+        <h3>Aparelhos com mais de uma equipe</h3>
+        <p class="hint">Reservas feitas pelo mesmo aparelho e rede para equipes diferentes. Pode indicar reserva feita por outra equipe; confira antes de agir.</p>
+        <ul class="audit" id="auditLista"></ul>
       </div>
 
       <form id="gradeForm" class="admin-block">
@@ -67,35 +76,29 @@
     </div>
   </section>
 
-  <section class="panel" aria-label="Sua equipe">
-    <div class="panel-row">
-      <div>
-        <label for="team">Sua equipe</label>
-        <select id="team"><option value="">Escolha a equipe…</option></select>
-      </div>
+  <section class="teambar" aria-label="Sua equipe">
+    <div class="teambar-row">
+      <select id="team" aria-label="Sua equipe"><option value="">Escolha a sua equipe…</option></select>
       <div class="credits" id="credits" hidden>
         <div class="pips" id="pips"></div>
         <span class="credits-text" id="creditsText"></span>
       </div>
     </div>
-    <div class="mine" id="mine">Escolha a equipe para ver os horários que ela pode reservar.</div>
-    <ul class="rules">
-      <li><strong id="ruleCredits">Cada equipe tem 1 crédito por dia</strong> (<span id="ruleSlot">1 crédito = 1 slot de 10 min</span>).</li>
-      <li><strong>Não vale reservar dois slots seguidos.</strong></li>
-      <li><strong>Não há remarcação.</strong> Para mudar de horário, a equipe negocia a troca direto com outra equipe e as duas avisam a coordenação.</li>
-      <li>Vagas que sobrarem ficam livres.</li>
-    </ul>
-    <p class="confirm-note"><strong>Confira seus horários.</strong> Depois de reservar, verifique nesta página os slots da sua equipe. Se encontrar qualquer divergência no agendamento, avise a coordenação da modalidade Artística.</p>
-    <div class="legend">
-      <span style="--sw: var(--free)">Vaga livre</span>
-      <span style="--sw: var(--accent)">Sua equipe</span>
-      <span style="--sw: var(--accent-soft)">Ocupada</span>
-      <span style="--sw: var(--off)">Bloqueada para sua equipe</span>
-    </div>
+    <p class="mine" id="mine">Escolha a sua equipe para ver os horários disponíveis.</p>
   </section>
 
+  <div class="toolbar">
+    <div class="rules-line">
+      <span id="rDur">Slots de 10 min</span>
+      <span id="rCred">1 crédito por equipe</span>
+      <span>Sem horários seguidos</span>
+      <button class="linkbtn" type="button" id="verRegras">Ver regras</button>
+    </div>
+    <label class="toggle"><input type="checkbox" id="soLivres"> Só horários livres</label>
+  </div>
+
   <section class="grid" id="grid" aria-label="Grade de horários"></section>
-</div>
+</main>
 
 <div class="sheet" id="sheet" hidden>
   <div class="sheet-in">
@@ -107,6 +110,29 @@
   </div>
 </div>
 <div class="toast" id="toast" hidden role="status"></div>
+
+<dialog class="modal" id="regras" aria-labelledby="regrasTitulo">
+  <div class="modal-in">
+    <h2 id="regrasTitulo">Antes de reservar</h2>
+    <div class="warn" role="alert">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+      <span>Reserve <strong>somente para a sua equipe</strong>. Reservas feitas por outra equipe podem resultar em <strong>desclassificação</strong>.</span>
+    </div>
+    <ol>
+      <li><strong id="mDur">Cada slot dura 10 minutos</strong> e <span id="mCred">cada equipe tem 1 crédito por dia</span> (1 crédito = 1 slot).</li>
+      <li><strong>Não vale reservar dois horários seguidos.</strong></li>
+      <li><strong>Não há remarcação.</strong> Para trocar de horário, combine direto com outra equipe e avisem a coordenação.</li>
+      <li><strong>Confira seus horários</strong> depois de reservar. Se encontrar qualquer divergência, avise a coordenação da Artística.</li>
+    </ol>
+    <div class="legend">
+      <span style="--sw: var(--free)">Livre</span>
+      <span style="--sw: var(--accent)">Sua equipe</span>
+      <span style="--sw: var(--accent-soft)">Ocupado</span>
+      <span style="--sw: var(--off)">Indisponível para sua equipe</span>
+    </div>
+    <button class="btn primary" type="button" id="entendi">Entendi, vou reservar só para minha equipe</button>
+  </div>
+</dialog>
 
 <script src="/app.js"></script>
 </body>

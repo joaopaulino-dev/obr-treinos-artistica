@@ -5,6 +5,7 @@
   const m = location.pathname.match(/n([12])/);
   const NIVEL = Number(params.get("nivel") || (m && m[1]) || 1);
   const MODO_COORD = params.has("coordenacao");
+  const AVISO_KEY = "obr-aviso-n" + NIVEL;
 
   const state = {
     cfg: null,           // resposta de /api/estado
@@ -13,6 +14,8 @@
     equipe: "",
     senha: "",
     admin: false,
+    auditoria: [],       // [{slot, equipe, criadoEm, origem}] (só coordenação)
+    soLivres: false,
     pending: null,       // ação aberta na folha de baixo
     busy: false,
     erroCarga: "",
@@ -30,13 +33,16 @@
   const naquele = (s) => state.reservas.filter((r) => r.slot === s).map((r) => r.equipe);
   const usados = (e) => state.reservas.filter((r) => r.equipe === e).length;
   const limite = (e) => g().creditos + ((state.cfg.extras || {})[e] || 0);
+  const mesaDe = (e) => { const t = state.cfg && state.cfg.equipes.find((x) => x.nome === e); return t ? t.mesa : null; };
+  const comMesa = (e) => { const n = mesaDe(e); return n ? "Mesa " + n + " · " + e : e; };
+  const cred = (n) => n + (n === 1 ? " crédito" : " créditos");
 
   // Mesma regra do servidor (lib/regras.js), só para mostrar o que está bloqueado.
   function motivo(e, s) {
     const aqui = naquele(s);
     if (aqui.includes(e)) return "Já está neste horário";
-    if (aqui.length >= g().porSlot) return "Horário lotado";
-    if (usados(e) >= limite(e)) return "Créditos esgotados";
+    if (aqui.length >= g().porSlot) return "Ocupado";
+    if (usados(e) >= limite(e)) return "Sem créditos";
     if (state.reservas.some((r) => r.equipe === e && Math.abs(r.slot - s) === 1)) return "Seguido de outro treino";
     return null;
   }
@@ -57,11 +63,17 @@
     if (state.equipe && !d.equipes.some((x) => x.nome === state.equipe)) state.equipe = "";
   }
 
+  async function carregarAuditoria() {
+    if (!state.admin) return;
+    try { state.auditoria = (await admin("auditoria")).reservas || []; } catch (e) { state.auditoria = []; }
+  }
+
   async function carregar() {
     try {
       const q = new URLSearchParams({ nivel: String(NIVEL) });
       if (state.dia) q.set("dia", state.dia);
       aplicar(await api("/api/estado?" + q));
+      await carregarAuditoria();
     } catch (e) {
       state.erroCarga = state.cfg ? "Não foi possível atualizar a grade. Ela pode estar desatualizada." : (e.message || "Não foi possível carregar a grade.");
     }
@@ -74,6 +86,7 @@
     state.busy = true; renderSheet();
     try {
       aplicar(await fn());
+      await carregarAuditoria();
       state.pending = null;
       toast(sucesso);
     } catch (e) {
@@ -91,25 +104,21 @@
   function botao(texto, cls, fn) { const b = el("button", "btn " + cls, texto); b.type = "button"; b.disabled = state.busy; b.addEventListener("click", fn); return b; }
 
   function render() {
-    $("banner").textContent = state.erroCarga || (state.cfg ? "" : "Carregando reservas…");
+    $("banner").textContent = state.erroCarga || (state.cfg ? "" : "Carregando horários…");
     $("banner").hidden = !$("banner").textContent;
     $("admin").hidden = !MODO_COORD;
     $("adminForm").hidden = state.admin;
     $("adminTools").hidden = !state.admin;
     if (!state.cfg) return;
     const c = state.cfg, gr = g();
+    const palcoLetra = c.palco.slice(-1);
     document.title = "Treinos Artística N" + NIVEL + " | OBR 2026";
-    $("palco").textContent = c.palco;
-    $("lvl").textContent = "Nível " + NIVEL;
-    const cred = (n) => n + (n === 1 ? " crédito" : " créditos");
-    $("creditChip").textContent = cred(gr.creditos) + " por equipe";
-    $("ruleCredits").textContent = "Cada equipe tem " + cred(gr.creditos) + " por dia";
-    $("ruleSlot").textContent = "1 crédito = 1 slot de " + gr.duracaoMin + " min";
-    $("duracaoChip").textContent = "Slots de " + gr.duracaoMin + " min";
-    const total = gr.nSlots * gr.porSlot;
-    const ocupadas = state.reservas.filter((r) => r.slot >= gr.primeiro && r.slot <= gr.ultimo).length;
-    $("freeChip").textContent = (total - ocupadas) + " de " + total + " vagas livres";
-    $("porSlotChip").textContent = gr.porSlot === 1 ? "1 equipe por slot" : "Até " + gr.porSlot + " equipes por slot";
+    $("titulo").textContent = "Nível " + NIVEL + " · " + c.palco;
+    $("linkMapa").href = "/mapa#palco-" + palcoLetra.toLowerCase();
+    $("rDur").textContent = "Slots de " + gr.duracaoMin + " min";
+    $("rCred").textContent = cred(gr.creditos) + " por equipe";
+    $("mDur").textContent = "Cada slot dura " + gr.duracaoMin + " minutos";
+    $("mCred").textContent = "cada equipe tem " + cred(gr.creditos) + " por dia";
 
     const dias = $("days");
     dias.hidden = c.dias.length < 2;
@@ -130,12 +139,11 @@
       const u = usados(e), lim = limite(e);
       $("pips").replaceChildren(...Array.from({ length: Math.max(lim, u) }, (_, k) => el("span", "pip" + (k < u ? " used" : ""))));
       const livres = Math.max(0, lim - u);
-      const extra = (c.extras || {})[e];
-      $("creditsText").textContent = (livres === 1 ? "1 crédito livre" : livres + " créditos livres") + (extra ? " (inclui " + extra + " extra)" : "");
-      const meus = state.reservas.filter((r) => r.equipe === e).map((r) => r.slot).sort((a, b) => a - b).map((s) => ini(s) + " às " + fim(s));
-      $("mine").textContent = meus.length ? "Horários da sua equipe: " + meus.join(" · ") : "Sua equipe ainda não reservou nenhum horário neste dia.";
+      $("creditsText").textContent = livres ? (livres === 1 ? "1 livre" : livres + " livres") : "Sem créditos";
+      const meus = state.reservas.filter((r) => r.equipe === e).map((r) => r.slot).sort((a, b) => a - b).map((s) => ini(s) + "–" + fim(s));
+      $("mine").textContent = meus.length ? "Seus horários: " + meus.join(" · ") : "Sua equipe ainda não tem horário neste dia.";
     } else {
-      $("mine").textContent = "Escolha a equipe para ver os horários que ela pode reservar.";
+      $("mine").textContent = "Escolha a sua equipe para ver os horários disponíveis.";
     }
 
     renderGrid();
@@ -152,8 +160,12 @@
     for (let k = 1; k <= gr.porSlot; k++) head.append(el("div", "", gr.porSlot === 1 ? "Equipe" : "Vaga " + k));
     head.append(el("div", "status", "Situação"));
     linhas.push(head);
+    let mostradas = 0;
     for (const s of slotsDoDia()) {
       const aqui = naquele(s);
+      const livres = gr.porSlot - Math.min(gr.porSlot, aqui.length);
+      if (state.soLivres && !livres) continue;
+      mostradas++;
       const row = el("div", "row" + (s !== gr.primeiro && (s * gr.duracaoMin) % 60 === 0 ? " hour" : ""));
       const t = el("div", "time", ini(s)); t.append(el("small", "", "até " + fim(s))); row.append(t);
       for (let k = 0; k < gr.porSlot; k++) {
@@ -173,12 +185,14 @@
         }
         row.append(c);
       }
-      const livres = gr.porSlot - Math.min(gr.porSlot, aqui.length);
       row.append(el("div", "status" + (livres ? "" : " full"), livres ? (gr.porSlot === 1 ? "Livre" : livres === 1 ? "1 livre" : livres + " livres") : "Ocupado"));
       linhas.push(row);
     }
+    if (!mostradas) linhas.push(el("div", "empty", "Nenhum horário livre neste dia."));
     $("grid").replaceChildren(...linhas);
   }
+
+  const fmtData = (iso) => { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: "America/Fortaleza" }); };
 
   function renderAdmin() {
     const c = state.cfg, gr = g();
@@ -195,7 +209,7 @@
     }
     $("gCreditos").placeholder = "Automático (" + gr.creditosAuto + ")";
     $("gHint").textContent = "Deixe os créditos em branco para o cálculo automático: " + gr.nSlots + " slots × " + gr.porSlot +
-      " equipes ÷ " + c.equipes.length + " equipes = " + gr.creditosAuto + " por equipe. O valor vale para todas as equipes do nível neste dia.";
+      " ÷ " + c.equipes.length + " equipes = " + gr.creditosAuto + " por equipe. O valor vale para todas as equipes do nível neste dia.";
 
     const xs = $("xEquipe");
     if (!xs.options.length) {
@@ -205,6 +219,17 @@
     }
     const com = Object.entries(c.extras || {}).map(([nome, n]) => nome + " (+" + n + ")");
     $("xLista").textContent = com.length ? "Com extras neste dia: " + com.join(" · ") : "Nenhuma equipe com créditos extras neste dia. Use 0 para remover.";
+
+    // Aparelhos que reservaram para mais de uma equipe.
+    const porOrigem = {};
+    for (const r of state.auditoria) {
+      if (!r.origem || r.origem === "coordenacao") continue;
+      (porOrigem[r.origem] = porOrigem[r.origem] || new Set()).add(r.equipe);
+    }
+    const suspeitos = Object.entries(porOrigem).filter(([, eqs]) => eqs.size > 1);
+    $("auditLista").replaceChildren(...(suspeitos.length
+      ? suspeitos.map(([o, eqs]) => el("li", "", "Aparelho " + o + ": " + [...eqs].map(comMesa).join(", ")))
+      : [el("li", "", "Nenhum caso até agora.")]));
   }
 
   function renderSheet() {
@@ -218,22 +243,23 @@
     const voltar = botao("Voltar", "", () => { state.pending = null; renderSheet(); });
 
     if (p.tipo === "reservar") {
-      main.textContent = "Reservar " + ini(p.slot) + " às " + fim(p.slot) + " para " + p.equipe + "?";
-      sub.textContent = "Usa 1 crédito do dia. Depois de confirmada, a reserva não pode ser remarcada.";
+      main.textContent = "Reservar " + ini(p.slot) + "–" + fim(p.slot) + " para " + comMesa(p.equipe) + "?";
+      sub.textContent = "Usa 1 crédito do dia e não pode ser remarcada.";
+      txt.append(el("span", "sub warnline", "Somente para a sua equipe. Reservar por outra equipe pode levar à desclassificação."));
       acts.replaceChildren(voltar, botao("Confirmar reserva", "primary", () => executar(
         () => post("/api/reservar", { nivel: NIVEL, dia: state.dia, slot: p.slot, equipe: p.equipe }),
-        "Reserva confirmada: " + ini(p.slot) + " para " + p.equipe + ". Confira seus horários abaixo.")));
+        "Reserva confirmada: " + ini(p.slot) + " para " + p.equipe + ". Confira seus horários acima.")));
     }
 
     if (p.tipo === "admin-livre") {
-      main.textContent = "Reservar " + ini(p.slot) + " às " + fim(p.slot) + " por uma equipe";
+      main.textContent = "Reservar " + ini(p.slot) + "–" + fim(p.slot) + " por uma equipe";
       sub.textContent = "Reserva feita pela coordenação.";
       const sel = el("select"); sel.setAttribute("aria-label", "Equipe");
       for (const t of state.cfg.equipes) sel.append(opcao(t.nome, "Mesa " + t.mesa + " · " + t.nome, t.nome === p.equipe));
       sel.addEventListener("change", () => { p.equipe = sel.value; });
       const lab = el("label", "check"); const cb = el("input"); cb.type = "checkbox"; cb.checked = p.forcar;
       cb.addEventListener("change", () => { p.forcar = cb.checked; });
-      lab.append(cb, document.createTextNode("Ignorar créditos e slots seguidos"));
+      lab.append(cb, document.createTextNode("Ignorar créditos e horários seguidos"));
       campos.append(sel, lab);
       acts.replaceChildren(voltar, botao("Reservar", "primary", () => executar(
         () => admin("reservar", { slot: p.slot, equipe: p.equipe, forcar: p.forcar }),
@@ -241,15 +267,18 @@
     }
 
     if (p.tipo === "admin-ocupada") {
-      main.textContent = p.equipe + " às " + ini(p.slot);
-      sub.textContent = "Mover ignora créditos e slots seguidos. Liberar devolve o crédito para a equipe.";
+      main.textContent = comMesa(p.equipe) + " às " + ini(p.slot);
+      const reg = state.auditoria.find((r) => r.slot === p.slot && r.equipe === p.equipe);
+      sub.textContent = reg
+        ? "Reservada em " + fmtData(reg.criadoEm) + " · " + (reg.origem === "coordenacao" ? "pela coordenação" : reg.origem ? "aparelho " + reg.origem : "origem não registrada")
+        : "Mover ignora créditos e horários seguidos. Liberar devolve o crédito.";
       const sel = el("select"); sel.setAttribute("aria-label", "Mover para");
-      sel.append(opcao("", "Mover para…", !p.para));
+      sel.append(opcao("", "Mover para…", p.para == null));
       for (const s of slotsDoDia()) {
         if (s === p.slot) continue;
         const aqui = naquele(s);
         const livres = g().porSlot - aqui.length;
-        const o = opcao(s, ini(s) + (aqui.includes(p.equipe) ? " (já está)" : livres > 0 ? " · " + livres + " livre" + (livres > 1 ? "s" : "") : " · lotado"), p.para === s);
+        const o = opcao(s, ini(s) + (aqui.includes(p.equipe) ? " (já está)" : livres > 0 ? " · livre" : " · ocupado"), p.para === s);
         o.disabled = livres <= 0 || aqui.includes(p.equipe);
         sel.append(o);
       }
@@ -264,10 +293,10 @@
     }
 
     if (p.tipo === "admin-liberar") {
-      main.textContent = "Liberar a vaga de " + p.equipe + " às " + ini(p.slot) + "?";
-      sub.textContent = "A equipe recupera 1 crédito e a vaga volta a ficar livre.";
-      acts.replaceChildren(voltar, botao("Liberar vaga", "danger", () => executar(
-        () => admin("liberar", { slot: p.slot, equipe: p.equipe }), "Vaga liberada.")));
+      main.textContent = "Liberar o horário de " + p.equipe + " às " + ini(p.slot) + "?";
+      sub.textContent = "A equipe recupera 1 crédito e o horário volta a ficar livre.";
+      acts.replaceChildren(voltar, botao("Liberar horário", "danger", () => executar(
+        () => admin("liberar", { slot: p.slot, equipe: p.equipe }), "Horário liberado.")));
     }
   }
 
@@ -278,9 +307,23 @@
   }
 
   function sairAdmin() {
-    state.admin = false; state.senha = "";
+    state.admin = false; state.senha = ""; state.auditoria = [];
     try { sessionStorage.removeItem("obr-coord"); } catch (e) {}
   }
+
+  /* ---------- janela de regras ---------- */
+  const dlg = $("regras");
+  function abrirRegras() { if (dlg.showModal) { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute("open", ""); }
+  function fecharRegras() {
+    try { sessionStorage.setItem(AVISO_KEY, "1"); } catch (e) {}
+    if (dlg.close) dlg.close(); else dlg.removeAttribute("open");
+  }
+  $("entendi").addEventListener("click", fecharRegras);
+  $("verRegras").addEventListener("click", abrirRegras);
+  dlg.addEventListener("cancel", () => { try { sessionStorage.setItem(AVISO_KEY, "1"); } catch (e) {} });
+  let jaViu = false;
+  try { jaViu = sessionStorage.getItem(AVISO_KEY) === "1"; } catch (e) {}
+  if (!jaViu && !MODO_COORD) abrirRegras();
 
   /* ---------- eventos ---------- */
   $("team").addEventListener("change", (ev) => {
@@ -289,11 +332,13 @@
     render();
   });
 
+  $("soLivres").addEventListener("change", (ev) => { state.soLivres = ev.target.checked; render(); });
+
   $("grid").addEventListener("click", (ev) => {
     const b = ev.target.closest("button"); if (!b || state.busy || !state.cfg) return;
     const d = b.dataset;
     if (d.reservar !== undefined) {
-      if (!state.equipe) { $("team").focus(); toast("Escolha sua equipe antes de reservar."); return; }
+      if (!state.equipe) { $("team").focus(); toast("Escolha a sua equipe antes de reservar."); return; }
       state.pending = { tipo: "reservar", slot: Number(d.reservar), equipe: state.equipe };
     } else if (d.livreAdmin !== undefined) {
       state.pending = { tipo: "admin-livre", slot: Number(d.livreAdmin), equipe: state.equipe || state.cfg.equipes[0].nome, forcar: false };
@@ -310,6 +355,7 @@
       await post("/api/admin", { senha, acao: "entrar" });
       state.senha = senha; state.admin = true; $("senha").value = "";
       try { sessionStorage.setItem("obr-coord", senha); } catch (e) {}
+      await carregarAuditoria();
       render();
     } catch (e) { toast(e.message, true); }
   });
@@ -318,10 +364,10 @@
 
   $("gradeForm").addEventListener("submit", (ev) => {
     ev.preventDefault();
-    const cred = $("gCreditos").value.trim();
+    const c = $("gCreditos").value.trim();
     executar(() => admin("grade", {
       porSlot: Number($("gPorSlot").value),
-      creditosBase: cred === "" ? null : Number(cred),
+      creditosBase: c === "" ? null : Number(c),
       inicioMin: Number($("gInicio").value),
       fimMin: Number($("gFim").value),
     }), "Grade do dia atualizada.");
@@ -336,7 +382,7 @@
 
   async function entrarComSenhaSalva() {
     if (!MODO_COORD || !state.senha) return;
-    try { await post("/api/admin", { senha: state.senha, acao: "entrar" }); state.admin = true; render(); } catch (e) { sairAdmin(); }
+    try { await post("/api/admin", { senha: state.senha, acao: "entrar" }); state.admin = true; await carregarAuditoria(); render(); } catch (e) { sairAdmin(); }
   }
 
   render();

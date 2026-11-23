@@ -5,8 +5,9 @@
 //   liberar   { slot, equipe }               remove a reserva
 //   extra     { equipe, extra }              créditos extras de uma equipe no dia (0 remove)
 //   grade     { porSlot, creditosBase, inicioMin, fimMin }   ajusta a grade do dia (creditosBase null = automático)
+//   auditoria                                devolve as reservas com data/hora e origem (hash do aparelho)
 import { validar, motivoBloqueio, erro, slotValido, inteiro } from "../lib/regras.js";
-import { comBanco, emTransacao } from "../lib/db.js";
+import { comBanco, emTransacao, listarAuditoria } from "../lib/db.js";
 import { carregarDia, montarEstado, resolverGrade } from "../lib/grade.js";
 import { DURACAO_MIN } from "../lib/config.js";
 import { responderErro, corpo, senhaConfere } from "../lib/http.js";
@@ -18,7 +19,7 @@ const ACOES = {
     const p = validar(b, { exigeSlot: true, exigeEquipe: true });
     const motivo = motivoBloqueio(ctx, p.equipe, p.slot, { forcar: b.forcar === true });
     if (motivo) throw erro(409, `Não foi possível reservar: ${motivo.toLowerCase()}.`);
-    await client.query("INSERT INTO reservas (nivel, dia, slot, equipe) VALUES ($1, $2, $3, $4)", [p.nivel, p.dia, p.slot, p.equipe]);
+    await client.query("INSERT INTO reservas (nivel, dia, slot, equipe, origem) VALUES ($1, $2, $3, $4, 'coordenacao')", [p.nivel, p.dia, p.slot, p.equipe]);
   },
 
   async mover(client, b, ctx) {
@@ -86,6 +87,11 @@ export default async function handler(req, res) {
     const b = corpo(req);
     if (!senhaConfere(b.senha)) throw erro(401, "Senha da coordenação incorreta.");
     if (b.acao === "entrar") return res.status(200).json({ ok: true });
+    if (b.acao === "auditoria") {
+      const p = validar(b);
+      const reservas = await comBanco((pool) => listarAuditoria(pool, p.nivel, p.dia));
+      return res.status(200).json({ reservas });
+    }
     const fn = ACOES[b.acao];
     if (!fn) throw erro(400, "Ação desconhecida.");
     const p = validar(b);
