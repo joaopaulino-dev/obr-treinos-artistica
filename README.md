@@ -7,12 +7,12 @@ Página pública para as equipes da modalidade Artística reservarem horários d
 | `/n1` | Nível 1 | Palco de treino A | 1 a 36 |
 | `/n2` | Nível 2 | Palco de treino B | 37 a 72 |
 
-Cada slot dura 15 minutos, das 08:00 às 18:00, e até 3 equipes dividem o palco por slot.
+Cada slot dura 10 minutos, das 08:00 às 18:00, e uma equipe por vez usa o palco (a coordenação pode mudar a quantidade por slot).
 
 ## Regras (aplicadas no servidor)
 
-- **Créditos por dia:** `floor(slots × equipes por slot ÷ 36 equipes)`. Na grade padrão (40 slots × 3) dá 3 créditos por equipe. As vagas que sobram ficam livres. A coordenação pode fixar outro valor para todas as equipes e dar créditos extras a uma equipe.
-- **Lotação:** no máximo N equipes por slot (padrão 3), e a mesma equipe não pode aparecer duas vezes no mesmo slot.
+- **Créditos por dia:** `floor(slots × equipes por slot ÷ 36 equipes)`. Na grade padrão (60 slots × 1 equipe) dá 1 crédito por equipe. As vagas que sobram ficam livres. A coordenação pode fixar outro valor para todas as equipes e dar créditos extras a uma equipe.
+- **Lotação:** no máximo N equipes por slot (padrão 1), e a mesma equipe não pode aparecer duas vezes no mesmo slot.
 - **Slots seguidos:** a equipe não pode reservar um slot colado em outro que já tem.
 - **Sem remarcação:** a equipe não consegue cancelar. Trocas são combinadas entre as equipes, e a coordenação libera as vagas.
 
@@ -32,7 +32,7 @@ public/             páginas estáticas (início, grade, estilo, script)
 test/               testes das regras (node --test)
 ```
 
-As tabelas (`reservas`, `grade`, `creditos_extra`, `meta`) são criadas sozinhas na primeira requisição. Os slots são contados a partir da meia-noite em blocos de 15 minutos (08:00 = slot 32).
+As tabelas (`reservas`, `grade`, `creditos_extra`, `meta`) são criadas sozinhas na primeira requisição. Os slots são contados a partir da meia-noite em blocos de 10 minutos (08:00 = slot 48). A duração fica em `DURACAO_MIN`, em `lib/config.js`; mudá-la depois de haver reservas exige migração.
 
 ## Deploy na Vercel com Neon
 

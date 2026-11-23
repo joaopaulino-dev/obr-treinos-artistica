@@ -101,12 +101,15 @@
     document.title = "Treinos Artística N" + NIVEL + " | OBR 2026";
     $("palco").textContent = c.palco;
     $("lvl").textContent = "Nível " + NIVEL;
-    $("creditChip").textContent = gr.creditos + " créditos por equipe";
-    $("ruleCredits").textContent = "Cada equipe tem " + gr.creditos + " créditos por dia";
+    const cred = (n) => n + (n === 1 ? " crédito" : " créditos");
+    $("creditChip").textContent = cred(gr.creditos) + " por equipe";
+    $("ruleCredits").textContent = "Cada equipe tem " + cred(gr.creditos) + " por dia";
+    $("ruleSlot").textContent = "1 crédito = 1 slot de " + gr.duracaoMin + " min";
+    $("duracaoChip").textContent = "Slots de " + gr.duracaoMin + " min";
     const total = gr.nSlots * gr.porSlot;
     const ocupadas = state.reservas.filter((r) => r.slot >= gr.primeiro && r.slot <= gr.ultimo).length;
     $("freeChip").textContent = (total - ocupadas) + " de " + total + " vagas livres";
-    $("porSlotChip").textContent = "Até " + gr.porSlot + " equipes por slot";
+    $("porSlotChip").textContent = gr.porSlot === 1 ? "1 equipe por slot" : "Até " + gr.porSlot + " equipes por slot";
 
     const dias = $("days");
     dias.hidden = c.dias.length < 2;
@@ -146,7 +149,7 @@
     const linhas = [];
     const head = el("div", "row head");
     head.append(el("div", "", "Horário"));
-    for (let k = 1; k <= gr.porSlot; k++) head.append(el("div", "", "Vaga " + k));
+    for (let k = 1; k <= gr.porSlot; k++) head.append(el("div", "", gr.porSlot === 1 ? "Equipe" : "Vaga " + k));
     head.append(el("div", "status", "Situação"));
     linhas.push(head);
     for (const s of slotsDoDia()) {
@@ -171,7 +174,7 @@
         row.append(c);
       }
       const livres = gr.porSlot - Math.min(gr.porSlot, aqui.length);
-      row.append(el("div", "status" + (livres ? "" : " full"), livres ? (livres === 1 ? "1 livre" : livres + " livres") : "Lotado"));
+      row.append(el("div", "status" + (livres ? "" : " full"), livres ? (gr.porSlot === 1 ? "Livre" : livres === 1 ? "1 livre" : livres + " livres") : "Ocupado"));
       linhas.push(row);
     }
     $("grid").replaceChildren(...linhas);

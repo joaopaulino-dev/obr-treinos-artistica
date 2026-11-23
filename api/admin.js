@@ -53,9 +53,9 @@ const ACOES = {
   async grade(client, b, ctx) {
     const p = validar(b);
     const porSlot = inteiro(b.porSlot, 1, 10, "Equipes por slot");
-    const inicioMin = inteiro(b.inicioMin, 0, 23 * 60 + 45, "Início");
-    const fimMin = inteiro(b.fimMin, 15, 24 * 60, "Fim");
-    if (inicioMin % DURACAO_MIN || fimMin % DURACAO_MIN) throw erro(400, "Início e fim precisam cair em múltiplos de 15 minutos.");
+    const inicioMin = inteiro(b.inicioMin, 0, 24 * 60 - DURACAO_MIN, "Início");
+    const fimMin = inteiro(b.fimMin, DURACAO_MIN, 24 * 60, "Fim");
+    if (inicioMin % DURACAO_MIN || fimMin % DURACAO_MIN) throw erro(400, `Início e fim precisam cair em múltiplos de ${DURACAO_MIN} minutos.`);
     if (fimMin <= inicioMin) throw erro(400, "O fim precisa ser depois do início.");
     const creditosBase = b.creditosBase === null || b.creditosBase === "" || b.creditosBase === undefined
       ? null : inteiro(b.creditosBase, 1, 40, "Créditos por equipe");
