@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gera divulgacao/qr-codes-A4.pdf: folha A4 com o logo da OBR 2026 e QR codes do portal.
+"""Gera divulgacao/qr-codes-A4.pdf: folha A4 com o logo da OBR 2026 e um único QR code para o portal.
 
 Requer reportlab (4.0.9 roda no Python 3.9 do macOS).
 Uso: python3 scripts/gerar-qr-a4.py
@@ -28,14 +28,6 @@ LINHA = HexColor("#E8DEDC")
 ALERTA = HexColor("#B42318")
 ALERTA_FUNDO = HexColor("#FDECEA")
 
-CARTOES = [
-    ("Agendar ensaio", "Nível 1 · Palco de ensaio A", "/n1"),
-    ("Agendar ensaio", "Nível 2 · Palco de ensaio B", "/n2"),
-    ("Mapa das mesas", "Busca da equipe e caminho a partir da entrada", "/mapa"),
-    ("Cronograma", "Artística N1 e N2 · Etapa Nacional", "/materiais#artistica"),
-    ("Material e informações", "Manuais e regras · Artística e Resgate", "/materiais"),
-    ("Portal completo", "Todas as opções em um só lugar", "/"),
-]
 
 
 def qr(c, url, x, y, tamanho):
@@ -74,31 +66,43 @@ def main():
     centro(c, "Robótica Artística: ensaios, mapa e materiais", W / 2, topo - 50, "Helvetica-Bold", 19, TINTA)
     centro(c, "Aponte a câmera do celular para o QR code", W / 2, topo - 69, "Helvetica", 11.5, CINZA)
 
-    # Grade 2 × 3 de cartões
-    margem, gap = 40, 16
-    rodape = 118
-    area_topo = topo - 88
-    cw = (W - 2 * margem - gap) / 2
-    ch = (area_topo - rodape - 2 * gap) / 3
-    q = min(cw - 70, ch - 62)
-    for i, (titulo, sub, caminho) in enumerate(CARTOES):
-        col, lin = i % 2, i // 2
-        x = margem + col * (cw + gap)
-        y = area_topo - (lin + 1) * ch - lin * gap
-        destaque = caminho in ("/n1", "/n2")
-        c.setFillColor(VINHO_CLARO if destaque else white)
-        c.setStrokeColor(VINHO if destaque else LINHA)
-        c.setLineWidth(1.4 if destaque else 1)
-        c.roundRect(x, y, cw, ch, 12, stroke=1, fill=1)
-        qx = x + (cw - q) / 2
-        qy = y + ch - 14 - q
+    # Um único QR code grande, para o portal
+    q = 250
+    qx, qy = (W - q) / 2, topo - 100 - q
+    c.setFillColor(VINHO_CLARO)
+    c.setStrokeColor(VINHO)
+    c.setLineWidth(1.6)
+    c.roundRect(qx - 22, qy - 22, q + 44, q + 44, 18, stroke=1, fill=1)
+    c.setFillColor(white)
+    c.roundRect(qx - 10, qy - 10, q + 20, q + 20, 10, stroke=0, fill=1)
+    qr(c, SITE + "/", qx, qy, q)
+
+    # O que tem no portal
+    itens = [
+        ("Agendar ensaio", "Nível 1 · Palco de ensaio A  |  Nível 2 · Palco de ensaio B"),
+        ("Mapa das mesas", "Busque a sua equipe e veja o caminho a partir da entrada"),
+        ("Cronograma", "Artística N1 e N2 · Etapa Nacional"),
+        ("Material e informações", "Manuais e regras da Artística e do Resgate"),
+    ]
+    y0 = qy - 62
+    centro(c, "NO PORTAL VOCÊ ENCONTRA", W / 2, y0, "Helvetica-Bold", 10, CINZA)
+    lx = 118
+    for i, (titulo, sub) in enumerate(itens):
+        y = y0 - 30 - i * 40
+        c.setFillColor(VINHO)
+        c.circle(lx, y + 4, 11, stroke=0, fill=1)
         c.setFillColor(white)
-        c.roundRect(qx - 6, qy - 6, q + 12, q + 12, 6, stroke=0, fill=1)
-        qr(c, SITE + caminho, qx, qy, q)
-        centro(c, titulo, x + cw / 2, y + 30, "Helvetica-Bold", 13.5, VINHO_ESCURO if destaque else TINTA)
-        centro(c, sub, x + cw / 2, y + 14, "Helvetica", 9.5, CINZA)
+        c.setFont("Helvetica-Bold", 11)
+        c.drawCentredString(lx, y, str(i + 1))
+        c.setFillColor(TINTA)
+        c.setFont("Helvetica-Bold", 13.5)
+        c.drawString(lx + 22, y + 5, titulo)
+        c.setFillColor(CINZA)
+        c.setFont("Helvetica", 10)
+        c.drawString(lx + 22, y - 9, sub)
 
     # Rodapé: aviso e endereço
+    margem = 40
     bx, by, bw, bh = margem, 50, W - 2 * margem, 54
     c.setFillColor(ALERTA_FUNDO)
     c.setStrokeColor(ALERTA)

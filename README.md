@@ -71,7 +71,7 @@ Abra `/n1?coordenacao` ou `/n2?coordenacao` e digite a senha (`ADMIN_PASSWORD`).
 
 ## Folha A4 de QR codes
 
-`divulgacao/qr-codes-A4.pdf` traz o logo da OBR 2026 e QR codes para agendar ensaio (N1 e N2), mapa, cronograma, material e o portal, além do aviso de desclassificação e da regra das 18h. Para gerar de novo: `python3 scripts/gerar-qr-a4.py` (precisa de `reportlab`; a versão 4.0.9 roda no Python 3.9).
+`divulgacao/qr-codes-A4.pdf` traz o logo da OBR 2026 e um único QR code para o portal (agendar ensaio, mapa, cronograma e material), além do aviso de desclassificação e da regra das 18h. Para gerar de novo: `python3 scripts/gerar-qr-a4.py` (precisa de `reportlab`; a versão 4.0.9 roda no Python 3.9).
 
 ## Atualizar o mapa ou as equipes
 
