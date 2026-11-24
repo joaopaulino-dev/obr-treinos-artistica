@@ -89,6 +89,10 @@ ENTRADA = (
 if corte != -1:
     svg = svg[:corte] + ENTRADA + "</svg>\n"
 
+# Na Artística, os palcos de treino se chamam palcos de ensaio.
+for letra in "AB":
+    svg = svg.replace(f">Palco de treino {letra}<", f">Palco de ensaio {letra}<")
+
 assert len(mesas) == 152 and sorted(mesas) == list(range(1, 153)), f"esperava 152 mesas, achei {len(mesas)}"
 for local in list(LOCAIS.values()) + ["arena-treino-n1", "arena-treino-n2", "entrada"]:
     assert f'id="{local}"' in svg, f"faltou {local}"

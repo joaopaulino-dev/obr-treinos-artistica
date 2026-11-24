@@ -49,7 +49,7 @@
     if (passou(s)) return "Encerrado";
     if (aqui.length >= g().porSlot) return "Ocupado";
     if (usados(e) >= limite(e)) return "Sem créditos";
-    if (state.reservas.some((r) => r.equipe === e && Math.abs(r.slot - s) === 1)) return "Seguido de outro treino";
+    if (state.reservas.some((r) => r.equipe === e && Math.abs(r.slot - s) === 1)) return "Seguido de outro ensaio";
     return null;
   }
 
@@ -118,7 +118,7 @@
     if (!state.cfg) return;
     const c = state.cfg, gr = g();
     const palcoLetra = c.palco.slice(-1);
-    document.title = "Treinos Artística N" + NIVEL + " | OBR 2026";
+    document.title = "Ensaios Artística N" + NIVEL + " | OBR 2026";
     $("titulo").textContent = "Nível " + NIVEL + " · " + c.palco;
     $("linkMapa").href = "/mapa#palco-" + palcoLetra.toLowerCase();
     $("rDur").textContent = "Slots de " + gr.duracaoMin + " min";

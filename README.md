@@ -1,18 +1,18 @@
-# OBR 2026 · Mapa das mesas e treinos da Artística
+# OBR 2026 · Mapa das mesas e ensaios da Artística
 
 Portal público com três entradas no menu principal (`/`):
 
 - **Mapa da OBR** (`/mapa`): as 152 mesas (Artística e Resgate), palcos e arenas. Tem busca por equipe ou número da mesa, zoom com pinça e arrastar, atalhos para os palcos e o PDF A4. O link `/mapa#mesa-23` (ou `#palco-a`) abre direto no local, útil para QR codes.
-- Ao escolher uma mesa, palco ou arena, o mapa anima o **caminho a partir da entrada** (entre o Palco principal e o Palco de treino A) e mostra o passo a passo.
+- Ao escolher uma mesa, palco ou arena, o mapa anima o **caminho a partir da entrada** (entre o Palco principal e o Palco de ensaio A) e mostra o passo a passo.
 - **Material e informações das categorias** (`/materiais`): cronogramas (Artística N1 e N2), manuais e regras oficiais da etapa Nacional 2026 de Artística e Resgate, com links para o site da OBR.
-- **Treinos Nível 1** e **Treinos Nível 2**: agendamento dos palcos de treino.
+- **Ensaios Nível 1** e **Ensaios Nível 2**: agendamento dos palcos de ensaio da Artística.
 
-## Agendamento de treinos
+## Agendamento de ensaios
 
 | Endereço | Nível | Palco | Mesas |
 |---|---|---|---|
-| `/n1` | Nível 1 | Palco de treino A | 1 a 36 |
-| `/n2` | Nível 2 | Palco de treino B | 37 a 72 |
+| `/n1` | Nível 1 | Palco de ensaio A | 1 a 36 |
+| `/n2` | Nível 2 | Palco de ensaio B | 37 a 72 |
 
 Cada slot dura 10 minutos, das 08:00 às 18:00, e uma equipe por vez usa o palco (a coordenação pode mudar a quantidade por slot).
 

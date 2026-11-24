@@ -3,8 +3,8 @@
   const stage = $("stage");
   const VB0 = { x: 40, y: 15, w: 1972, h: 1865 }; // mesmo recorte do scripts/preparar-mapa.py
   const LOCAIS = {
-    "palco-a": { nome: "Palco de treino A", sub: "Treinos da Artística Nível 1", link: "/n1", rotulo: "Agendar treino N1" },
-    "palco-b": { nome: "Palco de treino B", sub: "Treinos da Artística Nível 2", link: "/n2", rotulo: "Agendar treino N2" },
+    "palco-a": { nome: "Palco de ensaio A", sub: "Ensaios da Artística Nível 1", link: "/n1", rotulo: "Agendar ensaio N1" },
+    "palco-b": { nome: "Palco de ensaio B", sub: "Ensaios da Artística Nível 2", link: "/n2", rotulo: "Agendar ensaio N2" },
     "palco-principal": { nome: "Palco principal", sub: "Apresentações da Artística" },
     "arena-treino-n1": { nome: "Arena de treino N1", sub: "Treinos do Resgate Nível 1" },
     "arena-treino-n2": { nome: "Arena de treino N2", sub: "Treinos do Resgate Nível 2" },
@@ -19,18 +19,18 @@
     r6: [68, 75, 80, 87, 88, 89, 94, 101, 108, 113, 118, 125, 132, 139, 146],
     c7: [37, 36, 35, 34, 33], c8: [32, 31, 30, 29, 28],
     bot: [1059, 1151, 1243, 1335, 1427],
-    land: [["perto do Palco de treino B", 313, 1663], ["perto do Palco principal", 670, 1663], ["perto do Palco de treino A", 1383, 1663],
+    land: [["perto do Palco de ensaio B", 313, 1663], ["perto do Palco principal", 670, 1663], ["perto do Palco de ensaio A", 1383, 1663],
       ["perto da Arena de treino N2", 613, 682], ["perto da Arena de treino N1", 1204, 682], ["perto da Sala da coordenação", 1693, 1365],
       ["em frente à Arena oficial 6", 477, 147], ["em frente à Arena oficial 5", 713, 147], ["em frente à Arena oficial 4", 949, 147],
       ["em frente à Arena oficial 3", 1185, 147], ["em frente à Arena oficial 2", 1421, 147], ["em frente à Arena oficial 1", 1657, 147]],
   };
   const ROTAS_LOCAIS = {
     "palco-principal": { pts: [[1085, 1786], [1085, 1663], [787, 1663]], passos: ["Entre: o Palco principal fica logo à sua esquerda."] },
-    "palco-a": { pts: [[1085, 1786], [1085, 1663], [1266, 1663]], passos: ["Entre: o Palco de treino A fica logo à sua direita."] },
+    "palco-a": { pts: [[1085, 1786], [1085, 1663], [1266, 1663]], passos: ["Entre: o Palco de ensaio A fica logo à sua direita."] },
     "palco-b": { pts: [[1085, 1786], [1085, 1500], [491, 1500], [491, 1663], [430, 1663]], passos: [
       "Entre e siga em frente pelo corredor central até passar a última fileira de mesas.",
       "Vire à esquerda e siga até depois do Palco principal.",
-      "Desça pelo corredor: o Palco de treino B fica à sua esquerda."] },
+      "Desça pelo corredor: o Palco de ensaio B fica à sua esquerda."] },
     "arena-treino-n1": { pts: [[1085, 1786], [1085, 986], [1204, 986], [1204, 780]], passos: [
       "Entre e siga em frente pelo corredor central, atravessando a área da Artística.",
       "No corredor largo entre as duas áreas, vire à direita.",
@@ -279,7 +279,7 @@
         info.append(document.createElement("br"), a);
       }
     } else if (id === "entrada") {
-      titulo.textContent = "Entrada do salão"; sub.textContent = "Entre o Palco principal e o Palco de treino A";
+      titulo.textContent = "Entrada do salão"; sub.textContent = "Entre o Palco principal e o Palco de ensaio A";
       info.append(titulo, sub);
     } else return;
     if (rota) {
