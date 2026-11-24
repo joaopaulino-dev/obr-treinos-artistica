@@ -73,15 +73,24 @@ svg = re.sub(
 
 # 4. Recorta para o salão (sem a legenda) e deixa o SVG escalável.
 svg = re.sub(r'<svg [^>]*>',
-             '<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 15 1972 1791" '
+             '<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 15 1972 1865" '
              'preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mapa das mesas da OBR 2026">',
              svg, count=1)
 corte = svg.find('<text x="60" y="1866" class="t">Legenda</text>')
+# Entrada do salão (fonte: guia de mesas): vão na parede de baixo, entre o Palco principal e o Palco de treino A.
+ENTRADA = (
+    '<rect x="1025" y="1780" width="120" height="12" fill="#fff"/>'
+    '<g id="entrada" class="local" data-x="1085" data-y="1830" data-w="160" data-h="80">'
+    '<path d="M1085 1844 L1085 1800 M1069 1816 L1085 1800 L1101 1816" fill="none" stroke="#E0245E" '
+    'stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>'
+    '<text x="1085" y="1868" style="fill:#E0245E;font-family:-apple-system,Helvetica,Arial,sans-serif;'
+    'font-size:24px;font-weight:800;letter-spacing:.12em;text-anchor:middle">ENTRADA</text></g>'
+)
 if corte != -1:
-    svg = svg[:corte] + "</svg>\n"
+    svg = svg[:corte] + ENTRADA + "</svg>\n"
 
 assert len(mesas) == 152 and sorted(mesas) == list(range(1, 153)), f"esperava 152 mesas, achei {len(mesas)}"
-for local in list(LOCAIS.values()) + ["arena-treino-n1", "arena-treino-n2"]:
+for local in list(LOCAIS.values()) + ["arena-treino-n1", "arena-treino-n2", "entrada"]:
     assert f'id="{local}"' in svg, f"faltou {local}"
 
 SAIDA_SVG.write_text(svg, encoding="utf-8")

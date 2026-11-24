@@ -33,8 +33,7 @@
   const naquele = (s) => state.reservas.filter((r) => r.slot === s).map((r) => r.equipe);
   const usados = (e) => state.reservas.filter((r) => r.equipe === e).length;
   const limite = (e) => g().creditos + ((state.cfg.extras || {})[e] || 0);
-  const mesaDe = (e) => { const t = state.cfg && state.cfg.equipes.find((x) => x.nome === e); return t ? t.mesa : null; };
-  const comMesa = (e) => { const n = mesaDe(e); return n ? "Mesa " + n + " · " + e : e; };
+  const comMesa = (e) => e; // nomes das equipes aparecem sem o número da mesa
   const cred = (n) => n + (n === 1 ? " crédito" : " créditos");
 
   // Mesma regra do servidor (lib/regras.js), só para mostrar o que está bloqueado.
@@ -130,7 +129,7 @@
     }));
 
     const sel = $("team");
-    if (sel.options.length === 1) for (const t of c.equipes) sel.append(opcao(t.nome, "Mesa " + t.mesa + " · " + t.nome));
+    if (sel.options.length === 1) for (const t of c.equipes) sel.append(opcao(t.nome, t.nome));
     sel.value = state.equipe;
 
     const e = state.equipe;
@@ -213,7 +212,7 @@
 
     const xs = $("xEquipe");
     if (!xs.options.length) {
-      for (const t of c.equipes) xs.append(opcao(t.nome, "Mesa " + t.mesa + " · " + t.nome));
+      for (const t of c.equipes) xs.append(opcao(t.nome, t.nome));
       if (state.equipe) xs.value = state.equipe;
       $("xValor").value = (c.extras || {})[xs.value] || 1;
     }
@@ -255,7 +254,7 @@
       main.textContent = "Reservar " + ini(p.slot) + "–" + fim(p.slot) + " por uma equipe";
       sub.textContent = "Reserva feita pela coordenação.";
       const sel = el("select"); sel.setAttribute("aria-label", "Equipe");
-      for (const t of state.cfg.equipes) sel.append(opcao(t.nome, "Mesa " + t.mesa + " · " + t.nome, t.nome === p.equipe));
+      for (const t of state.cfg.equipes) sel.append(opcao(t.nome, t.nome, t.nome === p.equipe));
       sel.addEventListener("change", () => { p.equipe = sel.value; });
       const lab = el("label", "check"); const cb = el("input"); cb.type = "checkbox"; cb.checked = p.forcar;
       cb.addEventListener("change", () => { p.forcar = cb.checked; });

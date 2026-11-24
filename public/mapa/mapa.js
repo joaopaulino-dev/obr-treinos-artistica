@@ -1,7 +1,7 @@
 (() => {
   const $ = (id) => document.getElementById(id);
   const stage = $("stage");
-  const VB0 = { x: 40, y: 15, w: 1972, h: 1791 }; // mesmo recorte do scripts/preparar-mapa.py
+  const VB0 = { x: 40, y: 15, w: 1972, h: 1865 }; // mesmo recorte do scripts/preparar-mapa.py
   const LOCAIS = {
     "palco-a": { nome: "Palco de treino A", sub: "Treinos da Artística Nível 1", link: "/n1", rotulo: "Agendar treino N1" },
     "palco-b": { nome: "Palco de treino B", sub: "Treinos da Artística Nível 2", link: "/n2", rotulo: "Agendar treino N2" },
@@ -10,6 +10,105 @@
     "arena-treino-n2": { nome: "Arena de treino N2", sub: "Treinos do Resgate Nível 2" },
   };
   const reduzir = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- rotas a partir da entrada (mesma lógica do Guia de Mesas) ---------- */
+  const R = {
+    ex: 1085, ey: 1786, ymain: 986,
+    arenas: [[506, 595, 720, 770], [1100, 595, 1309, 770]],
+    X: [194.0, 312.9, 431.8, 550.7, 669.6, 788.5, 907.4, 1026.3, 1145.2, 1264.1, 1383.0, 1501.9, 1620.8, 1739.7, 1858.6],
+    r6: [68, 75, 80, 87, 88, 89, 94, 101, 108, 113, 118, 125, 132, 139, 146],
+    c7: [37, 36, 35, 34, 33], c8: [32, 31, 30, 29, 28],
+    bot: [1059, 1151, 1243, 1335, 1427],
+    land: [["perto do Palco de treino B", 313, 1663], ["perto do Palco principal", 670, 1663], ["perto do Palco de treino A", 1383, 1663],
+      ["perto da Arena de treino N2", 613, 682], ["perto da Arena de treino N1", 1204, 682], ["perto da Sala da coordenação", 1693, 1365],
+      ["em frente à Arena oficial 6", 477, 147], ["em frente à Arena oficial 5", 713, 147], ["em frente à Arena oficial 4", 949, 147],
+      ["em frente à Arena oficial 3", 1185, 147], ["em frente à Arena oficial 2", 1421, 147], ["em frente à Arena oficial 1", 1657, 147]],
+  };
+  const ROTAS_LOCAIS = {
+    "palco-principal": { pts: [[1085, 1786], [1085, 1663], [787, 1663]], passos: ["Entre: o Palco principal fica logo à sua esquerda."] },
+    "palco-a": { pts: [[1085, 1786], [1085, 1663], [1266, 1663]], passos: ["Entre: o Palco de treino A fica logo à sua direita."] },
+    "palco-b": { pts: [[1085, 1786], [1085, 1500], [491, 1500], [491, 1663], [430, 1663]], passos: [
+      "Entre e siga em frente pelo corredor central até passar a última fileira de mesas.",
+      "Vire à esquerda e siga até depois do Palco principal.",
+      "Desça pelo corredor: o Palco de treino B fica à sua esquerda."] },
+    "arena-treino-n1": { pts: [[1085, 1786], [1085, 986], [1204, 986], [1204, 780]], passos: [
+      "Entre e siga em frente pelo corredor central, atravessando a área da Artística.",
+      "No corredor largo entre as duas áreas, vire à direita.",
+      "A Arena de treino N1 fica logo à frente, entre as mesas do Resgate."] },
+    "arena-treino-n2": { pts: [[1085, 1786], [1085, 986], [613, 986], [613, 780]], passos: [
+      "Entre e siga em frente pelo corredor central, atravessando a área da Artística.",
+      "No corredor largo entre as duas áreas, vire à esquerda.",
+      "Suba entre as mesas 87 e 88: a Arena de treino N2 fica logo à frente."] },
+  };
+
+  function rotaMesa(t) {
+    const { ex, ey, ymain, arenas } = R, pts = [[ex, ey]];
+    if (t.y > ymain) {
+      const wy = t.y + 46; pts.push([ex, wy]); if (Math.abs(t.x - ex) > 1) pts.push([t.x, wy]); pts.push([t.x, t.y + 36]);
+      return { pts };
+    }
+    if (Math.abs(t.y - (2 * ymain - R.bot[0])) < 2) { pts.push([ex, ymain], [t.x, ymain], [t.x, t.y + 36]); return { pts, frente: true }; }
+    const cands = [t.x - 59.45, t.x + 59.45].filter((ax) => !arenas.some(([x1, , x2, y2]) => ax > x1 - 10 && ax < x2 + 10 && t.y < y2 + 40));
+    cands.sort((a, b) => Math.abs(a - ex) - Math.abs(b - ex));
+    const ax = cands[0];
+    pts.push([ex, ymain]); if (Math.abs(ax - ex) > 1) pts.push([ax, ymain]); pts.push([ax, t.y], [t.x + (ax < t.x ? -36 : 36), t.y]);
+    return { pts, ax };
+  }
+
+  function passosMesa(t, n, r) {
+    const lado = t.x < R.ex - 60 ? "esquerda" : t.x > R.ex + 60 ? "direita" : null, s = [];
+    if (t.y > R.ymain) {
+      s.push("Entre e siga em frente pelo corredor central.");
+      if (lado) {
+        const i = R.bot.indexOf(t.y), col = lado === "esquerda" ? R.c7 : R.c8, ref = i >= 0 ? col[i] : col[col.length - 1];
+        s.push(i >= 0 ? `Na altura da mesa ${ref}, vire à ${lado}.` : `Passe a mesa ${ref} e vire à ${lado}.`);
+        s.push(`Siga pela fileira até a mesa ${n}.`);
+      } else s.push(`A mesa ${n} fica logo ao lado do corredor, à ${t.x < R.ex ? "esquerda" : "direita"}.`);
+      return s;
+    }
+    s.push("Entre e siga em frente pelo corredor central, atravessando a área da Artística.");
+    if (r.frente) {
+      s.push(`No corredor largo entre as duas áreas, vire à ${lado || (t.x < R.ex ? "esquerda" : "direita")}.`);
+      s.push(`A mesa ${n} fica na primeira fileira, de frente para esse corredor.`);
+      return s;
+    }
+    const ax = r.ax, X = R.X;
+    let faixa;
+    if (ax < X[0]) faixa = "pela lateral esquerda do salão, depois da mesa 68";
+    else if (ax > X[14]) faixa = "pela lateral direita do salão, depois da mesa 146";
+    else { const i = Math.round((ax - X[0] - 59.45) / 118.9); faixa = `entre as mesas ${R.r6[i]} e ${R.r6[i + 1]}`; }
+    if (Math.abs(ax - R.ex) < 2) s.push(`Continue em frente ${faixa}.`);
+    else s.push(`No corredor largo entre as duas áreas, vire à ${ax < R.ex ? "esquerda" : "direita"} e suba ${faixa}.`);
+    s.push(`Siga até a mesa ${n}, à ${ax < t.x ? "direita" : "esquerda"} do corredor.`);
+    return s;
+  }
+
+  function referencia(t) {
+    let melhor = null, d = 1e9;
+    for (const [txt, x, y] of R.land) { const k = Math.hypot(x - t.x, y - t.y); if (k < d) { d = k; melhor = txt; } }
+    return melhor;
+  }
+
+  function desenharRota(pts) {
+    const ns = "http://www.w3.org/2000/svg";
+    const path = document.createElementNS(ns, "path");
+    path.setAttribute("class", "rota");
+    path.setAttribute("d", "M" + pts.map((p) => p.join(" ")).join(" L"));
+    svg.appendChild(path);
+    const ponto = document.createElementNS(ns, "circle");
+    ponto.setAttribute("class", "rota-ponto"); ponto.setAttribute("cx", pts[0][0]); ponto.setAttribute("cy", pts[0][1]); ponto.setAttribute("r", 12);
+    svg.appendChild(ponto);
+    const len = path.getTotalLength();
+    path.style.strokeDasharray = len; path.style.strokeDashoffset = reduzir ? 0 : len;
+    if (!reduzir) { path.getBoundingClientRect(); path.style.transition = "stroke-dashoffset 1.1s ease-in-out .25s"; path.style.strokeDashoffset = 0; }
+  }
+
+  function enquadrar(pts) {
+    const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]), pad = 150;
+    let v = ajustarAspecto({ x: Math.min(...xs) - pad, y: Math.min(...ys) - pad, w: Math.max(...xs) - Math.min(...xs) + 2 * pad, h: Math.max(...ys) - Math.min(...ys) + 2 * pad });
+    if (tam().w < 700) v = { ...v, y: v.y + v.h * 0.16, h: v.h * 1.32, x: v.x - v.w * 0.16, w: v.w * 1.32 }; // espaço para o cartão embaixo
+    animarPara(ajustarAspecto(v));
+  }
 
   let svg = null, equipes = [], porMesa = {}, vb = { ...VB0 }, anim = 0;
 
@@ -131,7 +230,7 @@
   function limparDestaque() {
     if (!svg) return;
     svg.querySelectorAll(".hl").forEach((n) => n.classList.remove("hl"));
-    svg.querySelectorAll(".pulse").forEach((n) => n.remove());
+    svg.querySelectorAll(".pulse, .rota, .rota-ponto").forEach((n) => n.remove());
     $("info").hidden = true;
   }
 
@@ -146,14 +245,23 @@
     const pulso = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     pulso.setAttribute("class", "pulse"); pulso.setAttribute("cx", x); pulso.setAttribute("cy", y); pulso.setAttribute("r", raio);
     svg.appendChild(pulso);
-    if (mover) focar(x, y, g.dataset.w ? 700 : 520);
-    mostrarInfo(id);
+    const mm = id.match(/^mesa-(\d+)$/);
+    let rota = null;
+    if (mm) { const t = { x, y }; const r = rotaMesa(t); rota = { pts: r.pts, passos: passosMesa(t, Number(mm[1]), r), onde: (y > R.ymain ? "Perto da entrada" : "Fundo do salão") + " · " + referencia(t) }; }
+    else if (ROTAS_LOCAIS[id]) rota = ROTAS_LOCAIS[id];
+    if (rota) { desenharRota(rota.pts); enquadrar([...rota.pts, [x, y - 60]]); }
+    else if (mover) focar(x, y, g.dataset.w ? 700 : 520);
+    mostrarInfo(id, rota);
     history.replaceState(null, "", "#" + id);
   }
 
-  function mostrarInfo(id) {
+  function mostrarInfo(id, rota) {
     const info = $("info");
     info.replaceChildren();
+    const fechar = document.createElement("button");
+    fechar.type = "button"; fechar.className = "info-x"; fechar.setAttribute("aria-label", "Fechar"); fechar.textContent = "×";
+    fechar.addEventListener("click", () => { limparDestaque(); history.replaceState(null, "", location.pathname); });
+    info.append(fechar);
     const titulo = document.createElement("strong"), sub = document.createElement("span");
     const m = id.match(/^mesa-(\d+)$/);
     if (m) {
@@ -170,7 +278,16 @@
         a.style.cssText = "display:inline-block;margin-top:6px;font-weight:600;color:#7A1C1C";
         info.append(document.createElement("br"), a);
       }
+    } else if (id === "entrada") {
+      titulo.textContent = "Entrada do salão"; sub.textContent = "Entre o Palco principal e o Palco de treino A";
+      info.append(titulo, sub);
     } else return;
+    if (rota) {
+      if (rota.onde) { const o = document.createElement("p"); o.className = "onde"; o.textContent = rota.onde; info.append(o); }
+      const ol = document.createElement("ol"); ol.className = "passos";
+      for (const p of rota.passos) { const li = document.createElement("li"); li.textContent = p; ol.append(li); }
+      info.append(ol);
+    }
     info.hidden = false;
   }
 
@@ -233,7 +350,7 @@
   /* ---------- carga ---------- */
   function irParaHash() {
     const id = decodeURIComponent(location.hash.slice(1));
-    if (id && /^(mesa-\d+|palco-[a-z]+|arena-treino-n[12])$/.test(id)) selecionar(id); else verTudo(false);
+    if (id && /^(mesa-\d+|palco-[a-z]+|arena-treino-n[12]|entrada)$/.test(id)) selecionar(id); else verTudo(false);
   }
 
   Promise.all([

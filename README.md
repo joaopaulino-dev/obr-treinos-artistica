@@ -3,6 +3,8 @@
 Portal público com três entradas no menu principal (`/`):
 
 - **Mapa da OBR** (`/mapa`): as 152 mesas (Artística e Resgate), palcos e arenas. Tem busca por equipe ou número da mesa, zoom com pinça e arrastar, atalhos para os palcos e o PDF A4. O link `/mapa#mesa-23` (ou `#palco-a`) abre direto no local, útil para QR codes.
+- Ao escolher uma mesa, palco ou arena, o mapa anima o **caminho a partir da entrada** (entre o Palco principal e o Palco de treino A) e mostra o passo a passo.
+- **Materiais** (`/materiais`): manuais e regras oficiais da OBR 2026 para Artística e Resgate (Nacional primeiro), com links para o site da OBR.
 - **Treinos Nível 1** e **Treinos Nível 2**: agendamento dos palcos de treino.
 
 ## Agendamento de treinos
