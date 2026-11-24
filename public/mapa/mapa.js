@@ -106,7 +106,6 @@
   function enquadrar(pts) {
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]), pad = 150;
     let v = ajustarAspecto({ x: Math.min(...xs) - pad, y: Math.min(...ys) - pad, w: Math.max(...xs) - Math.min(...xs) + 2 * pad, h: Math.max(...ys) - Math.min(...ys) + 2 * pad });
-    if (tam().w < 700) v = { ...v, y: v.y + v.h * 0.16, h: v.h * 1.32, x: v.x - v.w * 0.16, w: v.w * 1.32 }; // espaço para o cartão embaixo
     animarPara(ajustarAspecto(v));
   }
 
@@ -252,6 +251,11 @@
     if (rota) { desenharRota(rota.pts); enquadrar([...rota.pts, [x, y - 60]]); }
     else if (mover) focar(x, y, g.dataset.w ? 700 : 520);
     mostrarInfo(id, rota);
+    if (!q.value || !mover) {
+      const mm2 = id.match(/^mesa-(\d+)$/);
+      const eq = mm2 && porMesa[Number(mm2[1])];
+      q.value = eq ? "Mesa " + eq.mesa + " · " + eq.equipe : (LOCAIS[id] ? LOCAIS[id].nome : id === "entrada" ? "Entrada do salão" : q.value);
+    }
     history.replaceState(null, "", "#" + id);
   }
 
