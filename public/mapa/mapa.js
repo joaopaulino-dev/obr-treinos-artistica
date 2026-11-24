@@ -376,7 +376,10 @@
       const d = document.createElement("span"); d.textContent = e.equipe;
       const t = document.createElement("span"); t.className = "t"; t.textContent = e.tipo + " · Nível " + e.nivel;
       d.append(t); li.append(n, d);
-      li.addEventListener("pointerdown", (ev) => { ev.preventDefault(); escolher(e); });
+      // Escolhe no "click" (ao soltar o dedo), não no pointerdown: senão a lista some antes
+      // e o clique cai no atalho de palco que fica embaixo dela.
+      li.addEventListener("mousedown", (ev) => ev.preventDefault()); // mantém o foco no campo
+      li.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); escolher(e); });
       return li;
     }));
     if (!resultados.length && q.value.trim()) {
@@ -388,7 +391,9 @@
     q.setAttribute("aria-activedescendant", ativo >= 0 && resultados[ativo] ? "op-" + resultados[ativo].mesa : "");
   }
 
+  let escolhidoEm = 0;
   function escolher(e) {
+    escolhidoEm = Date.now();
     q.value = "Mesa " + e.mesa + " · " + e.equipe;
     resultados = []; ativo = -1; lista.hidden = true; caixa.setAttribute("aria-expanded", "false");
     q.blur();
@@ -403,9 +408,13 @@
     else if (e.key === "Enter") { if (resultados[ativo]) escolher(resultados[ativo]); e.preventDefault(); }
     else if (e.key === "Escape") { lista.hidden = true; caixa.setAttribute("aria-expanded", "false"); }
   });
-  q.addEventListener("blur", () => setTimeout(() => { lista.hidden = true; caixa.setAttribute("aria-expanded", "false"); }, 120));
+  q.addEventListener("blur", () => setTimeout(() => { lista.hidden = true; caixa.setAttribute("aria-expanded", "false"); }, 300));
 
-  document.querySelectorAll("[data-ir]").forEach((b) => b.addEventListener("click", () => { q.value = ""; selecionar(b.dataset.ir); }));
+  // Ignora um clique "fantasma" num atalho logo depois de escolher uma equipe na lista.
+  document.querySelectorAll("[data-ir]").forEach((b) => b.addEventListener("click", () => {
+    if (Date.now() - escolhidoEm < 600 || !lista.hidden) return;
+    q.value = ""; selecionar(b.dataset.ir);
+  }));
 
   /* ---------- carga ---------- */
   function irParaHash() {
