@@ -41,6 +41,12 @@
   const comMesa = (e) => e; // nomes das equipes aparecem sem o número da mesa
   const cred = (n) => n + (n === 1 ? " crédito" : " créditos");
   const passou = (s) => state.cfg.agoraMin != null && s * g().duracaoMin < state.cfg.agoraMin;
+  // Repescagem (lib/regras.js): quem já treinou tudo pode pegar o próximo horário livre.
+  const proximo = () => state.cfg.agoraMin == null ? null : Math.ceil(state.cfg.agoraMin / g().duracaoMin);
+  const jaTreinou = (e) => {
+    const meus = state.reservas.filter((r) => r.equipe === e);
+    return state.cfg.agoraMin != null && meus.length > 0 && meus.every((r) => (r.slot + 1) * g().duracaoMin <= state.cfg.agoraMin);
+  };
 
   // Mesma regra do servidor (lib/regras.js), só para mostrar o que está bloqueado.
   function motivo(e, s) {
@@ -48,7 +54,7 @@
     if (aqui.includes(e)) return "Já está neste horário";
     if (passou(s)) return "Encerrado";
     if (aqui.length >= g().porSlot) return "Ocupado";
-    if (usados(e) >= limite(e)) return "Sem créditos";
+    if (usados(e) >= limite(e) && !(s === proximo() && jaTreinou(e))) return "Sem créditos";
     if (state.reservas.some((r) => r.equipe === e && Math.abs(r.slot - s) === 1)) return "Seguido de outro ensaio";
     return null;
   }
