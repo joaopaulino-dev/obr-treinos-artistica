@@ -117,10 +117,10 @@
     $("adminTools").hidden = !state.admin;
     if (!state.cfg) return;
     const c = state.cfg, gr = g();
-    const palcoLetra = c.palco.slice(-1);
+    const palcoNum = c.palco.slice(-1);
     document.title = "Ensaios Artística N" + NIVEL + " | OBR 2026";
     $("titulo").textContent = "Nível " + NIVEL + " · " + c.palco;
-    $("linkMapa").href = "/mapa#palco-" + palcoLetra.toLowerCase();
+    $("linkMapa").href = "/mapa#palco-" + palcoNum;
     $("rDur").textContent = "Slots de " + gr.duracaoMin + " min";
     $("rCred").textContent = cred(gr.creditos) + " por equipe";
     $("mDur").textContent = "Cada slot dura " + gr.duracaoMin + " minutos";

@@ -79,7 +79,7 @@ def main():
 
     # O que tem no portal
     itens = [
-        ("Agendar ensaio", "Nível 1 · Palco de ensaio A  |  Nível 2 · Palco de ensaio B"),
+        ("Agendar ensaio", "Nível 1 · Palco de ensaio 2  |  Nível 2 · Palco de ensaio 1"),
         ("Mapa das mesas", "Busque a sua equipe e veja o caminho a partir da entrada"),
         ("Cronograma", "Artística N1 e N2 · Etapa Nacional"),
         ("Material e informações", "Manuais e regras da Artística e do Resgate"),

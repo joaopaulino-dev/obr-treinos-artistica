@@ -20,8 +20,8 @@ SAIDA_SVG = RAIZ / "public" / "mapa" / "mapa.svg"
 SAIDA_JSON = RAIZ / "public" / "mapa" / "equipes.json"
 
 LOCAIS = {
-    "Palco de treino A": "palco-a",
-    "Palco de treino B": "palco-b",
+    "Palco de treino A": "palco-1",  # direita, perto da coordenação
+    "Palco de treino B": "palco-2",  # esquerda, mais longe da coordenação
     "Palco principal": "palco-principal",
 }
 
@@ -77,7 +77,7 @@ svg = re.sub(r'<svg [^>]*>',
              'preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mapa das mesas da OBR 2026">',
              svg, count=1)
 corte = svg.find('<text x="60" y="1866" class="t">Legenda</text>')
-# Entrada do salão (fonte: guia de mesas): vão na parede de baixo, entre o Palco principal e o Palco de treino A.
+# Entrada do salão (fonte: guia de mesas): vão na parede de baixo, entre o Palco principal e o Palco de ensaio 1.
 ENTRADA = (
     '<rect x="1025" y="1780" width="120" height="12" fill="#fff"/>'
     '<g id="entrada" class="local" data-x="1085" data-y="1830" data-w="160" data-h="80">'
@@ -89,9 +89,8 @@ ENTRADA = (
 if corte != -1:
     svg = svg[:corte] + ENTRADA + "</svg>\n"
 
-# Na Artística, os palcos de treino se chamam palcos de ensaio.
-for letra in "AB":
-    svg = svg.replace(f">Palco de treino {letra}<", f">Palco de ensaio {letra}<")
+# Na Artística, os palcos de treino se chamam palcos de ensaio, numerados pela distância à coordenação.
+svg = svg.replace(">Palco de treino A<", ">Palco de ensaio 1<").replace(">Palco de treino B<", ">Palco de ensaio 2<")
 
 assert len(mesas) == 152 and sorted(mesas) == list(range(1, 153)), f"esperava 152 mesas, achei {len(mesas)}"
 for local in list(LOCAIS.values()) + ["arena-treino-n1", "arena-treino-n2", "entrada"]:
