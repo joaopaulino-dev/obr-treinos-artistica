@@ -287,17 +287,26 @@ body.expandido .mapa-top { display: none }
 
 /* ---------- abertura: OBR 20 anos ---------- */
 .intro { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 24px; background: #7A1C1C; color: #FFFFFF; cursor: pointer;
-  animation: intro-sai .55s ease-in 2.3s forwards }
+  animation: intro-sai .55s ease-in 2.9s forwards }
 .intro.fora { animation: intro-sai .3s ease-in forwards }
 html.sem-intro .intro { display: none }
-.intro-in { display: grid; justify-items: center; gap: 10px; text-align: center }
-.intro-logo { width: min(300px, 72vw); height: auto; animation: intro-logo .8s cubic-bezier(.2, .8, .2, 1) both }
+.intro-in { display: grid; justify-items: center; align-items: center; gap: 14px; text-align: center }
+.intro-marca { display: grid; justify-items: center; gap: 10px }
+.intro-mascote { height: min(34vh, 280px); width: auto; transform-origin: 50% 100%; filter: drop-shadow(0 10px 18px rgba(0,0,0,.3));
+  animation: intro-salta .8s cubic-bezier(.3, 1.4, .5, 1) both, intro-acena 1.2s ease-in-out .9s both }
+@media (min-width: 700px) and (min-height: 480px) {
+  .intro-in { grid-template-columns: auto auto; gap: 40px; text-align: left }
+  .intro-mascote { height: min(56vh, 380px) }
+}
+.intro-logo { width: min(300px, 72vw); height: auto; animation: intro-logo .8s cubic-bezier(.2, .8, .2, 1) .3s both }
 .intro-anos { display: flex; align-items: baseline; gap: 10px; font-family: var(--font-d); font-weight: 700; line-height: 1 }
-.intro-num { font-size: clamp(64px, 20vw, 104px); letter-spacing: -.02em; animation: intro-pop .6s cubic-bezier(.3, 1.5, .5, 1) .65s both }
-.intro-txt { font-size: clamp(26px, 8vw, 40px); text-transform: uppercase; letter-spacing: .14em; animation: intro-desliza .5s ease-out .95s both }
-.intro-sub { font-size: 13px; letter-spacing: .3em; opacity: .8; position: relative; padding-top: 12px; animation: intro-surge .5s ease-out 1.25s both }
+.intro-num { font-size: clamp(56px, 16vw, 104px); letter-spacing: -.02em; animation: intro-pop .6s cubic-bezier(.3, 1.5, .5, 1) .95s both }
+.intro-txt { font-size: clamp(24px, 7vw, 40px); text-transform: uppercase; letter-spacing: .14em; animation: intro-desliza .5s ease-out 1.25s both }
+.intro-sub { font-size: 13px; letter-spacing: .3em; opacity: .8; position: relative; padding-top: 12px; animation: intro-surge .5s ease-out 1.55s both }
 .intro-sub::before { content: ""; position: absolute; top: 0; left: 50%; width: 120px; height: 2px; margin-left: -60px; background: currentColor; transform-origin: center;
-  animation: intro-linha .6s ease-out 1.1s both }
+  animation: intro-linha .6s ease-out 1.4s both }
+@keyframes intro-salta { from { opacity: 0; transform: translateY(60px) scale(.7) } to { opacity: 1; transform: none } }
+@keyframes intro-acena { 0%, 100% { transform: none } 30% { transform: rotate(-4deg) translateY(-6px) } 60% { transform: rotate(3deg) } }
 @keyframes intro-logo { from { opacity: 0; transform: scale(.82); filter: blur(6px) } to { opacity: 1; transform: none; filter: none } }
 @keyframes intro-pop { from { opacity: 0; transform: scale(.3) } to { opacity: 1; transform: none } }
 @keyframes intro-desliza { from { opacity: 0; transform: translateX(-16px) } to { opacity: 1; transform: none } }
@@ -306,5 +315,5 @@ html.sem-intro .intro { display: none }
 @keyframes intro-sai { to { opacity: 0; transform: scale(1.04); visibility: hidden; pointer-events: none } }
 @media (prefers-reduced-motion: reduce) {
   .intro { animation: intro-sai .3s linear 1.2s forwards }
-  .intro-logo, .intro-num, .intro-txt, .intro-sub, .intro-sub::before { animation: none }
+  .intro-mascote, .intro-logo, .intro-num, .intro-txt, .intro-sub, .intro-sub::before { animation: none }
 }
