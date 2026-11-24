@@ -4,7 +4,7 @@
   const VB0 = { x: 40, y: 15, w: 1972, h: 1865 }; // mesmo recorte do scripts/preparar-mapa.py
   const LOCAIS = {
     "palco-1": { nome: "Palco de ensaio 1", sub: "Ensaios da Artística Nível 2 · perto da coordenação", link: "/n2", rotulo: "Agendar ensaio N2" },
-    "palco-2": { nome: "Palco de ensaio 2", sub: "Ensaios da Artística Nível 1", link: "/n1", rotulo: "Agendar ensaio N1" },
+    "palco-2": { resumo: "Siga o corredor central até depois da última fileira, vire à esquerda e desça depois do Palco principal.", nome: "Palco de ensaio 2", sub: "Ensaios da Artística Nível 1", link: "/n1", rotulo: "Agendar ensaio N1" },
     "palco-principal": { nome: "Palco principal", sub: "Apresentações da Artística" },
     "arena-treino-n1": { nome: "Arena de treino N1", sub: "Treinos do Resgate Nível 1" },
     "arena-treino-n2": { nome: "Arena de treino N2", sub: "Treinos do Resgate Nível 2" },
@@ -25,17 +25,17 @@
       ["em frente à Arena oficial 3", 1185, 147], ["em frente à Arena oficial 2", 1421, 147], ["em frente à Arena oficial 1", 1657, 147]],
   };
   const ROTAS_LOCAIS = {
-    "palco-principal": { pts: [[1085, 1786], [1085, 1663], [787, 1663]], passos: ["Entre: o Palco principal fica logo à sua esquerda."] },
-    "palco-1": { pts: [[1085, 1786], [1085, 1663], [1266, 1663]], passos: ["Entre: o Palco de ensaio 1 fica logo à sua direita, perto da Sala da coordenação."] },
+    "palco-principal": { resumo: "Logo à esquerda da entrada.", pts: [[1085, 1786], [1085, 1663], [787, 1663]], passos: ["Entre: o Palco principal fica logo à sua esquerda."] },
+    "palco-1": { resumo: "Logo à direita da entrada, perto da Sala da coordenação.", pts: [[1085, 1786], [1085, 1663], [1266, 1663]], passos: ["Entre: o Palco de ensaio 1 fica logo à sua direita, perto da Sala da coordenação."] },
     "palco-2": { pts: [[1085, 1786], [1085, 1500], [491, 1500], [491, 1663], [430, 1663]], passos: [
       "Entre e siga em frente pelo corredor central até passar a última fileira de mesas.",
       "Vire à esquerda e siga até depois do Palco principal.",
       "Desça pelo corredor: o Palco de ensaio 2 fica à sua esquerda."] },
-    "arena-treino-n1": { pts: [[1085, 1786], [1085, 986], [1204, 986], [1204, 780]], passos: [
+    "arena-treino-n1": { resumo: "Atravesse as 5 fileiras da Artística até o corredor largo e vire à direita.", pts: [[1085, 1786], [1085, 986], [1204, 986], [1204, 780]], passos: [
       "Entre e siga em frente pelo corredor central, atravessando a área da Artística.",
       "No corredor largo entre as duas áreas, vire à direita.",
       "A Arena de treino N1 fica logo à frente, entre as mesas do Resgate."] },
-    "arena-treino-n2": { pts: [[1085, 1786], [1085, 986], [613, 986], [613, 780]], passos: [
+    "arena-treino-n2": { resumo: "Atravesse as 5 fileiras da Artística até o corredor largo, vire à esquerda e suba entre as mesas 87 e 88.", pts: [[1085, 1786], [1085, 986], [613, 986], [613, 780]], passos: [
       "Entre e siga em frente pelo corredor central, atravessando a área da Artística.",
       "No corredor largo entre as duas áreas, vire à esquerda.",
       "Suba entre as mesas 87 e 88: a Arena de treino N2 fica logo à frente."] },
@@ -73,14 +73,42 @@
       return s;
     }
     const ax = r.ax, X = R.X;
-    let faixa;
-    if (ax < X[0]) faixa = "pela lateral esquerda do salão, depois da mesa 68";
-    else if (ax > X[14]) faixa = "pela lateral direita do salão, depois da mesa 146";
-    else { const i = Math.round((ax - X[0] - 59.45) / 118.9); faixa = `entre as mesas ${R.r6[i]} e ${R.r6[i + 1]}`; }
+    const faixa = ax < X[0] ? "pela lateral esquerda do salão, depois da mesa 68"
+      : ax > X[14] ? "pela lateral direita do salão, depois da mesa 146" : faixaDe(ax);
     if (Math.abs(ax - R.ex) < 2) s.push(`Continue em frente ${faixa}.`);
     else s.push(`No corredor largo entre as duas áreas, vire à ${ax < R.ex ? "esquerda" : "direita"} e suba ${faixa}.`);
     s.push(`Siga até a mesa ${n}, à ${ax < t.x ? "direita" : "esquerda"} do corredor.`);
     return s;
+  }
+
+  // Passagem (vertical) usada no fundo do salão, em texto curto.
+  function faixaDe(ax) {
+    const X = R.X;
+    if (ax < X[0]) return "pela lateral esquerda do salão";
+    if (ax > X[14]) return "pela lateral direita do salão";
+    const i = Math.round((ax - X[0] - 59.45) / 118.9);
+    return `entre as mesas ${R.r6[i]} e ${R.r6[i + 1]}`;
+  }
+
+  const ord = (n) => n + "ª";
+  const plural = (n, s, p) => n + " " + (n === 1 ? s : p);
+
+  // Resumo: quantas fileiras contar e qual mesa da fileira.
+  function resumoMesa(t, r) {
+    const lado = t.x < R.ex - 60 ? "esquerda" : t.x > R.ex + 60 ? "direita" : null;
+    if (t.y > R.ymain) {
+      // fileiras que aparecem ao lado do corredor central, contando da entrada
+      const fileira = [...R.bot].reverse().indexOf(t.y) + 1; // 0 = fileira avulsa antes da 1ª (mesas 22, 16, 10)
+      const naFileira = mesasPos.filter((m) => Math.abs(m.y - t.y) < 2 && (lado === "esquerda" ? m.x <= R.ex && m.x >= t.x - 1 : m.x >= R.ex && m.x <= t.x + 1)).length;
+      if (!lado) return `Siga ${plural(fileira, "fileira", "fileiras")} pelo corredor central: a mesa fica colada ao corredor.`;
+      if (fileira === 0) return `Logo depois de entrar, vire à ${lado} antes da 1ª fileira: é a ${ord(naFileira)} mesa.`;
+      return `Conte ${plural(fileira, "fileira", "fileiras")} a partir da entrada e vire à ${lado}: é a ${ord(naFileira)} mesa da fileira.`;
+    }
+    const artistica = R.bot.length;
+    if (r.frente) return `Atravesse as ${artistica} fileiras da Artística até o corredor largo e vire à ${lado || (t.x < R.ex ? "esquerda" : "direita")}: a mesa está na 1ª fileira do Resgate, de frente para o corredor.`;
+    const fileiras = new Set(mesasPos.filter((m) => m.y < R.ymain && m.y >= t.y - 1 && Math.abs(Math.abs(m.x - r.ax) - 59.45) < 3).map((m) => m.y)).size;
+    const vira = Math.abs(r.ax - R.ex) < 2 ? "siga em frente" : `vire à ${r.ax < R.ex ? "esquerda" : "direita"}, suba ${faixaDe(r.ax)}`;
+    return `Atravesse as ${artistica} fileiras da Artística até o corredor largo, ${vira} e conte ${plural(fileiras, "fileira", "fileiras")}: a mesa fica à ${r.ax < t.x ? "direita" : "esquerda"}.`;
   }
 
   function referencia(t) {
@@ -109,7 +137,7 @@
     animarPara(ajustarAspecto(v));
   }
 
-  let svg = null, equipes = [], porMesa = {}, vb = { ...VB0 }, anim = 0;
+  let svg = null, equipes = [], porMesa = {}, vb = { ...VB0 }, anim = 0, mesasPos = [];
 
   /* ---------- viewBox: zoom e arrastar ---------- */
   const tam = () => ({ w: stage.clientWidth || 1, h: stage.clientHeight || 1 });
@@ -222,6 +250,24 @@
   $("zout").addEventListener("click", () => { const { w, h } = tam(); zoomEm(1 / 1.5, w / 2, h / 2); });
   $("zfit").addEventListener("click", () => { limparDestaque(); verTudo(); });
 
+  const btnExp = $("zexp");
+  function marcarExpandido(on) {
+    document.body.classList.toggle("expandido", on);
+    btnExp.setAttribute("aria-pressed", String(on));
+    btnExp.setAttribute("aria-label", on ? "Sair da tela cheia" : "Expandir mapa");
+    btnExp.textContent = on ? "⤡" : "⤢";
+    requestAnimationFrame(() => aplicar(ajustarAspecto(vb)));
+  }
+  btnExp.addEventListener("click", () => {
+    const on = !document.body.classList.contains("expandido");
+    marcarExpandido(on);
+    try {
+      if (on && document.documentElement.requestFullscreen && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+      if (!on && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    } catch (e) {}
+  });
+  document.addEventListener("fullscreenchange", () => { if (!document.fullscreenElement && document.body.classList.contains("expandido")) marcarExpandido(false); });
+
   let resizeT;
   addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => aplicar(ajustarAspecto(vb)), 80); });
 
@@ -246,7 +292,7 @@
     svg.appendChild(pulso);
     const mm = id.match(/^mesa-(\d+)$/);
     let rota = null;
-    if (mm) { const t = { x, y }; const r = rotaMesa(t); rota = { pts: r.pts, passos: passosMesa(t, Number(mm[1]), r), onde: (y > R.ymain ? "Perto da entrada" : "Fundo do salão") + " · " + referencia(t) }; }
+    if (mm) { const t = { x, y }; const r = rotaMesa(t); rota = { pts: r.pts, resumo: resumoMesa(t, r), passos: passosMesa(t, Number(mm[1]), r), onde: (y > R.ymain ? "Perto da entrada" : "Fundo do salão") + " · " + referencia(t) }; }
     else if (ROTAS_LOCAIS[id]) rota = ROTAS_LOCAIS[id];
     if (rota) { desenharRota(rota.pts); enquadrar([...rota.pts, [x, y - 60]]); }
     else if (mover) focar(x, y, g.dataset.w ? 700 : 520);
@@ -287,10 +333,20 @@
       info.append(titulo, sub);
     } else return;
     if (rota) {
-      if (rota.onde) { const o = document.createElement("p"); o.className = "onde"; o.textContent = rota.onde; info.append(o); }
+      if (rota.resumo) {
+        const rs = document.createElement("p"); rs.className = "resumo";
+        const b = document.createElement("b"); b.textContent = "Resumo: ";
+        rs.append(b, document.createTextNode(rota.resumo));
+        info.append(rs);
+      }
+      const det = document.createElement("details"); det.className = "detalhes";
+      const sm = document.createElement("summary"); sm.textContent = "Ver passo a passo";
+      det.append(sm);
+      if (rota.onde) { const o = document.createElement("p"); o.className = "onde"; o.textContent = rota.onde; det.append(o); }
       const ol = document.createElement("ol"); ol.className = "passos";
       for (const p of rota.passos) { const li = document.createElement("li"); li.textContent = p; ol.append(li); }
-      info.append(ol);
+      det.append(ol);
+      info.append(det);
     }
     info.hidden = false;
   }
@@ -366,6 +422,7 @@
     const doc = new DOMParser().parseFromString(texto, "image/svg+xml");
     svg = document.importNode(doc.documentElement, true);
     stage.prepend(svg);
+    mesasPos = [...svg.querySelectorAll(".mesa")].map((g) => ({ x: Number(g.dataset.x), y: Number(g.dataset.y) }));
     irParaHash();
   }).catch(() => {
     const p = document.createElement("p"); p.className = "empty";

@@ -240,3 +240,20 @@ body.mapa-page { height: 100dvh; display: flex; flex-direction: column; overflow
 
 /* No celular o cartão de orientações cobre o mapa: fica só a rota animada e o destaque. */
 @media (max-width: 700px) { .stage .info { display: none !important } }
+
+/* ---------- mapa: resumo e tela cheia ---------- */
+.info .resumo { margin: 8px 0 0; padding: 8px 10px; border-radius: 8px; background: #FDE6EE; color: #261A1C; font-size: 14px; line-height: 1.4 }
+.info .resumo b { color: #B81C4B }
+.info .detalhes { margin-top: 8px }
+.info .detalhes summary { cursor: pointer; font-size: 13px; font-weight: 600; color: #7A1C1C }
+.zoom button.exp { background: #7A1C1C; color: #FFFFFF; border-color: #7A1C1C; font-size: 20px }
+body.expandido .mapa-top { display: none }
+/* Tablet e telas baixas: topo mais compacto */
+@media (max-width: 1100px), (max-height: 820px) {
+  .mapa-top { gap: 8px; padding-top: 8px; padding-bottom: 8px }
+  .mapa-top .topbar .logo { height: 26px }
+  .mapa-top .eyebrow { display: none }
+  .mapa-top h1 { font-size: 18px }
+  .mapa-top .search input { min-height: 42px; padding-top: 9px; padding-bottom: 9px }
+  .mapa-top .legend-map { display: none }
+}
