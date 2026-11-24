@@ -259,3 +259,52 @@ body.expandido .mapa-top { display: none }
 }
 .aviso { display: grid; gap: 8px; padding: 12px 14px; border-radius: var(--radius); background: var(--note); color: var(--note-ink); border-left: 4px solid currentColor; font-size: 14px; line-height: 1.45 }
 .aviso p { margin: 0 }
+
+/* ---------- menu por modalidade ---------- */
+.menu-wrap { max-width: 640px; padding-bottom: 40px }
+.hero-eyebrow { margin: 0; text-wrap: balance; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600 }
+.mod { display: grid; gap: 10px }
+.item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px 14px; padding: 14px 16px; min-height: 76px;
+  border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); color: var(--ink); text-decoration: none }
+.item .ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent) }
+.item .ico svg { width: 24px; height: 24px }
+.item-t { min-width: 0 }
+.item strong { display: block; font-family: var(--font-d); font-size: 17px }
+.item .sub { display: block; color: var(--muted); font-size: 13.5px }
+.item .go { color: var(--muted); font-size: 22px }
+.item.link:hover { border-color: var(--accent) }
+.item.off .ico { background: var(--off); color: var(--off-ink) }
+.pair { display: flex; gap: 8px }
+.pill { display: inline-grid; place-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--accent); color: var(--accent);
+  font-weight: 600; font-size: 14px; text-decoration: none; white-space: nowrap }
+.pill:hover { background: var(--accent-soft) }
+.pill.solid { background: var(--accent); color: var(--accent-ink) }
+.pill.solid:hover { background: var(--accent-strong); border-color: var(--accent-strong) }
+@media (max-width: 560px) {
+  .item .pair { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr }
+  .item .tag { grid-column: 2; justify-self: start }
+}
+
+/* ---------- abertura: OBR 20 anos ---------- */
+.intro { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 24px; background: #7A1C1C; color: #FFFFFF; cursor: pointer;
+  animation: intro-sai .55s ease-in 2.3s forwards }
+.intro.fora { animation: intro-sai .3s ease-in forwards }
+html.sem-intro .intro { display: none }
+.intro-in { display: grid; justify-items: center; gap: 10px; text-align: center }
+.intro-logo { width: min(300px, 72vw); height: auto; animation: intro-logo .8s cubic-bezier(.2, .8, .2, 1) both }
+.intro-anos { display: flex; align-items: baseline; gap: 10px; font-family: var(--font-d); font-weight: 700; line-height: 1 }
+.intro-num { font-size: clamp(64px, 20vw, 104px); letter-spacing: -.02em; animation: intro-pop .6s cubic-bezier(.3, 1.5, .5, 1) .65s both }
+.intro-txt { font-size: clamp(26px, 8vw, 40px); text-transform: uppercase; letter-spacing: .14em; animation: intro-desliza .5s ease-out .95s both }
+.intro-sub { font-size: 13px; letter-spacing: .3em; opacity: .8; position: relative; padding-top: 12px; animation: intro-surge .5s ease-out 1.25s both }
+.intro-sub::before { content: ""; position: absolute; top: 0; left: 50%; width: 120px; height: 2px; margin-left: -60px; background: currentColor; transform-origin: center;
+  animation: intro-linha .6s ease-out 1.1s both }
+@keyframes intro-logo { from { opacity: 0; transform: scale(.82); filter: blur(6px) } to { opacity: 1; transform: none; filter: none } }
+@keyframes intro-pop { from { opacity: 0; transform: scale(.3) } to { opacity: 1; transform: none } }
+@keyframes intro-desliza { from { opacity: 0; transform: translateX(-16px) } to { opacity: 1; transform: none } }
+@keyframes intro-surge { from { opacity: 0 } to { opacity: .8 } }
+@keyframes intro-linha { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+@keyframes intro-sai { to { opacity: 0; transform: scale(1.04); visibility: hidden; pointer-events: none } }
+@media (prefers-reduced-motion: reduce) {
+  .intro { animation: intro-sai .3s linear 1.2s forwards }
+  .intro-logo, .intro-num, .intro-txt, .intro-sub, .intro-sub::before { animation: none }
+}
