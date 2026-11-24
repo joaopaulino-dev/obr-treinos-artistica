@@ -57,7 +57,7 @@ As tabelas (`reservas`, `grade`, `creditos_extra`, `meta`) são criadas sozinhas
 
 1. Importe este repositório na Vercel (Add New, Project). Pode deixar o framework como **Other**: não há etapa de build.
 2. Na aba **Storage** do projeto, adicione um banco **Neon** na região **São Paulo (aws sa-east-1)**, a mesma das funções (`gru1`, definida no `vercel.json`). A integração cria a variável `DATABASE_URL` sozinha. Se preferir usar um banco Neon que já existe, cadastre `DATABASE_URL` à mão com a connection string em modo pooled.
-3. Em **Settings > Environment Variables**, cadastre `ADMIN_PASSWORD` (senha da coordenação) e `MASTER_PASSWORD` (senha master, só para zerar reservas).
+3. Em **Settings > Environment Variables**, cadastre `ADMIN_PASSWORD` (senha da coordenação). `MASTER_PASSWORD` é opcional: se existir, passa a ser a senha exigida para zerar reservas.
 4. Faça o deploy. Depois abra `/n1` e `/n2` para conferir.
 
 ## Coordenação
@@ -84,7 +84,7 @@ A coordenação alterna entre Hoje e Amanhã no topo da grade e pode reservar em
 
 ## Zerar as reservas do dia
 
-No modo coordenação, o bloco **Zerar reservas do dia** apaga todas as reservas do nível no dia selecionado (por exemplo, ao fim do dia). Ele exige a senha master, cadastrada na Vercel como `MASTER_PASSWORD`. Sem essa variável, o botão avisa que ela não está configurada.
+No modo coordenação, o bloco **Zerar reservas do dia** apaga todas as reservas do nível no dia selecionado (por exemplo, ao fim do dia). Para confirmar, a coordenação digita a senha de novo: vale a `ADMIN_PASSWORD` ou, se existir, uma senha separada em `MASTER_PASSWORD`.
 
 ## Rodar localmente
 
