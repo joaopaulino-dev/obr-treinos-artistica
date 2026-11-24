@@ -257,3 +257,5 @@ body.expandido .mapa-top { display: none }
   .mapa-top .search input { min-height: 42px; padding-top: 9px; padding-bottom: 9px }
   .mapa-top .legend-map { display: none }
 }
+.aviso { display: grid; gap: 8px; padding: 12px 14px; border-radius: var(--radius); background: var(--note); color: var(--note-ink); border-left: 4px solid currentColor; font-size: 14px; line-height: 1.45 }
+.aviso p { margin: 0 }

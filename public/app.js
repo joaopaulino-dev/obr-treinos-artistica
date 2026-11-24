@@ -42,7 +42,7 @@
   const cred = (n) => n + (n === 1 ? " crédito" : " créditos");
   const passou = (s) => state.cfg.agoraMin != null && s * g().duracaoMin < state.cfg.agoraMin;
   // Repescagem (lib/regras.js): quem já treinou tudo pode pegar o próximo horário livre.
-  const proximo = () => state.cfg.agoraMin == null ? null : Math.ceil(state.cfg.agoraMin / g().duracaoMin);
+  const proximo = () => state.cfg.agoraMin == null ? null : Math.floor(state.cfg.agoraMin / g().duracaoMin) + 1;
   const jaTreinou = (e) => {
     const meus = state.reservas.filter((r) => r.equipe === e);
     return state.cfg.agoraMin != null && meus.length > 0 && meus.every((r) => (r.slot + 1) * g().duracaoMin <= state.cfg.agoraMin);
