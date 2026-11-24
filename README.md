@@ -69,6 +69,10 @@ Abra `/n1?coordenacao` ou `/n2?coordenacao` e digite a senha (`ADMIN_PASSWORD`).
 - **Grade deste dia:** equipes por slot, créditos por equipe (em branco = automático), início e fim. Não deixa encolher a grade se houver reservas fora dela ou acima da nova lotação.
 - **Créditos extras:** soma créditos a uma equipe naquele dia (0 remove).
 
+## Folha A4 de QR codes
+
+`divulgacao/qr-codes-A4.pdf` traz o logo da OBR 2026 e QR codes para agendar ensaio (N1 e N2), mapa, cronograma, material e o portal, além do aviso de desclassificação e da regra das 18h. Para gerar de novo: `python3 scripts/gerar-qr-a4.py` (precisa de `reportlab`; a versão 4.0.9 roda no Python 3.9).
+
 ## Atualizar o mapa ou as equipes
 
 Edite `fontes/mapa-mesas.svg` ou `fontes/equipes.csv` e rode `python3 scripts/preparar-mapa.py`. O script confere que existem as 152 mesas e os palcos antes de gravar.
