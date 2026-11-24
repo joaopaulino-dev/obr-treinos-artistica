@@ -3,7 +3,7 @@
 Portal público com três entradas no menu principal (`/`):
 
 - **Mapa da OBR** (`/mapa`): as 152 mesas (Artística e Resgate), palcos e arenas. Tem busca por equipe ou número da mesa, zoom com pinça e arrastar, atalhos para os palcos e o PDF A4. O link `/mapa#mesa-23` (ou `#palco-1`) abre direto no local, útil para QR codes.
-- Ao escolher uma mesa, palco ou arena, o mapa anima o **caminho a partir da entrada** (entre o Palco principal e o Palco de ensaio 1) e mostra o passo a passo.
+- Ao escolher uma mesa, palco ou arena, o mapa anima o **caminho a partir da entrada** (entre o Palco principal e o Palco de ensaio 1, no corredor ao lado da mesa 22) e mostra o passo a passo.
 - **Material e informações das categorias** (`/materiais`): cronogramas (Artística N1 e N2), manuais e regras oficiais da etapa Nacional 2026 de Artística e Resgate, com links para o site da OBR.
 - **Ensaios Nível 1** e **Ensaios Nível 2**: agendamento dos palcos de ensaio da Artística.
 

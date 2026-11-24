@@ -13,30 +13,32 @@
 
   /* ---------- rotas a partir da entrada (mesma lógica do Guia de Mesas) ---------- */
   const R = {
-    ex: 1085, ey: 1786, ymain: 986,
+    ex: 1204.5, ey: 1786, ymain: 986,
     arenas: [[506, 595, 720, 770], [1100, 595, 1309, 770]],
     X: [194.0, 312.9, 431.8, 550.7, 669.6, 788.5, 907.4, 1026.3, 1145.2, 1264.1, 1383.0, 1501.9, 1620.8, 1739.7, 1858.6],
     r6: [68, 75, 80, 87, 88, 89, 94, 101, 108, 113, 118, 125, 132, 139, 146],
-    c7: [37, 36, 35, 34, 33], c8: [32, 31, 30, 29, 28],
+    // colunas coladas ao corredor da entrada, por fileira (y): à esquerda (mesas 32–28) e à direita (27–22)
+    esq: { 1059: 32, 1151: 31, 1243: 30, 1335: 29, 1427: 28 }, dir: { 1059: 27, 1151: 26, 1243: 25, 1335: 24, 1427: 23, 1519: 22 },
     bot: [1059, 1151, 1243, 1335, 1427],
+    filas: [1519, 1427, 1335, 1243, 1151, 1059], // fileiras da Artística, na ordem em que aparecem a partir da entrada
     land: [["perto do Palco de ensaio 2", 313, 1663], ["perto do Palco principal", 670, 1663], ["perto do Palco de ensaio 1", 1383, 1663],
       ["perto da Arena de treino N2", 613, 682], ["perto da Arena de treino N1", 1204, 682], ["perto da Sala da coordenação", 1693, 1365],
       ["em frente à Arena oficial 6", 477, 147], ["em frente à Arena oficial 5", 713, 147], ["em frente à Arena oficial 4", 949, 147],
       ["em frente à Arena oficial 3", 1185, 147], ["em frente à Arena oficial 2", 1421, 147], ["em frente à Arena oficial 1", 1657, 147]],
   };
   const ROTAS_LOCAIS = {
-    "palco-principal": { resumo: "Logo à esquerda da entrada.", pts: [[1085, 1786], [1085, 1663], [787, 1663]], passos: ["Entre: o Palco principal fica logo à sua esquerda."] },
-    "palco-1": { resumo: "Logo à direita da entrada, perto da Sala da coordenação.", pts: [[1085, 1786], [1085, 1663], [1266, 1663]], passos: ["Entre: o Palco de ensaio 1 fica logo à sua direita, perto da Sala da coordenação."] },
-    "palco-2": { pts: [[1085, 1786], [1085, 1500], [491, 1500], [491, 1663], [430, 1663]], passos: [
-      "Entre e siga em frente pelo corredor central até passar a última fileira de mesas.",
-      "Vire à esquerda e siga até depois do Palco principal.",
-      "Desça pelo corredor: o Palco de ensaio 2 fica à sua esquerda."] },
-    "arena-treino-n1": { resumo: "Atravesse as 5 fileiras da Artística até o corredor largo e vire à direita.", pts: [[1085, 1786], [1085, 986], [1204, 986], [1204, 780]], passos: [
-      "Entre e siga em frente pelo corredor central, atravessando a área da Artística.",
-      "No corredor largo entre as duas áreas, vire à direita.",
+    "palco-principal": { resumo: "Logo à esquerda da entrada.", pts: [[1204.5, 1786], [1204.5, 1663], [787, 1663]], passos: ["Entre: o Palco principal fica logo à sua esquerda."] },
+    "palco-1": { resumo: "Logo à direita da entrada, perto da Sala da coordenação.", pts: [[1204.5, 1786], [1204.5, 1663], [1266, 1663]], passos: ["Entre: o Palco de ensaio 1 fica logo à sua direita, perto da Sala da coordenação."] },
+    "palco-2": { resumo: "Entre, vire à esquerda antes das mesas e passe em frente ao Palco principal: o Palco de ensaio 2 é o seguinte.", pts: [[1204.5, 1786], [1204.5, 1500], [491, 1500], [491, 1663], [430, 1663]], passos: [
+      "Entre e avance um pouco pelo corredor, até a altura da mesa 22 (à sua direita).",
+      "Vire à esquerda e siga passando em frente ao Palco principal.",
+      "Depois do Palco principal, desça: o Palco de ensaio 2 fica à sua esquerda."] },
+    "arena-treino-n1": { resumo: "Siga sempre em frente pelo corredor, atravessando as 6 fileiras da Artística e o corredor largo.", pts: [[1204.5, 1786], [1204.5, 780]], passos: [
+      "Entre e siga em frente pelo corredor, entre as mesas 28 e 23, atravessando a área da Artística.",
+      "Atravesse o corredor largo entre as duas áreas.",
       "A Arena de treino N1 fica logo à frente, entre as mesas do Resgate."] },
-    "arena-treino-n2": { resumo: "Atravesse as 5 fileiras da Artística até o corredor largo, vire à esquerda e suba entre as mesas 87 e 88.", pts: [[1085, 1786], [1085, 986], [613, 986], [613, 780]], passos: [
-      "Entre e siga em frente pelo corredor central, atravessando a área da Artística.",
+    "arena-treino-n2": { resumo: "Atravesse as 6 fileiras da Artística até o corredor largo, vire à esquerda e suba entre as mesas 87 e 88.", pts: [[1204.5, 1786], [1204.5, 986], [613, 986], [613, 780]], passos: [
+      "Entre e siga em frente pelo corredor, entre as mesas 28 e 23, atravessando a área da Artística.",
       "No corredor largo entre as duas áreas, vire à esquerda.",
       "Suba entre as mesas 87 e 88: a Arena de treino N2 fica logo à frente."] },
   };
@@ -58,15 +60,15 @@
   function passosMesa(t, n, r) {
     const lado = t.x < R.ex - 60 ? "esquerda" : t.x > R.ex + 60 ? "direita" : null, s = [];
     if (t.y > R.ymain) {
-      s.push("Entre e siga em frente pelo corredor central.");
+      s.push("Entre e siga em frente pelo corredor da entrada.");
       if (lado) {
-        const i = R.bot.indexOf(t.y), col = lado === "esquerda" ? R.c7 : R.c8, ref = i >= 0 ? col[i] : col[col.length - 1];
-        s.push(i >= 0 ? `Na altura da mesa ${ref}, vire à ${lado}.` : `Passe a mesa ${ref} e vire à ${lado}.`);
+        const ref = (lado === "esquerda" ? R.esq : R.dir)[t.y];
+        s.push(ref ? `Na altura da mesa ${ref}, vire à ${lado}.` : `Na altura da mesa ${R.dir[t.y] || R.esq[t.y]}, vire à ${lado}.`);
         s.push(`Siga pela fileira até a mesa ${n}.`);
       } else s.push(`A mesa ${n} fica logo ao lado do corredor, à ${t.x < R.ex ? "esquerda" : "direita"}.`);
       return s;
     }
-    s.push("Entre e siga em frente pelo corredor central, atravessando a área da Artística.");
+    s.push("Entre e siga em frente pelo corredor da entrada, atravessando a área da Artística.");
     if (r.frente) {
       s.push(`No corredor largo entre as duas áreas, vire à ${lado || (t.x < R.ex ? "esquerda" : "direita")}.`);
       s.push(`A mesa ${n} fica na primeira fileira, de frente para esse corredor.`);
@@ -98,13 +100,12 @@
     const lado = t.x < R.ex - 60 ? "esquerda" : t.x > R.ex + 60 ? "direita" : null;
     if (t.y > R.ymain) {
       // fileiras que aparecem ao lado do corredor central, contando da entrada
-      const fileira = [...R.bot].reverse().indexOf(t.y) + 1; // 0 = fileira avulsa antes da 1ª (mesas 22, 16, 10)
+      const fileira = R.filas.indexOf(t.y) + 1; // 1 = fileira das mesas 22, 16, 10
       const naFileira = mesasPos.filter((m) => Math.abs(m.y - t.y) < 2 && (lado === "esquerda" ? m.x <= R.ex && m.x >= t.x - 1 : m.x >= R.ex && m.x <= t.x + 1)).length;
-      if (!lado) return `Siga ${plural(fileira, "fileira", "fileiras")} pelo corredor central: a mesa fica colada ao corredor.`;
-      if (fileira === 0) return `Logo depois de entrar, vire à ${lado} antes da 1ª fileira: é a ${ord(naFileira)} mesa.`;
+      if (!lado) return `Siga pelo corredor da entrada até a ${ord(fileira)} fileira: a mesa fica colada ao corredor, à ${t.x < R.ex ? "esquerda" : "direita"}.`;
       return `Conte ${plural(fileira, "fileira", "fileiras")} a partir da entrada e vire à ${lado}: é a ${ord(naFileira)} mesa da fileira.`;
     }
-    const artistica = R.bot.length;
+    const artistica = R.filas.length;
     if (r.frente) return `Atravesse as ${artistica} fileiras da Artística até o corredor largo e vire à ${lado || (t.x < R.ex ? "esquerda" : "direita")}: a mesa está na 1ª fileira do Resgate, de frente para o corredor.`;
     const fileiras = new Set(mesasPos.filter((m) => m.y < R.ymain && m.y >= t.y - 1 && Math.abs(Math.abs(m.x - r.ax) - 59.45) < 3).map((m) => m.y)).size;
     const vira = Math.abs(r.ax - R.ex) < 2 ? "siga em frente" : `vire à ${r.ax < R.ex ? "esquerda" : "direita"}, suba ${faixaDe(r.ax)}`;

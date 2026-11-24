@@ -77,13 +77,14 @@ svg = re.sub(r'<svg [^>]*>',
              'preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mapa das mesas da OBR 2026">',
              svg, count=1)
 corte = svg.find('<text x="60" y="1866" class="t">Legenda</text>')
-# Entrada do salão (fonte: guia de mesas): vão na parede de baixo, entre o Palco principal e o Palco de ensaio 1.
+# Entrada do salão: vão na parede de baixo, entre o Palco principal e o Palco de ensaio 1,
+# alinhada ao corredor entre as colunas das mesas 28 e 23 (à esquerda da mesa 22).
 ENTRADA = (
-    '<rect x="1025" y="1780" width="120" height="12" fill="#fff"/>'
-    '<g id="entrada" class="local" data-x="1085" data-y="1830" data-w="160" data-h="80">'
-    '<path d="M1085 1844 L1085 1800 M1069 1816 L1085 1800 L1101 1816" fill="none" stroke="#E0245E" '
+    '<rect x="1144.5" y="1780" width="120" height="12" fill="#fff"/>'
+    '<g id="entrada" class="local" data-x="1204.5" data-y="1830" data-w="160" data-h="80">'
+    '<path d="M1204.5 1844 L1204.5 1800 M1188.5 1816 L1204.5 1800 L1220.5 1816" fill="none" stroke="#E0245E" '
     'stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>'
-    '<text x="1085" y="1868" style="fill:#E0245E;font-family:-apple-system,Helvetica,Arial,sans-serif;'
+    '<text x="1204.5" y="1868" style="fill:#E0245E;font-family:-apple-system,Helvetica,Arial,sans-serif;'
     'font-size:24px;font-weight:800;letter-spacing:.12em;text-anchor:middle">ENTRADA</text></g>'
 )
 if corte != -1:
