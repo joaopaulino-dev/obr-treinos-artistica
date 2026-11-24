@@ -9,7 +9,7 @@
 
   const state = {
     cfg: null,           // resposta de /api/estado
-    dia: params.get("dia") || "",
+    dia: "",             // público: o servidor decide (hoje até 18h, depois amanhã); coordenação escolhe
     reservas: [],        // [{slot, equipe}]
     equipe: "",
     senha: "",
@@ -35,11 +35,13 @@
   const limite = (e) => g().creditos + ((state.cfg.extras || {})[e] || 0);
   const comMesa = (e) => e; // nomes das equipes aparecem sem o número da mesa
   const cred = (n) => n + (n === 1 ? " crédito" : " créditos");
+  const passou = (s) => state.cfg.agoraMin != null && s * g().duracaoMin < state.cfg.agoraMin;
 
   // Mesma regra do servidor (lib/regras.js), só para mostrar o que está bloqueado.
   function motivo(e, s) {
     const aqui = naquele(s);
     if (aqui.includes(e)) return "Já está neste horário";
+    if (passou(s)) return "Encerrado";
     if (aqui.length >= g().porSlot) return "Ocupado";
     if (usados(e) >= limite(e)) return "Sem créditos";
     if (state.reservas.some((r) => r.equipe === e && Math.abs(r.slot - s) === 1)) return "Seguido de outro treino";
@@ -70,7 +72,7 @@
   async function carregar() {
     try {
       const q = new URLSearchParams({ nivel: String(NIVEL) });
-      if (state.dia) q.set("dia", state.dia);
+      if (state.dia && state.admin) q.set("dia", state.dia);
       aplicar(await api("/api/estado?" + q));
       await carregarAuditoria();
     } catch (e) {
@@ -119,8 +121,22 @@
     $("mDur").textContent = "Cada slot dura " + gr.duracaoMin + " minutos";
     $("mCred").textContent = "cada equipe tem " + cred(gr.creditos) + " por dia";
 
+    const ehHoje = c.dia === c.dias[0].id;
+    $("dayInfo").hidden = false;
+    $("rAbre").textContent = "Dia seguinte abre às " + c.aberturaHora + "h";
+    $("mAbre").textContent = "Só é possível agendar para o dia seguinte após as " + c.aberturaHora + "h do dia vigente.";
+    if (state.admin && c.dia !== c.diaAtivo) {
+      $("dayLabel").textContent = "Coordenação: " + (ehHoje ? "hoje, " : "amanhã, ") + c.rotuloDia;
+      $("dayHint").textContent = "As equipes estão reservando para " + (c.diaAtivo === c.dias[0].id ? "hoje" : "amanhã") + ".";
+    } else {
+      $("dayLabel").textContent = "Reservas para " + (ehHoje ? "hoje, " : "amanhã, ") + c.rotuloDia;
+      $("dayHint").textContent = ehHoje
+        ? "As reservas para amanhã abrem hoje às " + c.aberturaHora + "h."
+        : "Abertas desde as " + c.aberturaHora + "h de hoje.";
+    }
+
     const dias = $("days");
-    dias.hidden = c.dias.length < 2;
+    dias.hidden = !state.admin;
     dias.replaceChildren(...c.dias.map((d) => {
       const b = el("button", "", d.rotulo); b.type = "button";
       b.setAttribute("aria-pressed", String(d.id === state.dia));
@@ -175,6 +191,8 @@
           if (state.admin) { c.type = "button"; c.dataset.ocupada = String(s); c.dataset.equipe = nome; c.title = "Mover ou liberar"; }
         } else if (state.admin) {
           c = el("button", "seat free", "Livre"); c.type = "button"; c.dataset.livreAdmin = String(s);
+        } else if (passou(s)) {
+          c = el("div", "seat off", "Encerrado");
         } else if (!e) {
           c = el("button", "seat free", "Livre"); c.type = "button"; c.dataset.reservar = String(s);
         } else {
@@ -291,6 +309,14 @@
         }));
     }
 
+    if (p.tipo === "admin-zerar") {
+      const n = state.reservas.length;
+      main.textContent = "Zerar " + (n === 1 ? "1 reserva" : n + " reservas") + " do Nível " + NIVEL + " em " + state.cfg.rotuloDia + "?";
+      sub.textContent = "Todas as reservas deste nível nesse dia serão apagadas. Não dá para desfazer.";
+      acts.replaceChildren(voltar, botao("Zerar reservas", "danger", () => executar(
+        () => admin("zerar", { master: p.master }), "Reservas de " + state.cfg.rotuloDia + " zeradas.")));
+    }
+
     if (p.tipo === "admin-liberar") {
       main.textContent = "Liberar o horário de " + p.equipe + " às " + ini(p.slot) + "?";
       sub.textContent = "A equipe recupera 1 crédito e o horário volta a ficar livre.";
@@ -357,6 +383,13 @@
       await carregarAuditoria();
       render();
     } catch (e) { toast(e.message, true); }
+  });
+
+  $("zerarForm").addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    state.pending = { tipo: "admin-zerar", master: $("master").value };
+    $("master").value = "";
+    renderSheet();
   });
 
   $("adminSair").addEventListener("click", () => { sairAdmin(); state.pending = null; render(); });

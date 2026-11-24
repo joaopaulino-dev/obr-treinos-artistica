@@ -6,6 +6,7 @@
 //   extra     { equipe, extra }              créditos extras de uma equipe no dia (0 remove)
 //   grade     { porSlot, creditosBase, inicioMin, fimMin }   ajusta a grade do dia (creditosBase null = automático)
 //   auditoria                                devolve as reservas com data/hora e origem (hash do aparelho)
+//   zerar     { master }                     apaga todas as reservas do nível no dia (exige MASTER_PASSWORD)
 import { validar, motivoBloqueio, erro, slotValido, inteiro } from "../lib/regras.js";
 import { comBanco, emTransacao, listarAuditoria } from "../lib/db.js";
 import { carregarDia, montarEstado, resolverGrade } from "../lib/grade.js";
@@ -49,6 +50,13 @@ const ACOES = {
         [p.nivel, p.dia, p.equipe, extra],
       );
     }
+  },
+
+  async zerar(client, b) {
+    if (!process.env.MASTER_PASSWORD) throw erro(409, "A senha master não está configurada. Cadastre MASTER_PASSWORD na Vercel.");
+    if (!senhaConfere(b.master, "MASTER_PASSWORD")) throw erro(403, "Senha master incorreta.");
+    const p = validar(b);
+    await client.query("DELETE FROM reservas WHERE nivel = $1 AND dia = $2", [p.nivel, p.dia]);
   },
 
   async grade(client, b, ctx) {

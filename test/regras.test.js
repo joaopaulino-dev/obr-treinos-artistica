@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { motivoBloqueio, validar } from "../lib/regras.js";
 import { resolverGrade, limiteDe } from "../lib/grade.js";
+import { agenda, rotulo, somarDias } from "../lib/dias.js";
 
 const r = (slot, equipe) => ({ slot, equipe });
 const linha = (o = {}) => ({ por_slot: 1, creditos_base: null, inicio_min: 480, fim_min: 1080, ...o });
@@ -63,9 +64,30 @@ test("bloqueia slots seguidos antes e depois, exceto forçando", () => {
 
 test("valida nível, dia, slot e equipe", () => {
   assert.throws(() => validar({ nivel: 3 }), /Nível inválido/);
-  assert.throws(() => validar({ nivel: 1, dia: "2026-12-01" }), /Dia não liberado/);
+  assert.throws(() => validar({ nivel: 1, dia: "2026-02-30" }), /Dia inválido/);
+  assert.equal(validar({ nivel: 1, dia: "2026-11-25" }).dia, "2026-11-25");
   assert.throws(() => validar({ nivel: 1, slot: 144 }, { exigeSlot: true }), /Horário inválido/);
   assert.equal(validar({ nivel: 1, slot: 143 }, { exigeSlot: true }).slot, 143);
   assert.throws(() => validar({ nivel: 1, slot: S, equipe: "The Tchukas" }, { exigeSlot: true, exigeEquipe: true }), /Equipe não encontrada/);
   assert.equal(validar({ nivel: "2", slot: "60", equipe: "The Tchukas" }, { exigeSlot: true, exigeEquipe: true }).slot, 60);
+});
+
+test("dia ativo: até 18h vale hoje, depois vale amanhã (horário de Natal)", () => {
+  const manha = agenda(new Date("2026-11-24T10:00:00-03:00"));
+  assert.equal(manha.hoje, "2026-11-24");
+  assert.equal(manha.ativo, "2026-11-24");
+  assert.equal(manha.agoraMin, 600);
+  const noite = agenda(new Date("2026-11-24T18:00:00-03:00"));
+  assert.equal(noite.ativo, "2026-11-25");
+  const virada = agenda(new Date("2026-11-30T23:30:00-03:00"));
+  assert.equal(virada.amanha, "2026-12-01");
+  assert.equal(rotulo("2026-11-24"), "Ter 24/11");
+  assert.equal(somarDias("2026-12-31", 1), "2027-01-01");
+});
+
+test("hoje: bloqueia horários que já começaram, exceto forçando", () => {
+  const c = { ...ctx(), agoraMin: 600 }; // 10:00
+  assert.equal(motivoBloqueio(c, "A", 59), "Esse horário já passou"); // 09:50
+  assert.equal(motivoBloqueio(c, "A", 60), null); // 10:00
+  assert.equal(motivoBloqueio(c, "A", 59, { forcar: true }), null);
 });

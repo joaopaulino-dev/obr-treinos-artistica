@@ -4,7 +4,7 @@ Portal público com três entradas no menu principal (`/`):
 
 - **Mapa da OBR** (`/mapa`): as 152 mesas (Artística e Resgate), palcos e arenas. Tem busca por equipe ou número da mesa, zoom com pinça e arrastar, atalhos para os palcos e o PDF A4. O link `/mapa#mesa-23` (ou `#palco-a`) abre direto no local, útil para QR codes.
 - Ao escolher uma mesa, palco ou arena, o mapa anima o **caminho a partir da entrada** (entre o Palco principal e o Palco de treino A) e mostra o passo a passo.
-- **Materiais** (`/materiais`): manuais e regras oficiais da OBR 2026 para Artística e Resgate (Nacional primeiro), com links para o site da OBR.
+- **Material e informações das categorias** (`/materiais`): manuais e regras oficiais da etapa Nacional 2026 de Artística e Resgate, com links para o site da OBR.
 - **Treinos Nível 1** e **Treinos Nível 2**: agendamento dos palcos de treino.
 
 ## Agendamento de treinos
@@ -57,7 +57,7 @@ As tabelas (`reservas`, `grade`, `creditos_extra`, `meta`) são criadas sozinhas
 
 1. Importe este repositório na Vercel (Add New, Project). Pode deixar o framework como **Other**: não há etapa de build.
 2. Na aba **Storage** do projeto, adicione um banco **Neon** na região **São Paulo (aws sa-east-1)**, a mesma das funções (`gru1`, definida no `vercel.json`). A integração cria a variável `DATABASE_URL` sozinha. Se preferir usar um banco Neon que já existe, cadastre `DATABASE_URL` à mão com a connection string em modo pooled.
-3. Em **Settings > Environment Variables**, cadastre `ADMIN_PASSWORD` com a senha da coordenação.
+3. Em **Settings > Environment Variables**, cadastre `ADMIN_PASSWORD` (senha da coordenação) e `MASTER_PASSWORD` (senha master, só para zerar reservas).
 4. Faça o deploy. Depois abra `/n1` e `/n2` para conferir.
 
 ## Coordenação
@@ -73,9 +73,18 @@ Abra `/n1?coordenacao` ou `/n2?coordenacao` e digite a senha (`ADMIN_PASSWORD`).
 
 Edite `fontes/mapa-mesas.svg` ou `fontes/equipes.csv` e rode `python3 scripts/preparar-mapa.py`. O script confere que existem as 152 mesas e os palcos antes de gravar.
 
-## Liberar mais dias (25 a 28/11)
+## Dia das reservas (qualquer dia)
 
-Em `lib/config.js`, descomente os dias desejados em `DIAS` e faça o push. Aparecem botões de dia no topo da grade, e cada dia tem seus próprios créditos.
+Não há lista fixa de dias. O dia é calculado no horário de Natal (`FUSO` e `HORA_ABERTURA` em `lib/config.js`):
+
+- até as 18h, as equipes reservam para **hoje**, e os horários que já começaram ficam bloqueados;
+- a partir das 18h, as equipes passam a reservar para **amanhã**.
+
+A coordenação alterna entre Hoje e Amanhã no topo da grade e pode reservar em qualquer horário.
+
+## Zerar as reservas do dia
+
+No modo coordenação, o bloco **Zerar reservas do dia** apaga todas as reservas do nível no dia selecionado (por exemplo, ao fim do dia). Ele exige a senha master, cadastrada na Vercel como `MASTER_PASSWORD`. Sem essa variável, o botão avisa que ela não está configurada.
 
 ## Rodar localmente
 

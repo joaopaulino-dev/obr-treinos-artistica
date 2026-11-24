@@ -26,7 +26,11 @@
     <a class="back" id="linkMapa" href="/mapa">Ver no mapa</a>
   </header>
 
-  <div class="days" id="days" role="group" aria-label="Dia"></div>
+  <div class="dayinfo" id="dayInfo" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+    <span><strong id="dayLabel">Reservas para hoje</strong><span class="sub" id="dayHint"></span></span>
+  </div>
+  <div class="days" id="days" role="group" aria-label="Dia" hidden></div>
   <div class="banner" id="banner" hidden></div>
 
   <section class="panel admin" id="admin" hidden aria-label="Coordenação">
@@ -72,6 +76,15 @@
         <button class="btn primary" type="submit">Salvar extras</button>
       </form>
 
+      <form id="zerarForm" class="admin-block zerar">
+        <h3>Zerar reservas do dia</h3>
+        <p class="hint">Apaga todas as reservas deste nível no dia selecionado acima, por exemplo ao fim do dia. Não dá para desfazer. Exige a senha master.</p>
+        <div class="fields">
+          <div class="wide"><label for="master">Senha master</label><input id="master" type="password" autocomplete="off" required></div>
+        </div>
+        <button class="btn danger" type="submit">Zerar reservas…</button>
+      </form>
+
       <button class="btn" id="adminSair" type="button">Sair da coordenação</button>
     </div>
   </section>
@@ -92,6 +105,7 @@
       <span id="rDur">Slots de 10 min</span>
       <span id="rCred">1 crédito por equipe</span>
       <span>Sem horários seguidos</span>
+      <span id="rAbre">Dia seguinte abre às 18h</span>
       <button class="linkbtn" type="button" id="verRegras">Ver regras</button>
     </div>
     <label class="toggle"><input type="checkbox" id="soLivres"> Só horários livres</label>
@@ -122,6 +136,7 @@
       <li><strong id="mDur">Cada slot dura 10 minutos</strong> e <span id="mCred">cada equipe tem 1 crédito por dia</span> (1 crédito = 1 slot).</li>
       <li><strong>Não vale reservar dois horários seguidos.</strong></li>
       <li><strong>Não há remarcação.</strong> Para trocar de horário, combine direto com outra equipe e avisem a coordenação.</li>
+      <li><strong id="mAbre">Só é possível agendar para o dia seguinte após as 18h do dia vigente.</strong> Antes disso, as reservas valem para o dia de hoje.</li>
       <li><strong>Confira seus horários</strong> depois de reservar. Se encontrar qualquer divergência, avise a coordenação da Artística.</li>
     </ol>
     <div class="legend">
