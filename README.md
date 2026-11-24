@@ -4,7 +4,7 @@ Portal público com três entradas no menu principal (`/`):
 
 - **Mapa da OBR** (`/mapa`): as 152 mesas (Artística e Resgate), palcos e arenas. Tem busca por equipe ou número da mesa, zoom com pinça e arrastar, atalhos para os palcos e o PDF A4. O link `/mapa#mesa-23` (ou `#palco-a`) abre direto no local, útil para QR codes.
 - Ao escolher uma mesa, palco ou arena, o mapa anima o **caminho a partir da entrada** (entre o Palco principal e o Palco de treino A) e mostra o passo a passo.
-- **Material e informações das categorias** (`/materiais`): manuais e regras oficiais da etapa Nacional 2026 de Artística e Resgate, com links para o site da OBR.
+- **Material e informações das categorias** (`/materiais`): cronogramas (Artística N1 e N2), manuais e regras oficiais da etapa Nacional 2026 de Artística e Resgate, com links para o site da OBR.
 - **Treinos Nível 1** e **Treinos Nível 2**: agendamento dos palcos de treino.
 
 ## Agendamento de treinos
@@ -75,7 +75,7 @@ Edite `fontes/mapa-mesas.svg` ou `fontes/equipes.csv` e rode `python3 scripts/pr
 
 ## Dia das reservas (qualquer dia)
 
-Não há lista fixa de dias. O dia é calculado no horário de Natal (`FUSO` e `HORA_ABERTURA` em `lib/config.js`):
+Não há lista fixa de dias. O dia é calculado no horário local do evento (João Pessoa/PB, UTC−3) (`FUSO` e `HORA_ABERTURA` em `lib/config.js`):
 
 - até as 18h, as equipes reservam para **hoje**, e os horários que já começaram ficam bloqueados;
 - a partir das 18h, as equipes passam a reservar para **amanhã**.

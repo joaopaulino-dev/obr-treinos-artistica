@@ -236,3 +236,4 @@ body.mapa-page { height: 100dvh; display: flex; flex-direction: column; overflow
 .dayinfo .sub { display: block; font-size: 13px; color: var(--muted) }
 .admin-block.zerar { border-top-color: var(--bad-line) }
 .admin-block.zerar h3 { color: var(--bad) }
+.pending { margin: 0; padding: 12px 14px; border-radius: var(--radius); border: 1px dashed var(--line); color: var(--muted); font-size: 14px }

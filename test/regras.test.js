@@ -72,7 +72,7 @@ test("valida nível, dia, slot e equipe", () => {
   assert.equal(validar({ nivel: "2", slot: "60", equipe: "The Tchukas" }, { exigeSlot: true, exigeEquipe: true }).slot, 60);
 });
 
-test("dia ativo: até 18h vale hoje, depois vale amanhã (horário de Natal)", () => {
+test("dia ativo: até 18h vale hoje, depois vale amanhã (horário de João Pessoa, UTC−3)", () => {
   const manha = agenda(new Date("2026-11-24T10:00:00-03:00"));
   assert.equal(manha.hoje, "2026-11-24");
   assert.equal(manha.ativo, "2026-11-24");

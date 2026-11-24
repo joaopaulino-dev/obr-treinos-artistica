@@ -6,6 +6,11 @@
   const NIVEL = Number(params.get("nivel") || (m && m[1]) || 1);
   const MODO_COORD = params.has("coordenacao");
   const AVISO_KEY = "obr-aviso-n" + NIVEL;
+  const CRONOGRAMA = {
+    1: "https://obr.robocup.org.br/wp-content/uploads/2026/11/Artistica-Cronograma-N1.pdf",
+    2: "https://obr.robocup.org.br/wp-content/uploads/2026/11/Artistica-Cronograma-N2.pdf",
+  };
+  if (CRONOGRAMA[NIVEL]) { $("linkCronograma").href = CRONOGRAMA[NIVEL]; $("linkCronograma").textContent = "Cronograma N" + NIVEL; }
 
   const state = {
     cfg: null,           // resposta de /api/estado
