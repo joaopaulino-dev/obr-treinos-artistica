@@ -33,6 +33,27 @@
   <div class="days" id="days" role="group" aria-label="Dia" hidden></div>
   <div class="banner" id="banner" hidden></div>
 
+  <section class="panel admin" id="agenda" hidden aria-label="Agendamento">
+    <div class="admin-head">
+      <h2>Agendamento de treinos</h2>
+      <div class="pair" role="group" aria-label="Nível">
+        <a class="pill" id="agN1" href="/agendar?nivel=1">Nível 1</a>
+        <a class="pill" id="agN2" href="/agendar?nivel=2">Nível 2</a>
+      </div>
+    </div>
+    <form id="agendaForm" class="admin-row">
+      <div>
+        <label for="senhaAgenda">Senha do agendamento</label>
+        <input id="senhaAgenda" type="password" autocomplete="current-password">
+      </div>
+      <button class="btn primary" type="submit">Entrar</button>
+    </form>
+    <div id="agendaTools" hidden class="admin-tools">
+      <p class="mine">Toque numa vaga <strong>livre</strong> para marcar o treino de uma equipe. Este acesso só cria reservas: para mover ou liberar um horário, procure a coordenação.</p>
+      <button class="btn" id="agendaSair" type="button">Sair do agendamento</button>
+    </div>
+  </section>
+
   <section class="panel admin" id="admin" hidden aria-label="Coordenação">
     <form id="adminForm" class="admin-row">
       <div>
@@ -89,7 +110,7 @@
     </div>
   </section>
 
-  <section class="teambar" aria-label="Sua equipe">
+  <section class="teambar" id="teambar" aria-label="Sua equipe">
     <div class="teambar-row">
       <select id="team" aria-label="Sua equipe"><option value="">Escolha a sua equipe…</option></select>
       <div class="credits" id="credits" hidden>

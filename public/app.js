@@ -5,6 +5,7 @@
   const m = location.pathname.match(/n([12])/);
   const NIVEL = Number(params.get("nivel") || (m && m[1]) || 1);
   const MODO_COORD = params.has("coordenacao");
+  const MODO_AGENDA = location.pathname.startsWith("/agendar"); // acesso limitado: só cria reservas, N1 e N2
   const AVISO_KEY = "obr-aviso-n" + NIVEL;
   const CRONOGRAMA = {
     1: "https://obr.robocup.org.br/wp-content/uploads/2026/11/Artistica-Cronograma-N1.pdf",
@@ -19,6 +20,8 @@
     equipe: "",
     senha: "",
     admin: false,
+    agenda: false,       // logado no agendamento limitado
+    senhaAgenda: "",
     auditoria: [],       // [{slot, equipe, criadoEm, origem}] (só coordenação)
     soLivres: false,
     pending: null,       // ação aberta na folha de baixo
@@ -29,6 +32,7 @@
 
   try { state.equipe = localStorage.getItem("obr-equipe-n" + NIVEL) || ""; } catch (e) {}
   try { state.senha = sessionStorage.getItem("obr-coord") || ""; } catch (e) {}
+  try { state.senhaAgenda = sessionStorage.getItem("obr-agenda") || ""; } catch (e) {}
 
   const hhmm = (min) => pad(Math.floor(min / 60)) + ":" + pad(min % 60);
   const g = () => state.cfg.grade;
@@ -69,6 +73,7 @@
   }
   const post = (caminho, corpo) => api(caminho, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo) });
   const admin = (acao, extra) => post("/api/admin", { senha: state.senha, acao, nivel: NIVEL, dia: state.dia, ...extra });
+  const agendaApi = (acao, extra) => post("/api/agenda", { senha: state.senhaAgenda, acao, nivel: NIVEL, dia: state.dia, ...extra });
 
   function aplicar(d) {
     state.cfg = d; state.dia = d.dia; state.reservas = d.reservas; state.erroCarga = "";
@@ -83,7 +88,7 @@
   async function carregar() {
     try {
       const q = new URLSearchParams({ nivel: String(NIVEL) });
-      if (state.dia && state.admin) q.set("dia", state.dia);
+      if (state.dia && (state.admin || state.agenda)) q.set("dia", state.dia);
       aplicar(await api("/api/estado?" + q));
       await carregarAuditoria();
     } catch (e) {
@@ -103,7 +108,7 @@
       toast(sucesso);
     } catch (e) {
       toast(e.message, true);
-      if (e.status === 401) { sairAdmin(); state.pending = null; }
+      if (e.status === 401) { if (MODO_AGENDA) sairAgenda(); else sairAdmin(); state.pending = null; }
       if (e.status === 409) { state.pending = null; carregar(); }
     } finally {
       state.busy = false; render();
@@ -121,10 +126,16 @@
     $("admin").hidden = !MODO_COORD;
     $("adminForm").hidden = state.admin;
     $("adminTools").hidden = !state.admin;
+    $("agenda").hidden = !MODO_AGENDA;
+    $("agendaForm").hidden = state.agenda;
+    $("agendaTools").hidden = !state.agenda;
+    $("teambar").hidden = MODO_AGENDA;
+    $("agN1").classList.toggle("solid", NIVEL === 1);
+    $("agN2").classList.toggle("solid", NIVEL === 2);
     if (!state.cfg) return;
     const c = state.cfg, gr = g();
     const palcoNum = c.palco.slice(-1);
-    document.title = "Ensaios Artística N" + NIVEL + " | OBR 2026";
+    document.title = (MODO_AGENDA ? "Agendamento" : "Ensaios Artística") + " N" + NIVEL + " | OBR 2026";
     $("titulo").textContent = "Nível " + NIVEL + " · " + c.palco;
     $("linkMapa").href = "/mapa#palco-" + palcoNum;
     $("rDur").textContent = "Slots de " + gr.duracaoMin + " min";
@@ -136,8 +147,8 @@
     $("dayInfo").hidden = false;
     $("rAbre").textContent = "Dia seguinte abre às " + c.aberturaHora + "h";
     $("mAbre").textContent = "Só é possível agendar para o dia seguinte após as " + c.aberturaHora + "h do dia vigente.";
-    if (state.admin && c.dia !== c.diaAtivo) {
-      $("dayLabel").textContent = "Coordenação: " + (ehHoje ? "hoje, " : "amanhã, ") + c.rotuloDia;
+    if ((state.admin || state.agenda) && c.dia !== c.diaAtivo) {
+      $("dayLabel").textContent = (state.admin ? "Coordenação: " : "Agendamento: ") + (ehHoje ? "hoje, " : "amanhã, ") + c.rotuloDia;
       $("dayHint").textContent = "As equipes estão reservando para " + (c.diaAtivo === c.dias[0].id ? "hoje" : "amanhã") + ".";
     } else {
       $("dayLabel").textContent = "Reservas para " + (ehHoje ? "hoje, " : "amanhã, ") + c.rotuloDia;
@@ -147,7 +158,7 @@
     }
 
     const dias = $("days");
-    dias.hidden = !state.admin;
+    dias.hidden = !(state.admin || state.agenda);
     dias.replaceChildren(...c.dias.map((d) => {
       const b = el("button", "", d.rotulo); b.type = "button";
       b.setAttribute("aria-pressed", String(d.id === state.dia));
@@ -202,6 +213,8 @@
           if (state.admin) { c.type = "button"; c.dataset.ocupada = String(s); c.dataset.equipe = nome; c.title = "Mover ou liberar"; }
         } else if (state.admin) {
           c = el("button", "seat free", "Livre"); c.type = "button"; c.dataset.livreAdmin = String(s);
+        } else if (state.agenda && !passou(s)) {
+          c = el("button", "seat free", "Livre"); c.type = "button"; c.dataset.livreAgenda = String(s);
         } else if (passou(s)) {
           c = el("div", "seat off", "Encerrado");
         } else if (!e) {
@@ -251,7 +264,7 @@
     // Aparelhos que reservaram para mais de uma equipe.
     const porOrigem = {};
     for (const r of state.auditoria) {
-      if (!r.origem || r.origem === "coordenacao") continue;
+      if (!r.origem || r.origem === "coordenacao" || r.origem === "agendamento") continue;
       (porOrigem[r.origem] = porOrigem[r.origem] || new Set()).add(r.equipe);
     }
     const suspeitos = Object.entries(porOrigem).filter(([, eqs]) => eqs.size > 1);
@@ -294,11 +307,29 @@
         "Reserva feita: " + ini(p.slot) + " para " + p.equipe + ".")));
     }
 
+    if (p.tipo === "agenda-livre") {
+      main.textContent = "Marcar " + ini(p.slot) + "–" + fim(p.slot) + " para uma equipe";
+      sub.textContent = "Reserva feita pelo agendamento. Depois de marcada, só a coordenação consegue mover ou liberar.";
+      const sel = el("select"); sel.setAttribute("aria-label", "Equipe");
+      sel.append(opcao("", "Escolha a equipe…", !p.equipe));
+      for (const t of state.cfg.equipes) sel.append(opcao(t.nome, t.nome, t.nome === p.equipe));
+      sel.addEventListener("change", () => { p.equipe = sel.value; });
+      const lab = el("label", "check"); const cb = el("input"); cb.type = "checkbox"; cb.checked = p.forcar;
+      cb.addEventListener("change", () => { p.forcar = cb.checked; });
+      lab.append(cb, document.createTextNode("Ignorar créditos e horários seguidos"));
+      campos.append(sel, lab);
+      acts.replaceChildren(voltar, botao("Marcar treino", "primary", () => {
+        if (!p.equipe) { toast("Escolha a equipe.", true); return; }
+        executar(() => agendaApi("reservar", { slot: p.slot, equipe: p.equipe, forcar: p.forcar }),
+          "Treino marcado: " + ini(p.slot) + " para " + p.equipe + ".");
+      }));
+    }
+
     if (p.tipo === "admin-ocupada") {
       main.textContent = comMesa(p.equipe) + " às " + ini(p.slot);
       const reg = state.auditoria.find((r) => r.slot === p.slot && r.equipe === p.equipe);
       sub.textContent = reg
-        ? "Reservada em " + fmtData(reg.criadoEm) + " · " + (reg.origem === "coordenacao" ? "pela coordenação" : reg.origem ? "aparelho " + reg.origem : "origem não registrada")
+        ? "Reservada em " + fmtData(reg.criadoEm) + " · " + (reg.origem === "coordenacao" ? "pela coordenação" : reg.origem === "agendamento" ? "pelo agendamento" : reg.origem ? "aparelho " + reg.origem : "origem não registrada")
         : "Mover ignora créditos e horários seguidos. Liberar devolve o crédito.";
       const sel = el("select"); sel.setAttribute("aria-label", "Mover para");
       sel.append(opcao("", "Mover para…", p.para == null));
@@ -342,6 +373,11 @@
     clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 4500);
   }
 
+  function sairAgenda() {
+    state.agenda = false; state.senhaAgenda = "";
+    try { sessionStorage.removeItem("obr-agenda"); } catch (e) {}
+  }
+
   function sairAdmin() {
     state.admin = false; state.senha = ""; state.auditoria = [];
     try { sessionStorage.removeItem("obr-coord"); } catch (e) {}
@@ -359,7 +395,7 @@
   dlg.addEventListener("cancel", () => { try { sessionStorage.setItem(AVISO_KEY, "1"); } catch (e) {} });
   let jaViu = false;
   try { jaViu = sessionStorage.getItem(AVISO_KEY) === "1"; } catch (e) {}
-  if (!jaViu && !MODO_COORD) abrirRegras();
+  if (!jaViu && !MODO_COORD && !MODO_AGENDA) abrirRegras();
 
   /* ---------- eventos ---------- */
   $("team").addEventListener("change", (ev) => {
@@ -376,6 +412,8 @@
     if (d.reservar !== undefined) {
       if (!state.equipe) { $("team").focus(); toast("Escolha a sua equipe antes de reservar."); return; }
       state.pending = { tipo: "reservar", slot: Number(d.reservar), equipe: state.equipe };
+    } else if (d.livreAgenda !== undefined) {
+      state.pending = { tipo: "agenda-livre", slot: Number(d.livreAgenda), equipe: "", forcar: false };
     } else if (d.livreAdmin !== undefined) {
       state.pending = { tipo: "admin-livre", slot: Number(d.livreAdmin), equipe: state.equipe || state.cfg.equipes[0].nome, forcar: false };
     } else if (d.ocupada !== undefined) {
@@ -403,6 +441,19 @@
     renderSheet();
   });
 
+  $("agendaForm").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const senha = $("senhaAgenda").value;
+    try {
+      await post("/api/agenda", { senha, acao: "entrar" });
+      state.senhaAgenda = senha; state.agenda = true; $("senhaAgenda").value = "";
+      try { sessionStorage.setItem("obr-agenda", senha); } catch (e) {}
+      render();
+    } catch (e) { toast(e.message, true); }
+  });
+
+  $("agendaSair").addEventListener("click", () => { sairAgenda(); state.pending = null; render(); });
+
   $("adminSair").addEventListener("click", () => { sairAdmin(); state.pending = null; render(); });
 
   $("gradeForm").addEventListener("submit", (ev) => {
@@ -423,6 +474,11 @@
     executar(() => admin("extra", { equipe, extra }), extra ? equipe + " agora tem +" + extra + " crédito" + (extra > 1 ? "s" : "") + " neste dia." : "Créditos extras removidos de " + equipe + ".");
   });
 
+  async function entrarAgendaSalva() {
+    if (!MODO_AGENDA || !state.senhaAgenda) return;
+    try { await post("/api/agenda", { senha: state.senhaAgenda, acao: "entrar" }); state.agenda = true; render(); } catch (e) { sairAgenda(); render(); }
+  }
+
   async function entrarComSenhaSalva() {
     if (!MODO_COORD || !state.senha) return;
     try { await post("/api/admin", { senha: state.senha, acao: "entrar" }); state.admin = true; await carregarAuditoria(); render(); } catch (e) { sairAdmin(); }
@@ -431,6 +487,7 @@
   render();
   carregar();
   entrarComSenhaSalva();
+  entrarAgendaSalva();
   setInterval(() => { if (document.visibilityState === "visible" && !state.busy && !state.pending) carregar(); }, 30000);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && !state.pending) carregar(); });
 })();

@@ -28,6 +28,10 @@
     {
       "source": "/n2",
       "destination": "/app.html"
+    },
+    {
+      "source": "/agendar",
+      "destination": "/app.html"
     }
   ],
   "headers": [
