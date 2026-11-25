@@ -44,6 +44,7 @@
         <span class="minha-nome"><strong id="minhaNome"></strong><span class="sub" id="minhaInfo"></span></span>
         <button type="button" class="linkbtn" id="minhaTrocar">Trocar</button>
       </div>
+      <div class="agenda" id="minhaAgenda" hidden></div>
       <ul class="minha-lista" id="minhaLista"></ul>
     </div>
   </section>
@@ -282,6 +283,40 @@
     }
 
     const pMesas = json("/mapa/equipes.json");
+
+    // Agenda da equipe na Artística (stand, entrevista, pôster, apresentações), dos PDFs de cronograma.
+    const pAgenda = json("/agenda-artistica.json");
+    const SEM = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+    const agoraIso = () => new Date().toLocaleString("sv-SE", { timeZone: "America/Fortaleza" }).replace(" ", "T").slice(0, 16);
+    const somaMin = (iso, m) => { const d = new Date(iso + ":00Z"); d.setUTCMinutes(d.getUTCMinutes() + m); return d.toISOString().slice(0, 16); };
+    const dia = (iso) => { const d = new Date(iso.slice(0, 10) + "T12:00:00Z"); return SEM[d.getUTCDay()] + " " + iso.slice(8, 10) + "/" + iso.slice(5, 7); };
+    const hora = (iso) => { const h = Number(iso.slice(11, 13)), m = iso.slice(14, 16); return m === "00" ? h + "h" : h + "h" + m; };
+    async function renderAgenda(e) {
+      const box = $("minhaAgenda");
+      const a = await pAgenda;
+      const nv = a && e.modalidade === "Artística" && a.niveis[e.nivel];
+      const t = nv && nv.equipes[e.nome];
+      if (!t) { box.hidden = true; return; }
+      const ev = [
+        { nome: "Stand", det: "nº " + t.stand, ini: nv.stand.ini, fim: nv.stand.fim },
+        { nome: "Entrevista", det: "", ini: t.entrevista, fim: somaMin(t.entrevista, 30) },
+        { nome: "Apresentação 1", ini: t.ap1, fim: somaMin(t.ap1, 8) },
+        { nome: "Pôster", det: "porta-banner nº " + t.poster, ini: nv.poster.ini, fim: nv.poster.fim },
+        { nome: "Apresentação 2", ini: t.ap2, fim: somaMin(t.ap2, 8) },
+      ].sort((x, y) => x.ini.localeCompare(y.ini));
+      const agora = agoraIso();
+      let marcouProx = false;
+      box.innerHTML = '<div class="agenda-h"><strong>Agenda da equipe</strong><a href="/materiais/pdf/apresentacoes-artistica-n' + e.nivel + '.pdf" target="_blank" rel="noopener">Cronograma completo</a></div><ol>' +
+        ev.map((x) => {
+          const fim = x.fim <= agora, ja = x.ini <= agora && !fim;
+          let st = "";
+          if (ja) { st = '<span class="ag-st on">agora</span>'; marcouProx = true; }
+          else if (!fim && !marcouProx) { st = '<span class="ag-st">próximo</span>'; marcouProx = true; }
+          const quando = dia(x.ini) + "<br>" + hora(x.ini) + (x.fim && (x.nome === "Stand" || x.nome === "Pôster") ? "–" + hora(x.fim) : "");
+          return `<li class="${fim ? "feito" : ""}${ja || st ? " destaque" : ""}"><span class="ag-q">${quando}</span><span class="ag-n"><b>${x.nome}</b>${x.det ? " · " + escH(x.det) : ""}</span>${st}</li>`;
+        }).join("") + "</ol>";
+      box.hidden = false;
+    }
     async function linhaMesa(e) {
       const l = await pMesas;
       const m = (l || []).find((x) => x.tipo === e.modalidade && x.equipe === e.nome);
@@ -299,6 +334,7 @@
       const lista = $("minhaLista");
       if (!lista.children.length) lista.innerHTML = '<li class="mi-load">Carregando…</li>';
       const art = e.modalidade === "Artística" && e.nivel;
+      renderAgenda(e);
       const linhas = await Promise.all([art ? linhaTreino(e) : "", art ? linhaSuperTeams(e) : "", linhaVotos(e), linhaMesa(e)]);
       if (escolhida()?.nome !== e.nome) return; // trocou de equipe enquanto carregava
       lista.innerHTML = linhas.join("");

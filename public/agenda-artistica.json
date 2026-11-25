@@ -1,0 +1,533 @@
+{
+ "fonte": "materiais/pdf/apresentacoes-artistica-n1.pdf e -n2.pdf",
+ "niveis": {
+  "1": {
+   "stand": {
+    "ini": "2026-11-25T14:00",
+    "fim": "2026-11-25T17:30"
+   },
+   "poster": {
+    "ini": "2026-11-27T09:00",
+    "fim": "2026-11-27T13:30"
+   },
+   "equipes": {
+    "Alfa Robóticos - Artística": {
+     "stand": 1,
+     "poster": 1,
+     "entrevista": "2026-11-25T09:00",
+     "ap1": "2026-11-26T14:00",
+     "ap2": "2026-11-27T15:54"
+    },
+    "APOIOBOT IMAGINARTE": {
+     "stand": 2,
+     "poster": 2,
+     "entrevista": "2026-11-25T09:30",
+     "ap1": "2026-11-26T14:08",
+     "ap2": "2026-11-27T16:02"
+    },
+    "BEEONIC": {
+     "stand": 3,
+     "poster": 3,
+     "entrevista": "2026-11-25T10:00",
+     "ap1": "2026-11-26T14:16",
+     "ap2": "2026-11-27T16:10"
+    },
+    "Cariacica Lego": {
+     "stand": 4,
+     "poster": 4,
+     "entrevista": "2026-11-25T10:30",
+     "ap1": "2026-11-26T14:24",
+     "ap2": "2026-11-27T16:18"
+    },
+    "CARIRITECH - DANCE": {
+     "stand": 5,
+     "poster": 5,
+     "entrevista": "2026-11-25T11:00",
+     "ap1": "2026-11-26T14:32",
+     "ap2": "2026-11-27T16:26"
+    },
+    "CAV NEO JAZZ": {
+     "stand": 6,
+     "poster": 6,
+     "entrevista": "2026-11-25T11:30",
+     "ap1": "2026-11-26T14:40",
+     "ap2": "2026-11-27T16:34"
+    },
+    "CILM - Labouré": {
+     "stand": 7,
+     "poster": 7,
+     "entrevista": "2026-11-26T09:00",
+     "ap1": "2026-11-26T14:48",
+     "ap2": "2026-11-27T16:42"
+    },
+    "Cyber Acalanto": {
+     "stand": 8,
+     "poster": 8,
+     "entrevista": "2026-11-26T09:30",
+     "ap1": "2026-11-26T14:56",
+     "ap2": "2026-11-27T16:50"
+    },
+    "Cyber Divas": {
+     "stand": 9,
+     "poster": 9,
+     "entrevista": "2026-11-26T10:00",
+     "ap1": "2026-11-26T15:04",
+     "ap2": "2026-11-27T16:58"
+    },
+    "Cyber Panthers": {
+     "stand": 10,
+     "poster": 10,
+     "entrevista": "2026-11-25T09:00",
+     "ap1": "2026-11-26T15:12",
+     "ap2": "2026-11-27T17:06"
+    },
+    "Cyber Rex": {
+     "stand": 11,
+     "poster": 11,
+     "entrevista": "2026-11-25T09:30",
+     "ap1": "2026-11-26T15:20",
+     "ap2": "2026-11-27T17:14"
+    },
+    "CZC Tech": {
+     "stand": 12,
+     "poster": 12,
+     "entrevista": "2026-11-25T10:00",
+     "ap1": "2026-11-26T15:28",
+     "ap2": "2026-11-27T17:22"
+    },
+    "DEMOLIDOR": {
+     "stand": 13,
+     "poster": 13,
+     "entrevista": "2026-11-25T10:30",
+     "ap1": "2026-11-26T15:36",
+     "ap2": "2026-11-27T17:30"
+    },
+    "Digital Dance": {
+     "stand": 14,
+     "poster": 14,
+     "entrevista": "2026-11-25T11:00",
+     "ap1": "2026-11-26T15:44",
+     "ap2": "2026-11-27T17:38"
+    },
+    "Engenheiros do Espetáculo": {
+     "stand": 15,
+     "poster": 15,
+     "entrevista": "2026-11-25T11:30",
+     "ap1": "2026-11-26T15:52",
+     "ap2": "2026-11-27T17:46"
+    },
+    "Equipe de Robótica Artística - Maravilha-SC": {
+     "stand": 16,
+     "poster": 16,
+     "entrevista": "2026-11-26T09:00",
+     "ap1": "2026-11-26T16:00",
+     "ap2": "2026-11-27T17:54"
+    },
+    "EXPOARTE ROBOTICS EFAF": {
+     "stand": 17,
+     "poster": 17,
+     "entrevista": "2026-11-26T09:30",
+     "ap1": "2026-11-26T16:08",
+     "ap2": "2026-11-27T18:02"
+    },
+    "FibraTech": {
+     "stand": 18,
+     "poster": 18,
+     "entrevista": "2026-11-26T10:00",
+     "ap1": "2026-11-26T16:16",
+     "ap2": "2026-11-27T18:10"
+    },
+    "GAROTAS DA SUCATA": {
+     "stand": 19,
+     "poster": 19,
+     "entrevista": "2026-11-25T09:00",
+     "ap1": "2026-11-26T16:24",
+     "ap2": "2026-11-28T09:00"
+    },
+    "Millennium Bots": {
+     "stand": 20,
+     "poster": 20,
+     "entrevista": "2026-11-25T09:30",
+     "ap1": "2026-11-26T16:32",
+     "ap2": "2026-11-28T09:08"
+    },
+    "OKÀN": {
+     "stand": 21,
+     "poster": 21,
+     "entrevista": "2026-11-25T10:00",
+     "ap1": "2026-11-26T16:40",
+     "ap2": "2026-11-28T09:16"
+    },
+    "PROTOCOLO MATRIX": {
+     "stand": 22,
+     "poster": 22,
+     "entrevista": "2026-11-25T10:30",
+     "ap1": "2026-11-26T16:48",
+     "ap2": "2026-11-28T09:24"
+    },
+    "RASTRO NOTURNO EVO": {
+     "stand": 23,
+     "poster": 23,
+     "entrevista": "2026-11-25T11:00",
+     "ap1": "2026-11-26T16:56",
+     "ap2": "2026-11-28T09:32"
+    },
+    "ROBOBROS": {
+     "stand": 24,
+     "poster": 24,
+     "entrevista": "2026-11-25T09:00",
+     "ap1": "2026-11-27T09:00",
+     "ap2": "2026-11-28T10:12"
+    },
+    "Robolokos": {
+     "stand": 25,
+     "poster": 25,
+     "entrevista": "2026-11-25T09:30",
+     "ap1": "2026-11-27T09:08",
+     "ap2": "2026-11-28T10:20"
+    },
+    "ROBOMAC": {
+     "stand": 26,
+     "poster": 26,
+     "entrevista": "2026-11-25T10:00",
+     "ap1": "2026-11-27T09:16",
+     "ap2": "2026-11-28T10:28"
+    },
+    "SESI TO Tucuna Vision": {
+     "stand": 27,
+     "poster": 27,
+     "entrevista": "2026-11-25T10:30",
+     "ap1": "2026-11-27T09:24",
+     "ap2": "2026-11-28T10:36"
+    },
+    "SESI TransformES": {
+     "stand": 28,
+     "poster": 28,
+     "entrevista": "2026-11-25T11:00",
+     "ap1": "2026-11-27T09:32",
+     "ap2": "2026-11-28T10:44"
+    },
+    "SOROBÓTICOS": {
+     "stand": 29,
+     "poster": 29,
+     "entrevista": "2026-11-25T11:30",
+     "ap1": "2026-11-27T09:40",
+     "ap2": "2026-11-28T10:52"
+    },
+    "Space Bots Explorer": {
+     "stand": 30,
+     "poster": 30,
+     "entrevista": "2026-11-26T09:00",
+     "ap1": "2026-11-27T09:48",
+     "ap2": "2026-11-28T11:00"
+    },
+    "Squad do Hamtaro": {
+     "stand": 31,
+     "poster": 31,
+     "entrevista": "2026-11-26T09:30",
+     "ap1": "2026-11-27T09:56",
+     "ap2": "2026-11-28T11:08"
+    },
+    "Stranger Things": {
+     "stand": 32,
+     "poster": 32,
+     "entrevista": "2026-11-26T10:00",
+     "ap1": "2026-11-27T10:04",
+     "ap2": "2026-11-28T11:16"
+    },
+    "Talentos da Tancredo": {
+     "stand": 33,
+     "poster": 33,
+     "entrevista": "2026-11-25T11:30",
+     "ap1": "2026-11-26T17:04",
+     "ap2": "2026-11-28T09:40"
+    },
+    "TECHTAIS": {
+     "stand": 34,
+     "poster": 34,
+     "entrevista": "2026-11-26T09:00",
+     "ap1": "2026-11-26T17:12",
+     "ap2": "2026-11-28T09:48"
+    },
+    "The Ducks": {
+     "stand": 35,
+     "poster": 35,
+     "entrevista": "2026-11-26T09:30",
+     "ap1": "2026-11-26T17:20",
+     "ap2": "2026-11-28T09:56"
+    },
+    "Twister": {
+     "stand": 36,
+     "poster": 36,
+     "entrevista": "2026-11-26T10:00",
+     "ap1": "2026-11-26T17:28",
+     "ap2": "2026-11-28T10:04"
+    }
+   }
+  },
+  "2": {
+   "stand": {
+    "ini": "2026-11-25T09:00",
+    "fim": "2026-11-25T12:30"
+   },
+   "poster": {
+    "ini": "2026-11-27T13:30",
+    "fim": "2026-11-27T18:00"
+   },
+   "equipes": {
+    "Alice no país das várias pilhas": {
+     "stand": 1,
+     "poster": 1,
+     "entrevista": "2026-11-25T14:00",
+     "ap1": "2026-11-27T10:12",
+     "ap2": "2026-11-28T11:24"
+    },
+    "Alien Bot": {
+     "stand": 2,
+     "poster": 2,
+     "entrevista": "2026-11-25T14:30",
+     "ap1": "2026-11-27T10:20",
+     "ap2": "2026-11-28T11:32"
+    },
+    "Andromeda": {
+     "stand": 3,
+     "poster": 3,
+     "entrevista": "2026-11-25T15:00",
+     "ap1": "2026-11-27T10:28",
+     "ap2": "2026-11-28T11:40"
+    },
+    "Anjos Robot": {
+     "stand": 4,
+     "poster": 4,
+     "entrevista": "2026-11-25T15:30",
+     "ap1": "2026-11-27T10:36",
+     "ap2": "2026-11-28T11:48"
+    },
+    "Armadillos": {
+     "stand": 5,
+     "poster": 5,
+     "entrevista": "2026-11-25T16:00",
+     "ap1": "2026-11-27T10:44",
+     "ap2": "2026-11-28T11:56"
+    },
+    "ATOS E EIXOS": {
+     "stand": 6,
+     "poster": 6,
+     "entrevista": "2026-11-25T16:30",
+     "ap1": "2026-11-27T10:52",
+     "ap2": "2026-11-28T12:04"
+    },
+    "CACTOS": {
+     "stand": 7,
+     "poster": 7,
+     "entrevista": "2026-11-26T10:30",
+     "ap1": "2026-11-27T11:00",
+     "ap2": "2026-11-28T12:12"
+    },
+    "Curto circuito": {
+     "stand": 8,
+     "poster": 8,
+     "entrevista": "2026-11-26T11:00",
+     "ap1": "2026-11-27T11:08",
+     "ap2": "2026-11-28T12:20"
+    },
+    "Cyber Olympians": {
+     "stand": 9,
+     "poster": 9,
+     "entrevista": "2026-11-26T11:30",
+     "ap1": "2026-11-27T11:16",
+     "ap2": "2026-11-28T12:28"
+    },
+    "Cyber Panthers Teens": {
+     "stand": 10,
+     "poster": 10,
+     "entrevista": "2026-11-25T14:00",
+     "ap1": "2026-11-27T11:24",
+     "ap2": "2026-11-28T13:30"
+    },
+    "Engenheiros do Açaí": {
+     "stand": 11,
+     "poster": 11,
+     "entrevista": "2026-11-25T14:30",
+     "ap1": "2026-11-27T11:32",
+     "ap2": "2026-11-28T13:38"
+    },
+    "Equipe CEFEsteam": {
+     "stand": 12,
+     "poster": 12,
+     "entrevista": "2026-11-25T15:00",
+     "ap1": "2026-11-27T11:40",
+     "ap2": "2026-11-28T13:46"
+    },
+    "Etnobóticos Íris": {
+     "stand": 13,
+     "poster": 13,
+     "entrevista": "2026-11-25T15:30",
+     "ap1": "2026-11-27T11:48",
+     "ap2": "2026-11-28T13:54"
+    },
+    "GUERREIRO ALAGOANO: A DANÇA QUE GANHA VIDA": {
+     "stand": 14,
+     "poster": 14,
+     "entrevista": "2026-11-25T16:00",
+     "ap1": "2026-11-27T11:56",
+     "ap2": "2026-11-28T14:02"
+    },
+    "Imagine Lego": {
+     "stand": 15,
+     "poster": 15,
+     "entrevista": "2026-11-25T16:30",
+     "ap1": "2026-11-27T12:04",
+     "ap2": "2026-11-28T14:10"
+    },
+    "KYRIOS": {
+     "stand": 16,
+     "poster": 16,
+     "entrevista": "2026-11-26T10:30",
+     "ap1": "2026-11-27T12:12",
+     "ap2": "2026-11-28T14:18"
+    },
+    "Lovelace": {
+     "stand": 17,
+     "poster": 17,
+     "entrevista": "2026-11-26T11:00",
+     "ap1": "2026-11-27T12:20",
+     "ap2": "2026-11-28T14:26"
+    },
+    "LYMM TECH": {
+     "stand": 18,
+     "poster": 18,
+     "entrevista": "2026-11-26T11:30",
+     "ap1": "2026-11-27T12:28",
+     "ap2": "2026-11-28T14:34"
+    },
+    "MAMONAS ANIMATRONICS": {
+     "stand": 19,
+     "poster": 19,
+     "entrevista": "2026-11-25T14:00",
+     "ap1": "2026-11-27T13:30",
+     "ap2": "2026-11-28T14:42"
+    },
+    "MegaRobert - Artística": {
+     "stand": 20,
+     "poster": 20,
+     "entrevista": "2026-11-25T14:30",
+     "ap1": "2026-11-27T13:38",
+     "ap2": "2026-11-28T14:50"
+    },
+    "Modern Times": {
+     "stand": 21,
+     "poster": 21,
+     "entrevista": "2026-11-25T15:00",
+     "ap1": "2026-11-27T13:46",
+     "ap2": "2026-11-28T14:58"
+    },
+    "Morpho Jackson": {
+     "stand": 22,
+     "poster": 22,
+     "entrevista": "2026-11-25T15:30",
+     "ap1": "2026-11-27T13:54",
+     "ap2": "2026-11-28T15:06"
+    },
+    "New Atom Art": {
+     "stand": 23,
+     "poster": 23,
+     "entrevista": "2026-11-25T16:00",
+     "ap1": "2026-11-27T14:02",
+     "ap2": "2026-11-28T15:14"
+    },
+    "o saber": {
+     "stand": 24,
+     "poster": 24,
+     "entrevista": "2026-11-25T16:30",
+     "ap1": "2026-11-27T14:10",
+     "ap2": "2026-11-28T15:22"
+    },
+    "PantaBots": {
+     "stand": 25,
+     "poster": 25,
+     "entrevista": "2026-11-26T10:30",
+     "ap1": "2026-11-27T14:18",
+     "ap2": "2026-11-28T15:30"
+    },
+    "Pardoboots Art": {
+     "stand": 26,
+     "poster": 26,
+     "entrevista": "2026-11-26T11:00",
+     "ap1": "2026-11-27T14:26",
+     "ap2": "2026-11-28T15:38"
+    },
+    "ROBOLIFE": {
+     "stand": 27,
+     "poster": 27,
+     "entrevista": "2026-11-26T11:30",
+     "ap1": "2026-11-27T14:34",
+     "ap2": "2026-11-28T15:46"
+    },
+    "Robot World Woman": {
+     "stand": 28,
+     "poster": 28,
+     "entrevista": "2026-11-25T14:00",
+     "ap1": "2026-11-27T14:42",
+     "ap2": "2026-11-28T15:54"
+    },
+    "Robótic Orion": {
+     "stand": 29,
+     "poster": 29,
+     "entrevista": "2026-11-25T14:30",
+     "ap1": "2026-11-27T14:50",
+     "ap2": "2026-11-28T16:02"
+    },
+    "ScriptBot Dance": {
+     "stand": 30,
+     "poster": 30,
+     "entrevista": "2026-11-25T15:00",
+     "ap1": "2026-11-27T14:58",
+     "ap2": "2026-11-28T16:10"
+    },
+    "SESI Red Hammer": {
+     "stand": 31,
+     "poster": 31,
+     "entrevista": "2026-11-25T15:30",
+     "ap1": "2026-11-27T15:06",
+     "ap2": "2026-11-28T16:18"
+    },
+    "SESI TO Tucuna Robotics": {
+     "stand": 32,
+     "poster": 32,
+     "entrevista": "2026-11-25T16:00",
+     "ap1": "2026-11-27T15:14",
+     "ap2": "2026-11-28T16:26"
+    },
+    "Space Bots Middle": {
+     "stand": 33,
+     "poster": 33,
+     "entrevista": "2026-11-25T16:30",
+     "ap1": "2026-11-27T15:22",
+     "ap2": "2026-11-28T16:34"
+    },
+    "Tamba Tajá Tech": {
+     "stand": 34,
+     "poster": 34,
+     "entrevista": "2026-11-26T10:30",
+     "ap1": "2026-11-27T15:30",
+     "ap2": "2026-11-28T16:42"
+    },
+    "Technocircus": {
+     "stand": 35,
+     "poster": 35,
+     "entrevista": "2026-11-26T11:00",
+     "ap1": "2026-11-27T15:38",
+     "ap2": "2026-11-28T16:50"
+    },
+    "The Tchukas": {
+     "stand": 36,
+     "poster": 36,
+     "entrevista": "2026-11-26T11:30",
+     "ap1": "2026-11-27T15:46",
+     "ap2": "2026-11-28T16:58"
+    }
+   }
+  }
+ }
+}

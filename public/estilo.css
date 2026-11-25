@@ -504,3 +504,20 @@ html.sem-intro .intro { display: none }
 .fold-t { font-weight: 600; font-variant-numeric: tabular-nums; width: 86px; flex: none }
 .fold-n { flex: 1; min-width: 0 }
 .fold-a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px }
+
+/* ---------- agenda da equipe (cartão do menu) ---------- */
+.agenda { border-radius: 12px; background: var(--bg); padding: 12px 12px 6px }
+.agenda-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 6px }
+.agenda-h strong { font-size: 15px }
+.agenda-h a { font-size: 12.5px; font-weight: 600 }
+.agenda ol { list-style: none; margin: 0; padding: 0 }
+.agenda li { display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 7px 0; border-top: 1px solid var(--line); font-size: 13.5px }
+.agenda li:first-child { border-top: 0 }
+.ag-q { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12.5px; line-height: 1.3 }
+.ag-n { min-width: 0 }
+.ag-n b { font-weight: 600 }
+.agenda li.feito { opacity: .5 }
+.agenda li.feito .ag-n b { text-decoration: line-through; text-decoration-thickness: 1px }
+.agenda li.destaque .ag-n b { color: var(--accent) }
+.ag-st { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 999px }
+.ag-st.on { background: var(--accent); color: var(--accent-ink) }
