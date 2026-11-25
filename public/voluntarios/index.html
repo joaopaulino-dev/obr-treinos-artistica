@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7A1C1C">
+<title>Voluntários | OBR 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/estilo.css">
+<link rel="stylesheet" href="/voluntarios/voluntarios.css">
+</head>
+<body>
+<main class="wrap vol-wrap">
+  <header class="topbar">
+    <picture>
+      <source srcset="/assets/logo-obr-2026-branco.png" media="(prefers-color-scheme: dark)">
+      <img class="logo" src="/assets/logo-obr-2026-vinho.png" alt="OBR 2026" width="560" height="237">
+    </picture>
+    <div class="titles">
+      <span class="eyebrow">Etapa Nacional · Voluntários</span>
+      <h1>Área do voluntário</h1>
+    </div>
+    <button class="back" type="button" id="sair" hidden>Sair</button>
+  </header>
+
+  <!-- entrada -->
+  <section class="panel vol-login" id="login" aria-labelledby="loginH" hidden>
+    <div>
+      <h2 id="loginH">Entre com o seu nome</h2>
+      <p class="hint">Use o primeiro e o último nome, como está na lista de voluntários.</p>
+    </div>
+    <form id="loginForm" class="vol-login-form" novalidate>
+      <div>
+        <label for="nome">Primeiro e último nome</label>
+        <input id="nome" type="text" autocomplete="name" autocapitalize="words" placeholder="Ex.: João Costa" required>
+      </div>
+      <button class="btn primary" type="submit" id="entrar">Entrar</button>
+    </form>
+    <p class="vol-erro" id="loginErro" role="alert" hidden></p>
+  </section>
+
+  <!-- área logada -->
+  <div class="vol-area" id="area" hidden>
+    <section class="vol-ola">
+      <div>
+        <span class="vol-chip" id="olaCat"></span>
+        <h2 id="olaNome"></h2>
+      </div>
+      <span class="vol-hoje" id="olaHoje"></span>
+    </section>
+
+    <section class="vol-card vol-checkin" id="checkin" aria-labelledby="ckH">
+      <div class="vol-ck-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+      </div>
+      <div class="vol-ck-txt">
+        <h2 id="ckH">Check-in</h2>
+        <p id="ckMsg"></p>
+      </div>
+      <button class="btn primary vol-ck-btn" type="button" id="ckBtn" hidden>Cheguei · fazer check-in</button>
+    </section>
+
+    <section aria-labelledby="valeH" class="vol-sec">
+      <h2 id="valeH" class="docs-h">Vale almoço</h2>
+      <div id="ticket"></div>
+      <ul class="vol-dias" id="valeDias" aria-label="Vales dos outros dias"></ul>
+    </section>
+
+    <section aria-labelledby="escH" class="vol-sec">
+      <h2 id="escH" class="docs-h">Seus horários</h2>
+      <p class="banner" id="escExemplo" hidden>Escala de exemplo. Os horários oficiais entram aqui em breve.</p>
+      <ol class="vol-escala" id="escala"></ol>
+    </section>
+
+    <section aria-labelledby="ctH" class="vol-sec">
+      <h2 id="ctH" class="docs-h">Contato da coordenação</h2>
+      <p class="banner" id="ctExemplo" hidden>Contatos de exemplo. Os números reais entram aqui em breve.</p>
+      <div class="vol-contatos" id="contatos"></div>
+    </section>
+
+    <section class="vol-card vol-local" aria-labelledby="lcH">
+      <div>
+        <h2 id="lcH">Local</h2>
+        <p id="lcTxt"></p>
+      </div>
+      <a class="btn" id="lcMapa" target="_blank" rel="noopener">Abrir no mapa</a>
+    </section>
+  </div>
+
+  <!-- coordenação -->
+  <section class="panel admin" id="admin" hidden aria-label="Coordenação">
+    <div class="admin-head"><h2>Coordenação · Voluntários</h2></div>
+    <form id="adminForm" class="admin-row">
+      <div>
+        <label for="senha">Senha da coordenação</label>
+        <input id="senha" type="password" autocomplete="current-password">
+      </div>
+      <button class="btn primary" type="submit">Entrar</button>
+    </form>
+    <div class="admin-tools" id="adminTools" hidden>
+      <div class="admin-row">
+        <div>
+          <label for="admDia">Dia</label>
+          <select id="admDia"></select>
+        </div>
+        <button class="btn" type="button" id="admAtualizar">Atualizar</button>
+      </div>
+      <p class="hint" id="admResumo"></p>
+      <div class="st-tabela-wrap">
+        <table class="st-tabela vol-tabela">
+          <thead><tr><th>Voluntário</th><th>Categoria</th><th>Check-in</th><th>Vale</th></tr></thead>
+          <tbody id="admLista"></tbody>
+        </table>
+      </div>
+      <button class="btn" type="button" id="adminSair">Sair da coordenação</button>
+    </div>
+  </section>
+
+  <p class="foot">OBR 2026 · Etapa Nacional · João Pessoa/PB</p>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script src="/voluntarios/voluntarios.js"></script>
+</body>
+</html>

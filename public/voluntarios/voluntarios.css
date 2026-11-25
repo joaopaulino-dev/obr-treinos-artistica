@@ -1,0 +1,100 @@
+/* Área do voluntário: usa os tokens de /estilo.css */
+.vol-wrap { max-width: 620px; padding-bottom: 48px }
+.vol-area { display: grid; gap: 18px }
+.vol-sec { display: grid; gap: 10px }
+.vol-sec .docs-h { margin: 0 }
+
+.vol-login-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: end }
+.vol-login h2 { font-size: 20px; margin-bottom: 4px }
+.vol-erro { margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--bad-soft); color: var(--bad); border: 1px solid var(--bad-line); font-size: 14px }
+@media (max-width: 420px) { .vol-login-form { grid-template-columns: 1fr } .vol-login-form .btn { width: 100% } }
+
+.vol-ola { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap }
+.vol-ola h2 { font-size: 24px; margin-top: 6px }
+.vol-chip { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-strong) }
+.vol-hoje { color: var(--muted); font-size: 13.5px; font-variant-numeric: tabular-nums }
+
+.vol-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px }
+
+/* check-in */
+.vol-checkin { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; align-items: center }
+.vol-ck-ico { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent) }
+.vol-ck-ico svg { width: 26px; height: 26px }
+.vol-ck-txt h2 { font-size: 18px }
+.vol-ck-txt p { margin: 2px 0 0; color: var(--muted); font-size: 14px }
+.vol-ck-btn { grid-column: 1 / -1; margin-top: 10px; width: 100%; min-height: 52px; font-size: 16px }
+.vol-checkin.ok { background: var(--free); border-color: var(--free-line) }
+.vol-checkin.ok .vol-ck-ico { background: var(--free-ink); color: var(--free) }
+.vol-checkin.ok .vol-ck-txt p, .vol-checkin.ok h2 { color: var(--free-ink) }
+.vol-checkin.pendente { border-color: var(--accent) }
+
+/* ticket */
+.tkt { --tkt-bg: var(--accent); --tkt-ink: var(--accent-ink); position: relative; border-radius: 18px; background: var(--tkt-bg); color: var(--tkt-ink); overflow: hidden;
+  box-shadow: 0 10px 26px rgba(60, 12, 16, .18) }
+.tkt::before, .tkt::after { content: ""; position: absolute; top: calc(100% - 86px); width: 26px; height: 26px; border-radius: 50%; background: var(--bg); transform: translateY(-50%) }
+.tkt::before { left: -13px } .tkt::after { right: -13px }
+.tkt-top { padding: 18px 20px 20px; display: grid; gap: 4px; border-bottom: 2px dashed rgba(255, 255, 255, .35); min-height: 132px }
+.tkt-kicker { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; opacity: .85 }
+.tkt-titulo { font-family: var(--font-d); font-size: 30px; font-weight: 700; line-height: 1.05 }
+.tkt-meta { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 14px; opacity: .92; margin-top: 6px }
+.tkt-bottom { padding: 16px 18px 18px; min-height: 86px; display: grid; align-items: center }
+
+.tkt-track { position: relative; height: 56px; border-radius: 999px; background: rgba(255, 255, 255, .16); touch-action: none; user-select: none; -webkit-user-select: none; overflow: hidden }
+.tkt-fill { position: absolute; inset: 0 auto 0 0; width: 0; background: rgba(255, 255, 255, .22); border-radius: 999px }
+.tkt-hint { position: absolute; inset: 0; display: grid; place-items: center; padding-left: 52px; font-weight: 600; font-size: 15px; letter-spacing: .02em; pointer-events: none }
+.tkt-hint span { animation: tkt-brilho 2.2s ease-in-out infinite }
+.tkt-knob { position: absolute; top: 4px; left: 4px; width: 48px; height: 48px; border-radius: 50%; border: 0; background: var(--tkt-ink); color: var(--tkt-bg); display: grid; place-items: center; cursor: grab; touch-action: none; padding: 0 }
+.tkt-knob svg { width: 24px; height: 24px }
+.tkt-knob:active { cursor: grabbing }
+.tkt-track.voltando .tkt-knob, .tkt-track.voltando .tkt-fill { transition: transform .25s ease, width .25s ease }
+.tkt-track.enviando { opacity: .7 }
+@keyframes tkt-brilho { 0%, 100% { opacity: .55 } 50% { opacity: 1 } }
+
+.tkt.usado { --tkt-bg: var(--surface); --tkt-ink: var(--ink); border: 1px solid var(--line); box-shadow: none }
+.tkt.usado .tkt-top { border-bottom-color: var(--line) }
+.tkt.usado::before, .tkt.usado::after { border: 1px solid var(--line) }
+.tkt-carimbo { position: absolute; top: 20px; right: 16px; transform: rotate(-9deg); border: 3px solid var(--bad); color: var(--bad); border-radius: 8px; padding: 2px 10px;
+  font-family: var(--font-d); font-weight: 700; font-size: 20px; letter-spacing: .08em; opacity: .9 }
+.tkt-usado { display: grid; gap: 2px }
+.tkt-usado strong { font-family: var(--font-d); font-size: 22px; font-variant-numeric: tabular-nums }
+.tkt-usado span { color: var(--muted); font-size: 13px }
+.tkt-vivo { display: inline-flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums }
+.tkt-vivo::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--free-ink); animation: tkt-brilho 1s ease-in-out infinite }
+.tkt.off { --tkt-bg: var(--off); --tkt-ink: var(--off-ink); box-shadow: none }
+.tkt.off .tkt-top { border-bottom-color: var(--line) }
+.tkt-off-msg { font-size: 14px }
+
+.vol-dias { list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; flex-wrap: wrap }
+.vol-dias li { font-size: 12.5px; padding: 6px 10px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); font-variant-numeric: tabular-nums }
+.vol-dias li strong { color: var(--ink); font-weight: 600 }
+.vol-dias li.usado { background: var(--off) }
+
+/* escala */
+.vol-escala { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden }
+.vol-escala li { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; padding: 12px 14px; border-top: 1px solid var(--line); align-items: baseline }
+.vol-escala li:first-child { border-top: 0 }
+.vol-escala .h { font-family: var(--font-d); font-weight: 700; font-variant-numeric: tabular-nums; font-size: 15px }
+.vol-escala .a strong { display: block; font-weight: 600 }
+.vol-escala .a span { color: var(--muted); font-size: 13px }
+.vol-escala li.agora { background: var(--accent-soft) }
+.vol-escala li.agora .h { color: var(--accent) }
+.vol-escala li.passou { opacity: .55 }
+
+/* contatos */
+.vol-contatos { display: grid; gap: 10px }
+.vol-ct { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px }
+.vol-ct.sua { border-color: var(--accent) }
+.vol-ct strong { display: block }
+.vol-ct .sub { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums }
+.vol-ct-acts { display: flex; gap: 8px }
+.vol-ct-acts .btn { padding: 8px 12px; min-height: 40px; font-size: 13.5px }
+@media (max-width: 420px) { .vol-ct { grid-template-columns: 1fr } .vol-ct-acts .btn { flex: 1 } }
+
+.vol-local { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center }
+.vol-local h2 { font-size: 16px }
+.vol-local p { margin: 2px 0 0; color: var(--muted); font-size: 13.5px }
+
+.vol-tabela td .sub { display: block; color: var(--muted); font-size: 12px }
+.vol-tabela .ok { color: var(--free-ink); font-weight: 600 }
+.vol-tabela .nao { color: var(--off-ink) }
+@media (prefers-reduced-motion: reduce) { .tkt-hint span, .tkt-vivo::before { animation: none } }

@@ -6,6 +6,10 @@
   ],
   "rewrites": [
     {
+      "source": "/voluntarios",
+      "destination": "/voluntarios/index.html"
+    },
+    {
       "source": "/mapa",
       "destination": "/mapa/index.html"
     },
