@@ -98,3 +98,12 @@
 .vol-tabela .ok { color: var(--free-ink); font-weight: 600 }
 .vol-tabela .nao { color: var(--off-ink) }
 @media (prefers-reduced-motion: reduce) { .tkt-hint span, .tkt-vivo::before { animation: none } }
+
+.vol-almoco { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink) }
+.vol-almoco::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--free-ink); flex: none }
+.vol-almoco strong { font-variant-numeric: tabular-nums }
+.vol-almoco .sub { color: var(--muted); font-size: 12.5px }
+.vol-painel { display: grid; gap: 10px; padding: 12px }
+.vol-painel-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px }
+.vol-painel-top select { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); min-height: 44px }
+.vol-tabela td:first-child { min-width: 130px }

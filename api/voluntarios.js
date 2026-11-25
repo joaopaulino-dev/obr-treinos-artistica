@@ -3,9 +3,12 @@
 //   estado   { token }                     escala, vales, check-in de hoje, contatos
 //   checkin  { token, lat, lng, precisao } check-in do dia, só perto do Centro de Convenções
 //   vale     { token }                     consome o vale almoço de hoje (uma vez)
+//   painel   { token, dia?, op?, voluntario? }  só voluntário admin: check-ins e almoços do dia
+//            op = liberarVale | apagarCheckin
 import { erro } from "../lib/regras.js";
 import { comBanco } from "../lib/db.js";
-import { acharVoluntario, emitirToken, lerToken, avaliarPosicao, diaDoEvento, estadoVoluntario } from "../lib/voluntarios.js";
+import { acharVoluntario, emitirToken, lerToken, avaliarPosicao, diaDoEvento, estadoVoluntario, acaoPainel } from "../lib/voluntarios.js";
+import { agoraNoFuso } from "../lib/dias.js";
 import { responderErro, corpo, origemDe } from "../lib/http.js";
 
 export default async function handler(req, res) {
@@ -56,6 +59,12 @@ export default async function handler(req, res) {
         return e;
       });
       return res.status(200).json(estado);
+    }
+
+    if (acao === "painel") {
+      if (!v.admin) throw erro(403, "Só a coordenação vê o painel.");
+      const op = ["liberarVale", "apagarCheckin"].includes(b.op) ? b.op : "listar";
+      return res.status(200).json(await comBanco((pool) => acaoPainel(pool, op, b, agoraNoFuso().id)));
     }
 
     throw erro(400, "Ação desconhecida.");

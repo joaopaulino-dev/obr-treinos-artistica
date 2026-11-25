@@ -29,16 +29,16 @@
   <section class="panel vol-login" id="login" aria-labelledby="loginH" hidden>
     <div>
       <h2 id="loginH">Entre com o seu nome</h2>
-      <p class="hint">Use o seu nome como está na lista de voluntários e a senha que a coordenação passou.</p>
+      <p class="hint">Login: seu primeiro e último nome juntos, sem acento e em minúsculas (ex.: joaocosta). Senha: os 6 primeiros dígitos do seu CPF.</p>
     </div>
     <form id="loginForm" class="vol-login-form" novalidate>
       <div>
-        <label for="nome">Nome</label>
-        <input id="nome" type="text" autocomplete="name" autocapitalize="words" placeholder="Ex.: João Costa" required>
+        <label for="nome">Login</label>
+        <input id="nome" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Ex.: joaocosta" required>
       </div>
       <div>
         <label for="senhaVol">Senha</label>
-        <input id="senhaVol" type="password" autocomplete="current-password" inputmode="numeric" required>
+        <input id="senhaVol" type="password" autocomplete="current-password" inputmode="numeric" maxlength="6" placeholder="6 primeiros dígitos do CPF" required>
       </div>
       <button class="btn primary" type="submit" id="entrar">Entrar</button>
     </form>
@@ -68,6 +68,7 @@
 
     <section aria-labelledby="valeH" class="vol-sec">
       <h2 id="valeH" class="docs-h">Vale almoço</h2>
+      <p class="vol-almoco" id="almoco" hidden></p>
       <div id="ticket"></div>
       <ul class="vol-dias" id="valeDias" aria-label="Vales dos outros dias"></ul>
     </section>
@@ -82,6 +83,23 @@
       <h2 id="ctH" class="docs-h">Contato da coordenação</h2>
       <p class="banner" id="ctExemplo" hidden>Contatos de exemplo. Os números reais entram aqui em breve.</p>
       <div class="vol-contatos" id="contatos"></div>
+    </section>
+
+    <section class="vol-sec" id="painel" hidden aria-labelledby="pnH">
+      <h2 id="pnH" class="docs-h">Painel da coordenação</h2>
+      <div class="vol-card vol-painel">
+        <div class="vol-painel-top">
+          <select id="pnDia" aria-label="Dia"></select>
+          <button class="btn" type="button" id="pnAtualizar">Atualizar</button>
+        </div>
+        <p class="hint" id="pnResumo"></p>
+        <div class="st-tabela-wrap">
+          <table class="st-tabela vol-tabela">
+            <thead><tr><th>Voluntário</th><th>Check-in</th><th>Almoço</th></tr></thead>
+            <tbody id="pnLista"></tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
     <section class="vol-card vol-local" aria-labelledby="lcH">

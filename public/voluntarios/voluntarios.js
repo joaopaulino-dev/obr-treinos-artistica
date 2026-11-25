@@ -5,7 +5,7 @@
   const MODO_COORD = new URLSearchParams(location.search).has("coordenacao");
   const CHAVE = "obr-vol-token";
   const FUSO = "America/Fortaleza";
-  const st = { token: "", dados: null, busy: false, senha: "", adm: null };
+  const st = { token: "", dados: null, painel: null, busy: false, senha: "", adm: null };
   try { st.token = localStorage.getItem(CHAVE) || ""; } catch (e) {}
   try { st.senha = sessionStorage.getItem("obr-coord") || ""; } catch (e) {}
 
@@ -50,8 +50,8 @@
     if (st.busy) return;
     const nome = $("nome").value.trim();
     const senha = $("senhaVol").value;
-    if (!nome) { mostrarLogin("Digite o seu nome."); return; }
-    if (!senha) { mostrarLogin("Digite a senha."); return; }
+    if (!nome) { mostrarLogin("Digite o seu login (ex.: joaocosta)."); return; }
+    if (!/^\d{6}$/.test(senha)) { mostrarLogin("A senha são os 6 primeiros dígitos do seu CPF."); return; }
     st.busy = true; $("entrar").disabled = true;
     try {
       const d = await post("/api/voluntarios", { acao: "entrar", nome, senha });
@@ -65,7 +65,7 @@
 
   $("sair").addEventListener("click", () => {
     try { localStorage.removeItem(CHAVE); } catch (e) {}
-    st.token = ""; st.dados = null; $("nome").value = ""; $("senhaVol").value = ""; mostrarLogin();
+    st.token = ""; st.dados = null; st.painel = null; $("nome").value = ""; $("senhaVol").value = ""; mostrarLogin();
   });
 
   /* ---------- render ---------- */
@@ -76,7 +76,9 @@
     $("olaCat").textContent = d.voluntario.categoria;
     $("olaNome").textContent = `Olá, ${d.voluntario.nome.split(" ")[0]}!`;
     $("olaHoje").textContent = fmt(new Date(), { weekday: "long", day: "2-digit", month: "2-digit" });
-    renderCheckin(d); renderVale(d); renderEscala(d); renderContatos(d);
+    renderCheckin(d); renderVale(d); renderEscala(d); renderContatos(d); renderAlmoco(d);
+    $("painel").hidden = !d.voluntario.admin;
+    if (d.voluntario.admin && !st.painel) carregarPainel();
     $("lcTxt").textContent = `${d.local.nome} · ${d.local.endereco}`;
     $("lcMapa").href = `https://www.google.com/maps/search/?api=1&query=${d.local.lat},${d.local.lng}`;
   }
@@ -167,7 +169,7 @@
 
     knob.addEventListener("pointerdown", (e) => {
       if (st.busy) return;
-      arrastando = true; x0 = e.clientX; dx = 0; max = track.clientWidth - knob.offsetWidth - 8;
+      arrastando = true; st.arrastando = true; x0 = e.clientX; dx = 0; max = track.clientWidth - knob.offsetWidth - 8;
       knob.setPointerCapture(e.pointerId); track.classList.remove("voltando");
     });
     knob.addEventListener("pointermove", (e) => {
@@ -176,7 +178,7 @@
     });
     const soltar = () => {
       if (!arrastando) return;
-      arrastando = false;
+      arrastando = false; st.arrastando = false;
       if (dx >= max * 0.85) { pos(max); usarVale(voltar); } else voltar();
     };
     knob.addEventListener("pointerup", soltar);
@@ -202,6 +204,47 @@
       toast(e.message, true);
     } finally { st.busy = false; $("tktTrack")?.classList.remove("enviando"); }
   }
+
+  /* ---------- almoço agora ---------- */
+  function renderAlmoco(d) {
+    const n = d.almocandoAgora || 0, el = $("almoco");
+    el.hidden = !d.eventoHoje;
+    el.innerHTML = n
+      ? `<span><strong>${n} pessoa${n === 1 ? "" : "s"}</strong> almoçando agora <span class="sub">· vales usados nos últimos ${d.janelaAlmocoMin} min</span></span>`
+      : `<span>Ninguém almoçando agora <span class="sub">· nenhum vale nos últimos ${d.janelaAlmocoMin} min</span></span>`;
+  }
+
+  /* ---------- painel (voluntários admin) ---------- */
+  const ddmm = (id) => id.split("-").reverse().slice(0, 2).join("/");
+  async function carregarPainel(op, extra) {
+    try {
+      st.painel = await vol("painel", { dia: $("pnDia").value || undefined, op, ...extra });
+      renderPainel();
+    } catch (e) { if (!sessaoInvalida(e)) toast(e.message, true); }
+  }
+  function renderPainel() {
+    const d = st.painel;
+    const sel = $("pnDia");
+    if (!sel.dataset.pronto) { sel.innerHTML = d.dias.map((x) => `<option value="${x}">${ddmm(x)}</option>`).join(""); sel.dataset.pronto = "1"; }
+    sel.value = d.dia;
+    const ck = d.voluntarios.filter((v) => v.checkin).length, vl = d.voluntarios.filter((v) => v.vale).length;
+    $("pnResumo").textContent = `${ddmm(d.dia)}: ${ck} de ${d.voluntarios.length} com check-in · ${vl} almoçaram.`;
+    $("pnLista").innerHTML = d.voluntarios.map((v) => `<tr>
+      <td>${esc(v.nome)}<span class="sub">${esc(v.categoria)}</span></td>
+      <td>${v.checkin ? `<span class="ok">${dataHora(v.checkin.em)}</span><span class="sub">a ${v.checkin.distancia} m</span>
+        <button class="linkbtn" data-op="apagarCheckin" data-id="${esc(v.id)}">apagar</button>` : '<span class="nao">—</span>'}</td>
+      <td>${v.vale ? `<span class="ok">${dataHora(v.vale)}</span>
+        <button class="linkbtn" data-op="liberarVale" data-id="${esc(v.id)}">liberar</button>` : '<span class="nao">—</span>'}</td></tr>`).join("");
+  }
+  $("pnDia").addEventListener("change", () => carregarPainel());
+  $("pnAtualizar").addEventListener("click", () => carregarPainel());
+  $("pnLista").addEventListener("click", (ev) => {
+    const b = ev.target.closest("button[data-op]");
+    if (!b) return;
+    const nome = st.painel.voluntarios.find((v) => v.id === b.dataset.id)?.nome || "";
+    const txt = b.dataset.op === "liberarVale" ? `Liberar de novo o vale de ${nome} neste dia?` : `Apagar o check-in de ${nome} neste dia?`;
+    if (confirm(txt)) carregarPainel(b.dataset.op, { voluntario: b.dataset.id });
+  });
 
   /* ---------- escala e contatos ---------- */
   function renderEscala(d) {
@@ -233,7 +276,12 @@
   }
 
   // Ao voltar para a aba (ex.: depois de um tempo), atualiza escala e estado.
-  document.addEventListener("visibilitychange", () => { if (!document.hidden && st.token && st.dados) carregar(); });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden || !st.token || !st.dados) return;
+    carregar(); if (st.painel) carregarPainel();
+  });
+  // Contador de almoço e painel se atualizam sozinhos a cada minuto.
+  setInterval(() => { if (!document.hidden && st.token && st.dados && !st.busy && !st.arrastando) { carregar(); if (st.painel) carregarPainel(); } }, 60000);
 
   /* ---------- coordenação ---------- */
   const adm = (acao, extra) => post("/api/voluntarios-admin", { senha: st.senha, acao, dia: $("admDia").value || undefined, ...extra });
