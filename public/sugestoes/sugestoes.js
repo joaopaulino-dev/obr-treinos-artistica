@@ -106,6 +106,7 @@
       const adm = state.admin ? `<div class="sg-adm">
           <button type="button" class="chip-btn" data-ocultar="${s.id}" data-oculta="${s.oculta ? "0" : "1"}">${s.oculta ? "Mostrar" : "Ocultar"}</button>
           ${s.categoria === "sugestao" ? `<button type="button" class="chip-btn${s.implementada ? "" : " impl"}" data-implementar="${s.id}" data-valor="${s.implementada ? "0" : "1"}">${s.implementada ? "Desmarcar implementada" : "✓ Marcar como implementada"}</button>` : ""}
+          <button type="button" class="chip-btn" data-responder="${s.id}">${s.resposta ? "Editar nota" : "Nota da organização"}</button>
           <button type="button" class="st-x" data-apagar="${s.id}">Apagar</button>
           <span class="hint">${s.origem ? "aparelho " + esc(s.origem) : ""}</span></div>` : "";
       return `<article class="sg-card${s.oculta ? " oculta" : ""}${s.implementada ? " feita" : ""}">
@@ -114,6 +115,7 @@
           <div class="sg-meta"><span class="sg-tag ${s.categoria}">${s.categoria === "elogio" ? "👏 Elogio" : "💡 Sugestão"}</span>${i < 3 && s.votos > 0 && !state.filtro ? `<span class="sg-top">Top ${i + 1}</span>` : ""}${s.implementada ? '<span class="sg-impl">✓ Sugestão implementada</span>' : ""}${s.oculta ? '<span class="sg-top">Oculta</span>' : ""}</div>
           <h3>${esc(s.titulo)}</h3>
           <p>${esc(s.descricao)}</p>
+          ${s.resposta ? `<div class="sg-resp"><strong>Nota da organização</strong>${esc(s.resposta)}</div>` : ""}
           <span class="sg-autor">por ${esc(s.equipe)} · ${esc(s.modalidade)}${s.nivel ? " N" + s.nivel : ""}</span>
           ${adm}
         </div>
@@ -232,6 +234,13 @@
     if (o) { executar(() => admin("ocultar", { id: Number(o.dataset.ocultar), oculta: o.dataset.oculta === "1" }), o.dataset.oculta === "1" ? "Sugestão ocultada." : "Sugestão visível de novo."); return; }
     const im = ev.target.closest("[data-implementar]");
     if (im) { executar(() => admin("implementar", { id: Number(im.dataset.implementar), implementada: im.dataset.valor === "1" }), im.dataset.valor === "1" ? "Marcada como implementada." : "Marcação de implementada removida."); return; }
+    const rp = ev.target.closest("[data-responder]");
+    if (rp) {
+      const atual = (state.lista.find((s) => s.id === Number(rp.dataset.responder)) || {}).resposta || "";
+      const resposta = prompt("Nota da organização (até 300 caracteres; deixe vazio para remover):", atual);
+      if (resposta !== null) executar(() => admin("responder", { id: Number(rp.dataset.responder), resposta }), resposta.trim() ? "Nota salva." : "Nota removida.");
+      return;
+    }
     const a = ev.target.closest("[data-apagar]");
     if (a && confirm("Apagar esta sugestão e os votos dela? Não dá para desfazer.")) executar(() => admin("apagar", { id: Number(a.dataset.apagar) }), "Sugestão apagada.");
   });

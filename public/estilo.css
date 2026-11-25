@@ -537,3 +537,7 @@ button.seat.own:hover { filter: brightness(1.08) }
 .seat .seat-act { font-size: 11px; font-weight: 600; opacity: .85; text-decoration: underline; text-underline-offset: 2px }
 .mine .mine-hint { display: block; margin-top: 4px; font-size: 13px; opacity: .8 }
 .audit li.alerta { color: var(--bad) }
+
+/* nota da organização na sugestão */
+.sg-resp { margin-top: 2px; padding: 8px 10px; border-radius: 8px; background: var(--free); border-left: 3px solid var(--free-ink); font-size: 13.5px; line-height: 1.4; overflow-wrap: anywhere }
+.sg-resp strong { display: block; font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--free-ink); margin-bottom: 2px }
