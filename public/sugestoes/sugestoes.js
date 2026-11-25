@@ -77,7 +77,7 @@
     if (e) { $("sgEscNome").textContent = e.nome; $("sgEscInfo").textContent = e.modalidade + " · Nível " + e.nivel; }
   }
 
-  function meusVotos() { return state.equipe ? state.lista.filter((s) => !s.oculta && s.votantes.includes(state.equipe)).length : 0; }
+  function meusVotos() { return state.equipe ? state.lista.filter((s) => !s.oculta && !s.implementada && s.votantes.includes(state.equipe)).length : 0; }
 
   function renderVotos() {
     if (!state.equipe) { $("sgVotos").textContent = `Escolha a sua equipe para enviar e votar. Cada equipe tem ${VOTOS()} votos para destacar as sugestões que mais quer ver.`; return; }
@@ -124,7 +124,7 @@
           ${s.resposta ? `<div class="sg-resp"><strong>Nota da organização</strong>${esc(s.resposta)}</div>` : ""}
           <span class="sg-autor">por ${esc(s.equipe)} · ${esc(s.modalidade)}${s.nivel ? " N" + s.nivel : ""}</span>
         </div>
-        <div class="sg-pe">${conta}${voto}</div>
+        ${s.implementada ? "" : `<div class="sg-pe">${conta}${voto}</div>`}
         ${adm}
       </article>`;
     }).join("");

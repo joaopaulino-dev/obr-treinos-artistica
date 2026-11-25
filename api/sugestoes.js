@@ -35,13 +35,14 @@ export default async function handler(req, res) {
             await client.query("DELETE FROM sugestoes_votos WHERE sugestao_id = $1 AND modalidade = $2 AND equipe = $3", [id, e.modalidade, e.nome]);
             return listarSugestoes(client);
           }
-          const s = await client.query("SELECT modalidade, equipe, oculta FROM sugestoes WHERE id = $1", [id]);
+          const s = await client.query("SELECT modalidade, equipe, oculta, implementada FROM sugestoes WHERE id = $1", [id]);
           if (!s.rows.length || s.rows[0].oculta) throw erro(409, "Essa sugestão não está mais disponível.");
+          if (s.rows[0].implementada && b.acao === "votar") throw erro(409, "Essa sugestão já foi implementada. Use o voto em outra.");
           if (s.rows[0].modalidade === e.modalidade && s.rows[0].equipe === e.nome) throw erro(409, "A equipe não pode votar na própria sugestão.");
           const usados = await client.query(
-            // Votos em sugestões ocultas pela coordenação não contam no limite da equipe.
+            // Votos em sugestões ocultas ou já implementadas não contam no limite da equipe (o voto volta).
             `SELECT v.sugestao_id FROM sugestoes_votos v JOIN sugestoes s ON s.id = v.sugestao_id
-             WHERE v.modalidade = $1 AND v.equipe = $2 AND NOT s.oculta`, [e.modalidade, e.nome]);
+             WHERE v.modalidade = $1 AND v.equipe = $2 AND NOT s.oculta AND NOT s.implementada`, [e.modalidade, e.nome]);
           const jaVotou = usados.rows.some((r) => Number(r.sugestao_id) === id);
           if (!jaVotou && usados.rows.length >= VOTOS_POR_EQUIPE) {
             throw erro(409, `Sua equipe já usou os ${VOTOS_POR_EQUIPE} votos. Retire um voto para votar em outra.`);

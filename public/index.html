@@ -214,10 +214,11 @@
   const pSug = json("/api/sugestoes");
   pSug.then((d) => {
     if (!d || !d.sugestoes) return;
-    const l = [...d.sugestoes].sort((a, b) => b.votos - a.votos), votos = l.reduce((n, x) => n + x.votos, 0);
-    if (!l.length) return;
+    const l = d.sugestoes.filter((x) => !x.implementada).sort((a, b) => b.votos - a.votos), votos = l.reduce((n, x) => n + x.votos, 0);
+    const n = d.sugestoes.length;
+    if (!n) return;
     document.getElementById("sgdResumo").textContent =
-      l.length + (l.length === 1 ? " mensagem enviada" : " mensagens enviadas") + " · " + votos + (votos === 1 ? " voto" : " votos") + ". Deixe a sua e vote nas favoritas!";
+      n + (n === 1 ? " mensagem enviada" : " mensagens enviadas") + " · " + votos + (votos === 1 ? " voto" : " votos") + ". Deixe a sua e vote nas favoritas!";
     const ol = document.getElementById("sgdLista");
     ol.innerHTML = l.slice(0, 3).map((x) => `<li><span class="sg-d-v">👍 ${x.votos}</span><span class="sg-d-n">${x.categoria === "elogio" ? "👏" : "💡"} ${escH(x.titulo)}</span>${x.implementada ? '<span class="sg-impl">✓</span>' : ""}</li>`).join("");
     ol.hidden = false;
