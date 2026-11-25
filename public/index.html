@@ -219,12 +219,12 @@
     document.getElementById("sgdResumo").textContent =
       l.length + (l.length === 1 ? " mensagem enviada" : " mensagens enviadas") + " · " + votos + (votos === 1 ? " voto" : " votos") + ". Deixe a sua e vote nas favoritas!";
     const ol = document.getElementById("sgdLista");
-    ol.innerHTML = l.slice(0, 3).map((x) => `<li><span class="sg-d-v">▲ ${x.votos}</span><span class="sg-d-n">${x.categoria === "elogio" ? "👏" : "💡"} ${escH(x.titulo)}</span>${x.implementada ? '<span class="sg-impl">✓</span>' : ""}</li>`).join("");
+    ol.innerHTML = l.slice(0, 3).map((x) => `<li><span class="sg-d-v">👍 ${x.votos}</span><span class="sg-d-n">${x.categoria === "elogio" ? "👏" : "💡"} ${escH(x.titulo)}</span>${x.implementada ? '<span class="sg-impl">✓</span>' : ""}</li>`).join("");
     ol.hidden = false;
     const top = l.find((x) => x.votos > 0);
     if (top) {
       const t = document.getElementById("conviteTop");
-      t.innerHTML = `<span class="ct">Mais votada agora: <strong>${escH(top.titulo)}</strong> (▲ ${top.votos})</span>`;
+      t.innerHTML = `<span class="ct">Mais votada agora: <strong>${escH(top.titulo)}</strong> (👍 ${top.votos})</span>`;
       t.hidden = false;
     }
   }).catch(() => {});

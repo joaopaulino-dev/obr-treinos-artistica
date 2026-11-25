@@ -82,7 +82,10 @@
   function renderVotos() {
     if (!state.equipe) { $("sgVotos").textContent = `Escolha a sua equipe para enviar e votar. Cada equipe tem ${VOTOS()} votos para destacar as sugestões que mais quer ver.`; return; }
     const r = VOTOS() - meusVotos();
-    $("sgVotos").textContent = r > 0 ? `Sua equipe tem ${r} de ${VOTOS()} votos disponíveis.` : `Sua equipe já usou os ${VOTOS()} votos. Toque num voto dado para retirá-lo e votar em outra.`;
+    const pips = Array.from({ length: VOTOS() }, (_, k) => `<span class="${k < r ? "" : "usado"}">👍</span>`).join("");
+    $("sgVotos").innerHTML = `<span class="sg-pips" aria-hidden="true">${pips}</span> ` + (r > 0
+      ? `<span><strong>${r} de ${VOTOS()} votos</strong> disponíveis. Toque em <strong>👍 Votar</strong> nas sugestões que a sua equipe quer ver acontecer.</span>`
+      : `<span><strong>Votos esgotados.</strong> Toque em <strong>✓ Votado</strong> numa sugestão para retirar o voto e usar em outra.</span>`);
   }
 
   function renderLista() {
@@ -98,11 +101,15 @@
       const i = s.implementada ? 99 : emVotacao.indexOf(s);
       const minha = s.autor === state.equipe;
       const votei = state.equipe && s.votantes.includes(state.equipe);
+      const pop = state.pop === s.id ? " pop" : "";
       const voto = minha
-        ? `<span class="sg-voto propria" title="Sugestão da sua equipe"><b>${s.votos}</b><small>voto${s.votos === 1 ? "" : "s"}</small></span>`
-        : `<button type="button" class="sg-voto${votei ? " on" : ""}" data-votar="${s.id}" aria-pressed="${votei ? "true" : "false"}"
-             ${semVotos && !votei ? 'data-sem="1"' : ""} aria-label="${votei ? "Retirar voto" : "Votar"} em ${esc(s.titulo)}">
-             <span aria-hidden="true">▲</span><b>${s.votos}</b><small>${votei ? "votado" : "votar"}</small></button>`;
+        ? `<span class="sg-votar propria">Sugestão da sua equipe</span>`
+        : `<button type="button" class="sg-votar${votei ? " on" : ""}${pop}" data-votar="${s.id}" aria-pressed="${votei ? "true" : "false"}"
+             ${semVotos && !votei ? 'data-sem="1"' : ""} title="${votei ? "Toque para retirar o voto" : "Votar nesta sugestão"}"
+             aria-label="${votei ? "Retirar voto de" : "Votar em"} ${esc(s.titulo)}">${votei
+               ? '<span aria-hidden="true">✓</span> Votado<small>retirar</small>'
+               : '<span aria-hidden="true">👍</span> Votar'}</button>`;
+      const conta = `<span class="sg-conta"><span aria-hidden="true">👍</span> <b>${s.votos}</b> voto${s.votos === 1 ? "" : "s"}</span>`;
       const adm = state.admin ? `<div class="sg-adm">
           <button type="button" class="chip-btn" data-ocultar="${s.id}" data-oculta="${s.oculta ? "0" : "1"}">${s.oculta ? "Mostrar" : "Ocultar"}</button>
           ${s.categoria === "sugestao" ? `<button type="button" class="chip-btn${s.implementada ? "" : " impl"}" data-implementar="${s.id}" data-valor="${s.implementada ? "0" : "1"}">${s.implementada ? "Desmarcar implementada" : "✓ Marcar como implementada"}</button>` : ""}
@@ -110,17 +117,18 @@
           <button type="button" class="st-x" data-apagar="${s.id}">Apagar</button>
           <span class="hint">${s.origem ? "aparelho " + esc(s.origem) : ""}</span></div>` : "";
       return `<article class="sg-card${s.oculta ? " oculta" : ""}${s.implementada ? " feita" : ""}">
-        ${voto}
         <div class="sg-corpo">
           <div class="sg-meta"><span class="sg-tag ${s.categoria}">${s.categoria === "elogio" ? "👏 Elogio" : "💡 Sugestão"}</span>${i < 3 && s.votos > 0 && !state.filtro ? `<span class="sg-top">Top ${i + 1}</span>` : ""}${s.implementada ? '<span class="sg-impl">✓ Sugestão implementada</span>' : ""}${s.oculta ? '<span class="sg-top">Oculta</span>' : ""}</div>
           <h3>${esc(s.titulo)}</h3>
           <p>${esc(s.descricao)}</p>
           ${s.resposta ? `<div class="sg-resp"><strong>Nota da organização</strong>${esc(s.resposta)}</div>` : ""}
           <span class="sg-autor">por ${esc(s.equipe)} · ${esc(s.modalidade)}${s.nivel ? " N" + s.nivel : ""}</span>
-          ${adm}
         </div>
+        <div class="sg-pe">${conta}${voto}</div>
+        ${adm}
       </article>`;
     }).join("");
+    state.pop = null;
   }
 
   function render() {
@@ -227,7 +235,9 @@
       if (!state.equipe) { toast("Escolha a sua equipe no topo da página para votar.", true); $("sgBusca").focus(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
       const on = v.getAttribute("aria-pressed") === "true";
       if (!on && v.dataset.sem) { toast(`Sua equipe já usou os ${VOTOS()} votos. Retire um voto para votar em outra.`, true); return; }
-      executar(() => post("/api/sugestoes", { acao: on ? "desvotar" : "votar", id: Number(v.dataset.votar), equipe: state.equipe }), on ? "Voto retirado." : "Voto registrado.");
+      if (!on) state.pop = Number(v.dataset.votar);
+      executar(() => post("/api/sugestoes", { acao: on ? "desvotar" : "votar", id: Number(v.dataset.votar), equipe: state.equipe }),
+        on ? "Voto retirado. Ele voltou para a sua equipe." : "👍 Voto registrado! Obrigado por participar.");
       return;
     }
     const o = ev.target.closest("[data-ocultar]");
