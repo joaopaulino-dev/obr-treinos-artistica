@@ -66,3 +66,24 @@ test("aviso quando um nível tem uma só equipe", () => {
   assert.match(r.avisos[0], /Nível 2/);
   assert.equal(r.times.filter((t) => t.nivel === 2).length, 1);
 });
+
+test("Resgate: N1 e N2 misturados, níveis espalhados e pessoas equilibradas", async () => {
+  const { MODS, validarInscricao: v } = await import("../lib/superteams.js");
+  const R1 = MODS.resgate.equipes[1], R2 = MODS.resgate.equipes[2];
+  assert.ok(R1.length > 5 && R2.length > 5);
+  assert.equal(v({ equipe: R2[0], integrantes: 3 }, MODS.resgate).nivel, 2);
+  assert.throws(() => v({ equipe: N1[0], integrantes: 3 }, MODS.resgate), /lista/); // equipe da Artística não entra no Resgate
+  const lista = [...ins(R1.slice(0, 6), 1, [3, 4, 2]), ...ins(R2.slice(0, 6), 2, [4, 3])];
+  for (let rodada = 0; rodada < 50; rodada++) {
+    const r = sortear(lista, 3, undefined, { misturar: true });
+    assert.equal(r.times.length, 4);
+    const todas = r.times.flatMap((t) => t.equipes.map((e) => e.equipe));
+    assert.equal(new Set(todas).size, lista.length);
+    for (const t of r.times) {
+      assert.match(t.nome, /^Super Team [A-Z]$/);
+      assert.equal(t.nivel, null);
+      const n1 = t.equipes.filter((e) => e.nivel === 1).length;
+      assert.ok(n1 >= 1 && n1 <= 2, "cada time tem equipes dos dois níveis");
+    }
+  }
+});

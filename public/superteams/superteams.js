@@ -2,7 +2,12 @@
 (() => {
   const $ = (id) => document.getElementById(id);
   const MODO_COORD = new URLSearchParams(location.search).has("coordenacao");
-  const CHAVE_LOCAL = "obr-superteams-enviada";
+  // A mesma página serve a Artística (/superteams, sorteio por nível) e o Resgate (/superteams/resgate, N1 e N2 misturados).
+  const RESGATE = location.pathname.startsWith("/superteams/resgate");
+  const MOD = RESGATE ? "Resgate" : "Artística";
+  const Q = RESGATE ? "?modalidade=resgate" : "";
+  const MSG_OK = document.body.dataset.ok || "O sorteio acontece depois das entrevistas; o resultado aparece nesta página.";
+  const CHAVE_LOCAL = RESGATE ? "obr-superteams-resgate-enviada" : "obr-superteams-enviada";
   const state = { pub: null, adm: null, senha: "", busy: false };
   try { state.senha = sessionStorage.getItem("obr-coord") || ""; } catch (e) {}
 
@@ -23,7 +28,7 @@
     return dados;
   }
   const post = (caminho, corpo) => api(caminho, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo) });
-  const admin = (acao, extra) => post("/api/superteams-admin", { senha: state.senha, acao, ...extra });
+  const admin = (acao, extra) => post("/api/superteams-admin", { senha: state.senha, acao, modalidade: RESGATE ? "resgate" : "", ...extra });
 
   /* ---------- página pública ---------- */
   function lembrada() { try { return localStorage.getItem(CHAVE_LOCAL) || ""; } catch (e) { return ""; } }
@@ -35,10 +40,15 @@
       `<optgroup label="Nível ${n}">` + [...lista].sort((a, b) => a.localeCompare(b, "pt-BR")).map((e) => `<option>${esc(e)}</option>`).join("") + "</optgroup>").join("");
     sel.dataset.pronto = "1";
     const eq = window.OBR_EQUIPE && window.OBR_EQUIPE.get();
-    if (eq && eq.modalidade === "Artística" && Object.values(equipes).some((l) => l.includes(eq.nome))) sel.value = eq.nome;
+    if (eq && eq.modalidade === MOD && Object.values(equipes).some((l) => l.includes(eq.nome))) sel.value = eq.nome;
   }
 
   function cardsTimes(times) {
+    if (RESGATE) return times.map((t) => `
+        <article class="st-time">
+          <header><strong>${esc(t.nome)}</strong><span>${t.pessoas} pessoa${t.pessoas === 1 ? "" : "s"}</span></header>
+          <ul>${t.equipes.map((e) => `<li>${esc(e.equipe)} <span>N${e.nivel} · ${e.integrantes}</span></li>`).join("")}</ul>
+        </article>`).join("");
     return [1, 2].map((n) => {
       const doNivel = times.filter((t) => t.nivel === n);
       if (!doNivel.length) return "";
@@ -61,13 +71,13 @@
     $("stFechado").hidden = d.aberto;
     const minha = lembrada();
     $("stOk").hidden = !minha;
-    if (minha) $("stOk").innerHTML = `<strong>Interesse registrado: ${esc(minha)}.</strong> O sorteio acontece depois das entrevistas; o resultado aparece nesta página.`;
+    if (minha) $("stOk").innerHTML = `<strong>Interesse registrado: ${esc(minha)}.</strong> ${esc(MSG_OK)}`;
     $("stResultado").hidden = !d.times;
     if (d.times) $("stTimes").innerHTML = cardsTimes(d.times);
   }
 
   async function carregar() {
-    try { state.pub = await api("/api/superteams"); renderPublico(); }
+    try { state.pub = await api("/api/superteams" + Q); renderPublico(); }
     catch (e) { $("stTotal").textContent = "Não foi possível carregar. Verifique a conexão e recarregue a página."; }
   }
 
@@ -80,9 +90,9 @@
     if (!confirm(`Confirmar o interesse da equipe ${equipe} (${integrantes} integrante${integrantes === 1 ? "" : "s"}) no Super Teams?`)) return;
     state.busy = true; $("stEnviar").disabled = true;
     try {
-      state.pub = await post("/api/superteams", { equipe, integrantes });
+      state.pub = await post("/api/superteams" + Q, { equipe, integrantes });
       try { localStorage.setItem(CHAVE_LOCAL, equipe); } catch (e) {}
-      if (window.OBR_EQUIPE) window.OBR_EQUIPE.set({ modalidade: "Artística", nivel: Number(Object.keys(state.pub.equipes).find((n) => state.pub.equipes[n].includes(equipe))) || null, nome: equipe });
+      if (window.OBR_EQUIPE) window.OBR_EQUIPE.set({ modalidade: MOD, nivel: Number(Object.keys(state.pub.equipes).find((n) => state.pub.equipes[n].includes(equipe))) || null, nome: equipe });
       $("stForm").reset();
       renderPublico();
       toast("Interesse registrado. Boa sorte no sorteio!");
@@ -191,7 +201,7 @@
     const csv = "﻿" + linhas.map((l) => l.map(cel).join(";")).join("\r\n");
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
-    a.download = "superteams-interessadas.csv";
+    a.download = RESGATE ? "superteams-resgate-interessadas.csv" : "superteams-interessadas.csv";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });

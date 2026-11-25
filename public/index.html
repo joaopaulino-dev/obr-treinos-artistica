@@ -121,6 +121,14 @@
   </section>
 
   <section class="mod" id="resgate" role="tabpanel" aria-labelledby="tab-resgate" hidden>
+    <a class="item link destaque" href="/superteams/resgate">
+      <span class="ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c.6-.3 1.3-.5 2-.5 2.2 0 4 1.8 4 4"/></svg>
+      </span>
+      <span class="item-t"><strong>Quero participar do Super Teams</strong><span class="sub">N1 e N2 juntos · sem caráter classificatório · proposta em 28/11</span></span>
+      <span class="go" aria-hidden="true">›</span>
+    </a>
+
     <details class="item submenu">
       <summary>
         <span class="ico" aria-hidden="true">
@@ -273,14 +281,16 @@
     }
 
     async function linhaSuperTeams(e) {
-      const d = await json("/api/superteams");
+      const res = e.modalidade === "Resgate";
+      const d = await json("/api/superteams" + (res ? "?modalidade=resgate" : ""));
       if (!d) return "";
+      const url = res ? "/superteams/resgate" : "/superteams";
       const time = (d.times || []).find((t) => t.equipes.some((x) => x.equipe === e.nome));
-      if (time) return item(ICO.st, `<strong>${escH(time.nome)}</strong><span>Sua equipe foi sorteada para este Super Team</span>`, "/superteams", "Ver times");
-      if (d.times) return item(ICO.st, "<strong>Super Teams sorteados</strong><span>Sua equipe não está entre as inscritas</span>", "/superteams", "Ver times");
-      if ((d.inscritas || []).includes(e.nome)) return item(ICO.st, "<strong>Super Teams: interesse registrado</strong><span>O sorteio acontece depois das entrevistas</span>", "/superteams", "Ver");
-      if (d.aberto) return item(ICO.st, "<strong>Super Teams: ainda não inscrita</strong><span>ODS 10 · participação opcional</span>", "/superteams", "Participar");
-      return item(ICO.st, "<strong>Super Teams: inscrições encerradas</strong><span>O resultado aparece na página</span>", "/superteams", "Ver");
+      if (time) return item(ICO.st, `<strong>${escH(time.nome)}</strong><span>Sua equipe foi sorteada para este Super Team</span>`, url, "Ver times");
+      if (d.times) return item(ICO.st, "<strong>Super Teams sorteados</strong><span>Sua equipe não está entre as inscritas</span>", url, "Ver times");
+      if ((d.inscritas || []).includes(e.nome)) return item(ICO.st, `<strong>Super Teams: interesse registrado</strong><span>${res ? "O sorteio mistura N1 e N2; proposta em 28/11" : "O sorteio acontece depois das entrevistas"}</span>`, url, "Ver");
+      if (d.aberto) return item(ICO.st, `<strong>Super Teams: ainda não inscrita</strong><span>${res ? "N1 e N2 juntos · sem caráter classificatório" : "ODS 10 · participação opcional"}</span>`, url, "Participar");
+      return item(ICO.st, "<strong>Super Teams: inscrições encerradas</strong><span>O resultado aparece na página</span>", url, "Ver");
     }
 
     async function linhaVotos(e) {
@@ -345,7 +355,7 @@
       if (!lista.children.length) lista.innerHTML = '<li class="mi-load">Carregando…</li>';
       const art = e.modalidade === "Artística" && e.nivel;
       renderAgenda(e);
-      const linhas = await Promise.all([art ? linhaTreino(e) : "", art ? linhaSuperTeams(e) : "", linhaVotos(e), linhaMesa(e)]);
+      const linhas = await Promise.all([art ? linhaTreino(e) : "", linhaSuperTeams(e), linhaVotos(e), linhaMesa(e)]);
       if (escolhida()?.nome !== e.nome) return; // trocou de equipe enquanto carregava
       lista.innerHTML = linhas.join("");
     }

@@ -576,3 +576,7 @@ button.seat.own:hover { filter: brightness(1.08) }
   .sg-card { padding: 12px }
   .sg-votar { min-width: 0; flex: 1 1 auto; padding: 8px 14px }
 }
+
+/* Super Teams do Resgate */
+.st-nota { display: grid; gap: 2px; padding: 12px 14px; border-radius: var(--radius); background: var(--free); color: var(--free-ink); border: 1px solid var(--free-line); font-size: 14px }
+.st-nota span { color: var(--ink) }

@@ -6,6 +6,10 @@
   ],
   "rewrites": [
     {
+      "source": "/superteams/resgate",
+      "destination": "/superteams/resgate/index.html"
+    },
+    {
       "source": "/voluntarios",
       "destination": "/voluntarios/index.html"
     },
