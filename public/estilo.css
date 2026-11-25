@@ -363,3 +363,37 @@ html.sem-intro .intro { display: none }
 .faq .resp { padding: 0 16px 14px; display: grid; gap: 8px; font-size: 14.5px }
 .faq .resp p { margin: 0 }
 .faq .hoje { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 999px; background: var(--note); color: var(--note-ink) }
+
+/* ---------- sugestões ---------- */
+.panel textarea { width: 100%; font: inherit; font-size: 15px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); resize: vertical; min-height: 84px }
+.sg-equipe { gap: 8px }
+.sg-h { font-size: 19px }
+.sg-form { display: grid; gap: 12px }
+.sg-form .btn { justify-self: start; min-width: 140px }
+.sg-cat { display: grid; grid-template-columns: 1fr 1fr; gap: 8px }
+.sg-cat button { font: inherit; font-weight: 600; min-height: 44px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer }
+.sg-cat button[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-strong) }
+.sg-cont { float: right; text-transform: none; letter-spacing: 0; font-weight: 500; font-variant-numeric: tabular-nums }
+.sg-cont.over { color: var(--bad); font-weight: 700 }
+.sg-lista { display: grid; gap: 10px }
+.sg-vazio { text-align: center; padding: 24px 0 }
+.sg-card { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; padding: 14px 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line) }
+.sg-card.oculta { opacity: .5; border-style: dashed }
+.sg-voto { align-self: start; display: grid; justify-items: center; gap: 0; padding: 8px 4px; min-height: 64px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; cursor: pointer }
+.sg-voto span { font-size: 12px; color: var(--muted); line-height: 1 }
+.sg-voto b { font-family: var(--font-d); font-size: 20px; line-height: 1.2; font-variant-numeric: tabular-nums }
+.sg-voto small { font-size: 11px; color: var(--muted) }
+.sg-voto.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink) }
+.sg-voto.on span, .sg-voto.on small { color: inherit; opacity: .85 }
+.sg-voto.propria { cursor: default; border-style: dashed }
+.sg-voto[data-sem] { opacity: .55 }
+.sg-corpo { min-width: 0; display: grid; gap: 4px }
+.sg-corpo h3 { font-size: 17px; overflow-wrap: anywhere }
+.sg-corpo p { margin: 0; font-size: 14.5px; overflow-wrap: anywhere }
+.sg-meta { display: flex; flex-wrap: wrap; gap: 6px }
+.sg-tag, .sg-top { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px }
+.sg-tag.sugestao { background: var(--note); color: var(--note-ink) }
+.sg-tag.elogio { background: var(--free); color: var(--free-ink) }
+.sg-top { background: var(--accent-soft); color: var(--accent-strong) }
+.sg-autor { font-size: 12.5px; color: var(--muted) }
+.sg-adm { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px }

@@ -22,6 +22,10 @@
       "destination": "/duvidas/index.html"
     },
     {
+      "source": "/sugestoes",
+      "destination": "/sugestoes/index.html"
+    },
+    {
       "source": "/n1",
       "destination": "/app.html"
     },

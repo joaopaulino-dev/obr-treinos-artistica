@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7A1C1C">
+<title>Sugestões e elogios | OBR 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/estilo.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="topbar">
+    <a href="/" aria-label="Voltar ao menu">
+      <picture>
+        <source srcset="/assets/logo-obr-2026-branco.png" media="(prefers-color-scheme: dark)">
+        <img class="logo" src="/assets/logo-obr-2026-vinho.png" alt="OBR 2026" width="560" height="237">
+      </picture>
+    </a>
+    <div class="titles">
+      <span class="eyebrow">Etapa Nacional · Artística e Resgate</span>
+      <h1>Sugestões e elogios</h1>
+    </div>
+    <a class="back" href="/">Menu</a>
+  </header>
+
+  <section class="panel sg-equipe" aria-labelledby="sgEquipeLbl">
+    <div>
+      <label for="sgEquipe" id="sgEquipeLbl">Sua equipe</label>
+      <select id="sgEquipe"><option value="">Carregando equipes…</option></select>
+    </div>
+    <p class="hint" id="sgVotos">Escolha a sua equipe para enviar e votar. Cada equipe tem 4 votos para destacar as sugestões que mais quer ver.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="sgNovaH">
+    <h2 id="sgNovaH" class="sg-h">Deixe sua sugestão ou elogio</h2>
+    <form id="sgForm" class="sg-form" novalidate>
+      <div class="sg-cat" role="radiogroup" aria-label="Categoria">
+        <button type="button" role="radio" aria-checked="true" data-cat="sugestao">💡 Sugestão</button>
+        <button type="button" role="radio" aria-checked="false" data-cat="elogio">👏 Elogio</button>
+      </div>
+      <div>
+        <label for="sgTitulo">Título</label>
+        <input id="sgTitulo" maxlength="80" required placeholder="Ex.: Mais tomadas perto das mesas">
+      </div>
+      <div>
+        <label for="sgDesc">Descrição <span class="sg-cont" id="sgCont">0/30 palavras</span></label>
+        <textarea id="sgDesc" rows="3" maxlength="300" required placeholder="Conte em poucas palavras."></textarea>
+      </div>
+      <button class="btn primary" type="submit" id="sgEnviar">Enviar</button>
+    </form>
+  </section>
+
+  <div class="tabs" role="tablist" aria-label="Filtro">
+    <button role="tab" aria-selected="true" data-filtro="">Todas</button>
+    <button role="tab" aria-selected="false" data-filtro="sugestao" tabindex="-1">Sugestões</button>
+    <button role="tab" aria-selected="false" data-filtro="elogio" tabindex="-1">Elogios</button>
+  </div>
+  <section class="sg-lista" id="sgLista" aria-live="polite"><p class="hint">Carregando…</p></section>
+
+  <section class="panel admin" id="admin" hidden aria-label="Coordenação">
+    <form id="adminForm" class="admin-row">
+      <div>
+        <label for="senha">Senha da coordenação</label>
+        <input id="senha" type="password" autocomplete="current-password">
+      </div>
+      <button class="btn primary" type="submit">Entrar</button>
+    </form>
+    <div id="adminTools" hidden class="admin-tools">
+      <p class="mine">Coordenação: as sugestões ocultas aparecem esmaecidas na lista. Use <strong>Ocultar</strong> para tirar do mural e <strong>Apagar</strong> para remover de vez.</p>
+      <button class="btn" id="adminSair" type="button">Sair da coordenação</button>
+    </div>
+  </section>
+
+  <p class="foot">As sugestões são públicas. Mensagens ofensivas serão removidas pela coordenação.</p>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script src="/sugestoes/sugestoes.js"></script>
+</body>
+</html>
