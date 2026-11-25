@@ -521,3 +521,12 @@ html.sem-intro .intro { display: none }
 .agenda li.destaque .ag-n b { color: var(--accent) }
 .ag-st { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 999px }
 .ag-st.on { background: var(--accent); color: var(--accent-ink) }
+
+/* ---------- menu: itens com submenu Nível 1 / Nível 2 ---------- */
+details.item { display: block; padding: 0; min-height: 0 }
+details.item > summary { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px 14px; padding: 14px 16px; min-height: 76px; list-style: none; cursor: pointer }
+details.item > summary::-webkit-details-marker { display: none }
+details.item:hover, details.item[open] { border-color: var(--accent) }
+details.item .go { transition: transform .15s }
+details.item[open] .go { transform: rotate(90deg) }
+details.item > .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 16px 16px }
