@@ -28,8 +28,16 @@
 
   <section class="panel sg-equipe" aria-labelledby="sgEquipeLbl">
     <div>
-      <label for="sgEquipe" id="sgEquipeLbl">Sua equipe</label>
-      <select id="sgEquipe"><option value="">Carregando equipes…</option></select>
+      <label for="sgBusca" id="sgEquipeLbl">Sua equipe</label>
+      <div class="sg-escolhida" id="sgEscolhida" hidden>
+        <span><strong id="sgEscNome"></strong><span class="sub" id="sgEscInfo"></span></span>
+        <button type="button" class="chip-btn" id="sgTrocar">Trocar</button>
+      </div>
+      <div class="search" id="sgBuscaBox">
+        <svg class="lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="sgBusca" type="search" autocomplete="off" placeholder="Digite o nome da sua equipe" role="combobox" aria-expanded="false" aria-controls="sgOpcoes" aria-autocomplete="list">
+        <ul class="suggest" id="sgOpcoes" role="listbox" hidden></ul>
+      </div>
     </div>
     <p class="hint" id="sgVotos">Escolha a sua equipe para enviar e votar. Cada equipe tem 4 votos para destacar as sugestões que mais quer ver.</p>
   </section>

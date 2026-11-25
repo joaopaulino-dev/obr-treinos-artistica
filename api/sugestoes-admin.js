@@ -1,5 +1,5 @@
 // POST /api/sugestoes-admin  { senha, acao, ... }  (só a coordenação)
-//   entrar | listar (inclui ocultas) | ocultar { id, oculta } | apagar { id }
+//   entrar | listar (inclui ocultas) | ocultar { id, oculta } | implementar { id, implementada } | apagar { id }
 import { erro } from "../lib/regras.js";
 import { comBanco } from "../lib/db.js";
 import { idValido, listarSugestoes } from "../lib/sugestoes.js";
@@ -14,6 +14,8 @@ export default async function handler(req, res) {
     const lista = await comBanco(async (pool) => {
       if (b.acao === "ocultar") {
         await pool.query("UPDATE sugestoes SET oculta = $2 WHERE id = $1", [idValido(b.id), b.oculta === true]);
+      } else if (b.acao === "implementar") {
+        await pool.query("UPDATE sugestoes SET implementada = $2 WHERE id = $1", [idValido(b.id), b.implementada === true]);
       } else if (b.acao === "apagar") {
         await pool.query("DELETE FROM sugestoes WHERE id = $1", [idValido(b.id)]);
       } else if (b.acao !== "listar") {

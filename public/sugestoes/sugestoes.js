@@ -27,17 +27,52 @@
   const admin = (acao, extra) => post("/api/sugestoes-admin", { senha: state.senha, acao, ...extra });
 
   /* ---------- render ---------- */
-  function preencherEquipes() {
-    const sel = $("sgEquipe");
-    if (sel.dataset.pronto || !state.dados) return;
-    const grupos = {};
-    for (const e of state.dados.equipes) (grupos[e.modalidade + " · Nível " + e.nivel] = grupos[e.modalidade + " · Nível " + e.nivel] || []).push(e);
-    sel.innerHTML = '<option value="">Escolha a sua equipe</option>' + Object.entries(grupos).map(([g, l]) =>
-      `<optgroup label="${esc(g)}">` + l.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"))
-        .map((e) => `<option value="${esc(e.chave)}">${esc(e.nome)}</option>`).join("") + "</optgroup>").join("");
-    sel.dataset.pronto = "1";
-    if (!state.dados.equipes.some((e) => e.chave === state.equipe)) state.equipe = "";
-    sel.value = state.equipe;
+  /* ---------- busca da equipe ---------- */
+  const norm = (t) => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const equipeAtual = () => state.dados && state.dados.equipes.find((e) => e.chave === state.equipe);
+  let opcoes = [], ativa = -1;
+
+  function abrirOpcoes() {
+    if (!state.dados) return;
+    const q = norm($("sgBusca").value.trim());
+    // A lista já vem na ordem: Artística N1, Artística N2, Resgate N1, Resgate N2.
+    opcoes = state.dados.equipes.filter((e) => !q || norm(e.nome).includes(q));
+    ativa = q && opcoes.length ? 0 : -1;
+    const ul = $("sgOpcoes");
+    if (!opcoes.length) {
+      ul.innerHTML = '<li class="sg-nada" aria-disabled="true">Nenhuma equipe com esse nome.</li>';
+    } else {
+      let grupo = "";
+      ul.innerHTML = opcoes.map((e, i) => {
+        const g = e.modalidade + " · Nível " + e.nivel;
+        const cab = g !== grupo ? `<li class="sg-grupo" role="presentation">${esc(g)}</li>` : "";
+        grupo = g;
+        return cab + `<li role="option" id="sgOp${i}" data-i="${i}" aria-selected="${i === ativa}"><span class="n">${esc(e.modalidade.slice(0, 3).toUpperCase())}</span><span>${esc(e.nome)}<span class="t">${esc(g)}</span></span></li>`;
+      }).join("");
+    }
+    ul.hidden = false;
+    $("sgBusca").setAttribute("aria-expanded", "true");
+  }
+  function fecharOpcoes() { $("sgOpcoes").hidden = true; $("sgBusca").setAttribute("aria-expanded", "false"); }
+  function marcar(i) {
+    ativa = i;
+    $("sgOpcoes").querySelectorAll("[role=option]").forEach((li) => li.setAttribute("aria-selected", String(Number(li.dataset.i) === i)));
+    const li = $("sgOp" + i); if (li) li.scrollIntoView({ block: "nearest" });
+  }
+  function escolher(e) {
+    state.equipe = e ? e.chave : "";
+    try { localStorage.setItem("obr-sugestoes-equipe", state.equipe); } catch (er) {}
+    $("sgBusca").value = "";
+    fecharOpcoes();
+    render();
+  }
+
+  function renderEquipe() {
+    const e = equipeAtual();
+    if (state.dados && state.equipe && !e) state.equipe = "";
+    $("sgEscolhida").hidden = !e;
+    $("sgBuscaBox").hidden = !!e;
+    if (e) { $("sgEscNome").textContent = e.nome; $("sgEscInfo").textContent = e.modalidade + " · Nível " + e.nivel; }
   }
 
   function meusVotos() { return state.equipe ? state.lista.filter((s) => !s.oculta && s.votantes.includes(state.equipe)).length : 0; }
@@ -65,12 +100,13 @@
              <span aria-hidden="true">▲</span><b>${s.votos}</b><small>${votei ? "votado" : "votar"}</small></button>`;
       const adm = state.admin ? `<div class="sg-adm">
           <button type="button" class="chip-btn" data-ocultar="${s.id}" data-oculta="${s.oculta ? "0" : "1"}">${s.oculta ? "Mostrar" : "Ocultar"}</button>
+          ${s.categoria === "sugestao" ? `<button type="button" class="chip-btn${s.implementada ? "" : " impl"}" data-implementar="${s.id}" data-valor="${s.implementada ? "0" : "1"}">${s.implementada ? "Desmarcar implementada" : "✓ Marcar como implementada"}</button>` : ""}
           <button type="button" class="st-x" data-apagar="${s.id}">Apagar</button>
           <span class="hint">${s.origem ? "aparelho " + esc(s.origem) : ""}</span></div>` : "";
-      return `<article class="sg-card${s.oculta ? " oculta" : ""}">
+      return `<article class="sg-card${s.oculta ? " oculta" : ""}${s.implementada ? " feita" : ""}">
         ${voto}
         <div class="sg-corpo">
-          <div class="sg-meta"><span class="sg-tag ${s.categoria}">${s.categoria === "elogio" ? "👏 Elogio" : "💡 Sugestão"}</span>${i < 3 && s.votos > 0 && !state.filtro ? `<span class="sg-top">Top ${i + 1}</span>` : ""}${s.oculta ? '<span class="sg-top">Oculta</span>' : ""}</div>
+          <div class="sg-meta"><span class="sg-tag ${s.categoria}">${s.categoria === "elogio" ? "👏 Elogio" : "💡 Sugestão"}</span>${i < 3 && s.votos > 0 && !state.filtro ? `<span class="sg-top">Top ${i + 1}</span>` : ""}${s.implementada ? '<span class="sg-impl">✓ Sugestão implementada</span>' : ""}${s.oculta ? '<span class="sg-top">Oculta</span>' : ""}</div>
           <h3>${esc(s.titulo)}</h3>
           <p>${esc(s.descricao)}</p>
           <span class="sg-autor">por ${esc(s.equipe)} · ${esc(s.modalidade)}${s.nivel ? " N" + s.nivel : ""}</span>
@@ -81,7 +117,7 @@
   }
 
   function render() {
-    preencherEquipes();
+    renderEquipe();
     renderVotos();
     renderLista();
     $("admin").hidden = !MODO_COORD;
@@ -120,11 +156,27 @@
   }
 
   /* ---------- eventos ---------- */
-  $("sgEquipe").addEventListener("change", (ev) => {
-    state.equipe = ev.target.value;
-    try { localStorage.setItem("obr-sugestoes-equipe", state.equipe); } catch (e) {}
-    render();
+  $("sgBusca").addEventListener("input", abrirOpcoes);
+  $("sgBusca").addEventListener("focus", abrirOpcoes);
+  $("sgBusca").addEventListener("keydown", (ev) => {
+    if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
+      ev.preventDefault();
+      if ($("sgOpcoes").hidden) abrirOpcoes();
+      if (!opcoes.length) return;
+      marcar(ativa < 0 ? (ev.key === "ArrowDown" ? 0 : opcoes.length - 1) : (ativa + (ev.key === "ArrowDown" ? 1 : opcoes.length - 1)) % opcoes.length);
+    } else if (ev.key === "Enter") {
+      ev.preventDefault();
+      if (ativa >= 0 && opcoes[ativa]) escolher(opcoes[ativa]);
+      else if (opcoes.length === 1) escolher(opcoes[0]);
+    } else if (ev.key === "Escape") fecharOpcoes();
   });
+  // pointerdown escolhe antes do blur fechar a lista.
+  $("sgOpcoes").addEventListener("pointerdown", (ev) => {
+    const li = ev.target.closest("[data-i]"); if (!li) return;
+    ev.preventDefault(); escolher(opcoes[Number(li.dataset.i)]);
+  });
+  $("sgBusca").addEventListener("blur", () => setTimeout(fecharOpcoes, 150));
+  $("sgTrocar").addEventListener("click", () => { escolher(null); $("sgBusca").focus(); });
 
   document.querySelectorAll("[data-cat]").forEach((b) => b.addEventListener("click", () => {
     state.categoria = b.dataset.cat;
@@ -141,7 +193,7 @@
 
   $("sgForm").addEventListener("submit", (ev) => {
     ev.preventDefault();
-    if (!state.equipe) { toast("Escolha a sua equipe no topo da página.", true); $("sgEquipe").focus(); return; }
+    if (!state.equipe) { toast("Escolha a sua equipe no topo da página.", true); $("sgBusca").focus(); return; }
     const titulo = $("sgTitulo").value.trim(), descricao = $("sgDesc").value.trim();
     if (titulo.length < 3) { toast("Escreva um título.", true); $("sgTitulo").focus(); return; }
     const n = palavras(descricao);
@@ -165,7 +217,7 @@
   $("sgLista").addEventListener("click", (ev) => {
     const v = ev.target.closest("[data-votar]");
     if (v) {
-      if (!state.equipe) { toast("Escolha a sua equipe no topo da página para votar.", true); $("sgEquipe").focus(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+      if (!state.equipe) { toast("Escolha a sua equipe no topo da página para votar.", true); $("sgBusca").focus(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
       const on = v.getAttribute("aria-pressed") === "true";
       if (!on && v.dataset.sem) { toast(`Sua equipe já usou os ${VOTOS()} votos. Retire um voto para votar em outra.`, true); return; }
       executar(() => post("/api/sugestoes", { acao: on ? "desvotar" : "votar", id: Number(v.dataset.votar), equipe: state.equipe }), on ? "Voto retirado." : "Voto registrado.");
@@ -173,6 +225,8 @@
     }
     const o = ev.target.closest("[data-ocultar]");
     if (o) { executar(() => admin("ocultar", { id: Number(o.dataset.ocultar), oculta: o.dataset.oculta === "1" }), o.dataset.oculta === "1" ? "Sugestão ocultada." : "Sugestão visível de novo."); return; }
+    const im = ev.target.closest("[data-implementar]");
+    if (im) { executar(() => admin("implementar", { id: Number(im.dataset.implementar), implementada: im.dataset.valor === "1" }), im.dataset.valor === "1" ? "Marcada como implementada." : "Marcação de implementada removida."); return; }
     const a = ev.target.closest("[data-apagar]");
     if (a && confirm("Apagar esta sugestão e os votos dela? Não dá para desfazer.")) executar(() => admin("apagar", { id: Number(a.dataset.apagar) }), "Sugestão apagada.");
   });
