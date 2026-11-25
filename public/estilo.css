@@ -429,3 +429,20 @@ html.sem-intro .intro { display: none }
 .sg-hero-acts { display: flex; flex-wrap: wrap; gap: 8px }
 .sg-hero-acts .btn { flex: 1 1 160px; text-align: center; text-decoration: none; display: grid; place-items: center }
 #votar, #nova { scroll-margin-top: 16px }
+
+/* ---------- convite para sugerir (menu) ---------- */
+.convite { position: fixed; z-index: 7; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: min(440px, calc(100% - 32px));
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; padding: 16px 16px 14px; border-radius: 16px;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line); box-shadow: 0 18px 40px rgba(20, 5, 6, .22);
+  transform: translate(-50%, 24px); opacity: 0; transition: transform .35s cubic-bezier(.2, .8, .2, 1), opacity .3s }
+.convite.on { transform: translate(-50%, 0); opacity: 1 }
+.convite-ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--note); font-size: 20px }
+.convite-corpo { display: grid; gap: 6px; padding-right: 18px }
+.convite-corpo strong { font-family: var(--font-d); font-size: 16px }
+.convite-corpo p { margin: 0; font-size: 13.5px; color: var(--muted) }
+.convite-top { background: var(--accent-soft); color: var(--accent-strong) !important; padding: 6px 10px; border-radius: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.convite-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px }
+.convite-acts .btn { min-height: 40px; padding: 8px 14px; text-decoration: none; display: inline-grid; place-items: center }
+.convite-x { position: absolute; top: 6px; right: 8px; width: 32px; height: 32px; border: 0; background: none; color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; border-radius: 8px }
+.convite-x:hover { background: var(--off) }
+@media (prefers-reduced-motion: reduce) { .convite { transition: none } }

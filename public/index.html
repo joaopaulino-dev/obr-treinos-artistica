@@ -130,6 +130,19 @@
 
   <p class="foot">Dúvidas ou divergências? Procure a coordenação da modalidade.</p>
 </main>
+<aside class="convite" id="convite" role="dialog" aria-labelledby="conviteT" aria-describedby="conviteTxt" hidden>
+  <button type="button" class="convite-x" id="conviteX" aria-label="Fechar">×</button>
+  <span class="convite-ico" aria-hidden="true">💡</span>
+  <div class="convite-corpo">
+    <strong id="conviteT">Como está sendo o Nacional?</strong>
+    <p id="conviteTxt">Conte para a organização o que pode melhorar ou o que está dando certo. Leva menos de 1 minuto.</p>
+    <p class="convite-top" id="conviteTop" hidden></p>
+    <div class="convite-acts">
+      <a class="btn primary" href="/sugestoes#nova" id="conviteIr">Sugerir ou elogiar</a>
+      <button type="button" class="btn" id="conviteDepois">Agora não</button>
+    </div>
+  </div>
+</aside>
 <script>
 (() => {
   // Abertura: some sozinha pelo CSS; clique/tecla pula. Só toca uma vez por sessão.
@@ -172,7 +185,32 @@
     const ol = document.getElementById("sgdLista");
     ol.innerHTML = l.slice(0, 3).map((x) => `<li><span class="sg-d-v">▲ ${x.votos}</span><span class="sg-d-n">${x.categoria === "elogio" ? "👏" : "💡"} ${escH(x.titulo)}</span>${x.implementada ? '<span class="sg-impl">✓</span>' : ""}</li>`).join("");
     ol.hidden = false;
+    const top = l.find((x) => x.votos > 0);
+    if (top) {
+      const t = document.getElementById("conviteTop");
+      t.innerHTML = `Mais votada agora: <strong>${escH(top.titulo)}</strong> (▲ ${top.votos})`;
+      t.hidden = false;
+    }
   }).catch(() => {});
+
+  // Convite discreto para sugerir/elogiar: sobe do rodapé depois da abertura.
+  // "Agora não" ou × esconde por 6 horas; quem já foi às sugestões não vê de novo por 12 horas.
+  const CONVITE = "obr-convite-sugestoes";
+  let ate = 0;
+  try { ate = Number(localStorage.getItem(CONVITE) || 0); } catch (e) {}
+  const conv = document.getElementById("convite");
+  const adiar = (horas) => { try { localStorage.setItem(CONVITE, String(Date.now() + horas * 3600e3)); } catch (e) {} };
+  const fecharConvite = () => { conv.classList.remove("on"); setTimeout(() => { conv.hidden = true; }, 300); adiar(6); };
+  document.getElementById("conviteX").addEventListener("click", fecharConvite);
+  document.getElementById("conviteDepois").addEventListener("click", fecharConvite);
+  document.getElementById("conviteIr").addEventListener("click", () => adiar(12));
+  document.querySelector(".sg-destaque").addEventListener("click", () => adiar(12));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !conv.hidden) fecharConvite(); });
+  if (Date.now() > ate) {
+    const mostrar = () => { conv.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => conv.classList.add("on"))); };
+    const esperar = () => document.getElementById("intro") ? setTimeout(esperar, 400) : setTimeout(mostrar, 1800);
+    esperar();
+  }
 })();
 </script>
 </body>
