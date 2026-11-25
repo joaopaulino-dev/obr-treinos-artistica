@@ -107,3 +107,6 @@
 .vol-painel-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px }
 .vol-painel-top select { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); min-height: 44px }
 .vol-tabela td:first-child { min-width: 130px }
+.vol-toggle { text-transform: none; letter-spacing: 0; font-weight: 500; margin: 0 }
+.vol-cred { display: block; font-size: 12.5px; font-variant-numeric: tabular-nums; color: var(--ink); margin-top: 2px }
+.vol-cred code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--off); padding: 1px 5px; border-radius: 5px }

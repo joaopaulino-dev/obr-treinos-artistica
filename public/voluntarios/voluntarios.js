@@ -230,12 +230,15 @@
     const ck = d.voluntarios.filter((v) => v.checkin).length, vl = d.voluntarios.filter((v) => v.vale).length;
     $("pnResumo").textContent = `${ddmm(d.dia)}: ${ck} de ${d.voluntarios.length} com check-in · ${vl} almoçaram.`;
     $("pnLista").innerHTML = d.voluntarios.map((v) => `<tr>
-      <td>${esc(v.nome)}<span class="sub">${esc(v.categoria)}</span></td>
+      <td>${esc(v.nome)}<span class="sub">${esc(v.categoria)}</span>${mostrarSenhas ? cred(v) : ""}</td>
       <td>${v.checkin ? `<span class="ok">${dataHora(v.checkin.em)}</span><span class="sub">a ${v.checkin.distancia} m</span>
         <button class="linkbtn" data-op="apagarCheckin" data-id="${esc(v.id)}">apagar</button>` : '<span class="nao">—</span>'}</td>
       <td>${v.vale ? `<span class="ok">${dataHora(v.vale)}</span>
         <button class="linkbtn" data-op="liberarVale" data-id="${esc(v.id)}">liberar</button>` : '<span class="nao">—</span>'}</td></tr>`).join("");
   }
+  let mostrarSenhas = false;
+  const cred = (v) => `<span class="vol-cred"><code>${esc(v.login || "")}</code> · <code>${esc(v.senha || "—")}</code></span>`;
+  $("pnSenhas").addEventListener("change", (e) => { mostrarSenhas = e.target.checked; if (st.painel) renderPainel(); });
   $("pnDia").addEventListener("change", () => carregarPainel());
   $("pnAtualizar").addEventListener("click", () => carregarPainel());
   $("pnLista").addEventListener("click", (ev) => {
@@ -298,7 +301,7 @@
     const ck = d.voluntarios.filter((v) => v.checkin).length, vl = d.voluntarios.filter((v) => v.vale).length;
     $("admResumo").textContent = `${ck} de ${d.voluntarios.length} com check-in · ${vl} vale${vl === 1 ? "" : "s"} usado${vl === 1 ? "" : "s"}.`;
     $("admLista").innerHTML = d.voluntarios.map((v) => `<tr>
-      <td>${esc(v.nome)}</td><td>${esc(v.categoria)}</td>
+      <td>${esc(v.nome)}<span class="sub">${esc(v.categoria)}</span></td><td><code>${esc(v.login || "")}</code> · <code>${esc(v.senha || "—")}</code></td>
       <td>${v.checkin ? `<span class="ok">${hora(v.checkin.em)}</span><span class="sub">a ${v.checkin.distancia} m (±${v.checkin.precisao} m)</span>
         <button class="linkbtn" data-acao="apagarCheckin" data-id="${esc(v.id)}">apagar</button>` : '<span class="nao">—</span>'}</td>
       <td>${v.vale ? `<span class="ok">${hora(v.vale)}</span>
