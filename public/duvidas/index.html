@@ -20,13 +20,18 @@
       </picture>
     </a>
     <div class="titles">
-      <span class="eyebrow">Robótica Artística · Etapa Nacional</span>
+      <span class="eyebrow">Artística e Resgate · Etapa Nacional</span>
       <h1>Perguntas frequentes</h1>
     </div>
     <a class="back" href="/">Menu</a>
   </header>
 
-  <section class="faq" aria-label="Perguntas frequentes da Artística">
+  <div class="tabs" role="tablist" aria-label="Modalidade">
+    <button role="tab" id="tab-artistica" aria-controls="artistica" aria-selected="true">Artística</button>
+    <button role="tab" id="tab-resgate" aria-controls="resgate" aria-selected="false" tabindex="-1">Resgate</button>
+  </div>
+
+  <section class="faq" id="artistica" role="tabpanel" aria-labelledby="tab-artistica">
     <details id="poster">
       <summary>O horário do pôster bate com outra atividade. E agora?</summary>
       <div class="resp">
@@ -101,13 +106,60 @@
     </details>
   </section>
 
-  <p class="foot">Não achou sua dúvida? Procure a coordenação da Robótica Artística.</p>
+  <section class="faq" id="resgate" role="tabpanel" aria-labelledby="tab-resgate" hidden>
+    <details id="resgate-stand">
+      <summary>Tem stand para as equipes do Resgate?</summary>
+      <div class="resp">
+        <p>Não. Não há stand para as equipes do Resgate.</p>
+      </div>
+    </details>
+
+    <details id="resgate-poster">
+      <summary>O horário do pôster bate com outra avaliação. E agora?</summary>
+      <div class="resp">
+        <p>O pôster é apenas expositivo: <strong>a equipe não precisa ficar junto dele</strong>.</p>
+        <p>Deixe o pôster no suporte no horário da sua equipe e siga para a avaliação.</p>
+      </div>
+    </details>
+
+    <details id="resgate-suporte">
+      <summary>Posso mudar o suporte do pôster de lugar?</summary>
+      <div class="resp">
+        <p>Não. O suporte do pôster deve ficar sempre no lugar original. Não leve o suporte para outro lugar nem mude de posição.</p>
+        <p>É o pôster que vai até o suporte.</p>
+      </div>
+    </details>
+  </section>
+
+  <p class="foot" id="foot">Não achou sua dúvida? Procure a coordenação da Robótica Artística.</p>
 </main>
 <script>
 (() => {
   // Selo "é hoje" na passagem de som, pelo fuso do evento.
   const hoje = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Fortaleza" }).format(new Date());
   if (hoje === "2026-11-25") document.getElementById("somHoje").hidden = false;
+  // Abas Artística / Resgate. #resgate (ou uma pergunta #resgate-...) abre a aba do Resgate.
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  function abrir(id, foco, mudarHash) {
+    for (const t of tabs) {
+      const on = t.getAttribute("aria-controls") === id;
+      t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      if (on && foco) t.focus();
+    }
+    document.getElementById("foot").textContent = "Não achou sua dúvida? Procure a coordenação " + (id === "resgate" ? "do Resgate." : "da Robótica Artística.");
+    if (mudarHash) history.replaceState(null, "", id === "artistica" ? location.pathname : "#" + id);
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => abrir(t.getAttribute("aria-controls"), false, true));
+    t.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const n = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+      abrir(n.getAttribute("aria-controls"), true, true);
+    });
+  });
+  if (location.hash.startsWith("#resgate")) abrir("resgate");
+
   // Link direto para uma pergunta (ex.: /duvidas#stand) já abre a resposta.
   const alvo = location.hash && document.getElementById(location.hash.slice(1));
   if (alvo && alvo.tagName === "DETAILS") alvo.open = true;
