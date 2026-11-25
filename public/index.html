@@ -35,14 +35,19 @@
 
   <section class="minha" id="minha" aria-labelledby="minhaT">
     <div class="minha-esc" id="minhaEsc">
-      <strong id="minhaT">Qual é a sua equipe?</strong>
-      <span class="sub">Escolha uma vez e veja aqui o seu próximo treino, o Super Teams e os seus votos.</span>
-      <select id="minhaSel" aria-label="Sua equipe" disabled><option value="">Carregando equipes…</option></select>
+      <strong id="minhaT">Busque a sua equipe</strong>
+      <span class="sub">Digite o nome e veja o resumo: próximo treino, agenda, Super Teams, mesa e votos.</span>
+      <div class="search">
+        <svg class="lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="minhaBusca" type="search" autocomplete="off" placeholder="Carregando equipes…" disabled role="combobox" aria-expanded="false" aria-controls="minhaOpcoes" aria-autocomplete="list" aria-labelledby="minhaT">
+        <ul class="suggest" id="minhaOpcoes" role="listbox" hidden></ul>
+      </div>
+      <button type="button" class="linkbtn minha-voltar" id="minhaVoltar" hidden>Voltar para a equipe escolhida</button>
     </div>
     <div class="minha-ok" id="minhaOk" hidden>
       <div class="minha-head">
         <span class="minha-nome"><strong id="minhaNome"></strong><span class="sub" id="minhaInfo"></span></span>
-        <button type="button" class="linkbtn" id="minhaTrocar">Trocar</button>
+        <button type="button" class="linkbtn" id="minhaTrocar">Buscar outra</button>
       </div>
       <div class="agenda" id="minhaAgenda" hidden></div>
       <ul class="minha-lista" id="minhaLista"></ul>
@@ -348,6 +353,7 @@
       const e = escolhida();
       $("minhaEsc").hidden = !!e;
       $("minhaOk").hidden = !e;
+      $("minhaVoltar").hidden = true;
       if (!e) return;
       $("minhaNome").textContent = e.nome;
       $("minhaInfo").textContent = e.modalidade + (e.nivel ? " · Nível " + e.nivel : "");
@@ -360,28 +366,71 @@
       lista.innerHTML = linhas.join("");
     }
 
+    // Busca por nome (sem acento), na ordem Artística N1, N2, Resgate N1, N2.
+    const norm = (t) => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const busca = $("minhaBusca"), ul = $("minhaOpcoes");
+    let opcoes = [], ativa = -1;
+    function abrirOpcoes() {
+      if (!equipes.length) return;
+      const q = norm(busca.value.trim());
+      opcoes = equipes.filter((x) => !q || norm(x.nome).includes(q));
+      ativa = q && opcoes.length ? 0 : -1;
+      if (!opcoes.length) ul.innerHTML = '<li class="sg-nada" aria-disabled="true">Nenhuma equipe com esse nome.</li>';
+      else {
+        let grupo = "";
+        ul.innerHTML = opcoes.map((x, i) => {
+          const g = x.modalidade + " · Nível " + x.nivel;
+          const cab = g !== grupo ? `<li class="sg-grupo" role="presentation">${escH(g)}</li>` : "";
+          grupo = g;
+          return cab + `<li role="option" id="mOp${i}" data-i="${i}" aria-selected="${i === ativa}"><span class="n">${escH(x.modalidade.slice(0, 3).toUpperCase())}</span><span>${escH(x.nome)}<span class="t">${escH(g)}</span></span></li>`;
+        }).join("");
+      }
+      ul.hidden = false; busca.setAttribute("aria-expanded", "true");
+    }
+    function fecharOpcoes() { ul.hidden = true; busca.setAttribute("aria-expanded", "false"); }
+    function marcar(i) {
+      ativa = i;
+      ul.querySelectorAll("[role=option]").forEach((li) => li.setAttribute("aria-selected", String(Number(li.dataset.i) === i)));
+      const li = $("mOp" + i); if (li) li.scrollIntoView({ block: "nearest" });
+    }
+    function escolher(x) {
+      if (!x) return;
+      EQ.set({ modalidade: x.modalidade, nivel: x.nivel, nome: x.nome });
+      busca.value = ""; fecharOpcoes();
+      $("minhaLista").innerHTML = "";
+      render();
+    }
+    busca.addEventListener("input", abrirOpcoes);
+    busca.addEventListener("focus", abrirOpcoes);
+    busca.addEventListener("blur", () => setTimeout(fecharOpcoes, 150));
+    busca.addEventListener("keydown", (ev) => {
+      if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
+        ev.preventDefault();
+        if (ul.hidden) abrirOpcoes();
+        if (opcoes.length) marcar(ev.key === "ArrowDown" ? (ativa + 1) % opcoes.length : (ativa <= 0 ? opcoes.length - 1 : ativa - 1));
+      } else if (ev.key === "Enter") {
+        ev.preventDefault();
+        if (opcoes[ativa]) escolher(opcoes[ativa]); else if (opcoes.length === 1) escolher(opcoes[0]);
+      } else if (ev.key === "Escape") { fecharOpcoes(); if (escolhida()) render(); }
+    });
+    ul.addEventListener("pointerdown", (ev) => {
+      const li = ev.target.closest("[data-i]");
+      if (!li) return;
+      ev.preventDefault();
+      escolher(opcoes[Number(li.dataset.i)]);
+    });
+
     pSug.then((d) => {
       equipes = (d && d.equipes) || [];
-      const sel = $("minhaSel");
-      if (!equipes.length) { sel.innerHTML = '<option value="">Não foi possível carregar as equipes</option>'; render(); return; }
-      const grupos = {};
-      for (const x of equipes) (grupos[x.modalidade + " · Nível " + x.nivel] = grupos[x.modalidade + " · Nível " + x.nivel] || []).push(x);
-      sel.innerHTML = '<option value="">Escolha a sua equipe…</option>' + Object.entries(grupos).map(([g, l]) =>
-        `<optgroup label="${escH(g)}">${l.map((x) => `<option value="${escH(x.chave)}">${escH(x.nome)}</option>`).join("")}</optgroup>`).join("");
-      sel.disabled = false;
-      sel.addEventListener("change", () => {
-        const x = equipes.find((q) => q.chave === sel.value);
-        if (!x) return;
-        EQ.set({ modalidade: x.modalidade, nivel: x.nivel, nome: x.nome });
-        $("minhaLista").innerHTML = "";
-        render();
-      });
+      busca.disabled = !equipes.length;
+      busca.placeholder = equipes.length ? "Nome da equipe" : "Não foi possível carregar as equipes";
       render();
     });
     $("minhaTrocar").addEventListener("click", () => {
-      $("minhaEsc").hidden = false; $("minhaOk").hidden = true;
-      $("minhaSel").value = ""; $("minhaSel").focus();
+      $("minhaEsc").hidden = false; $("minhaOk").hidden = true; $("minhaVoltar").hidden = false;
+      busca.value = ""; busca.focus();
     });
+    $("minhaVoltar").addEventListener("click", () => render());
     setInterval(() => { if (document.visibilityState === "visible" && !$("minhaOk").hidden) render(); }, 60000);
   })();
 

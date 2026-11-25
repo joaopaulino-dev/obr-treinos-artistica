@@ -580,3 +580,8 @@ button.seat.own:hover { filter: brightness(1.08) }
 /* Super Teams do Resgate */
 .st-nota { display: grid; gap: 2px; padding: 12px 14px; border-radius: var(--radius); background: var(--free); color: var(--free-ink); border: 1px solid var(--free-line); font-size: 14px }
 .st-nota span { color: var(--ink) }
+
+/* busca de equipe no topo do menu */
+.minha .search input { background: var(--bg) }
+.minha .suggest { z-index: 20 }
+.minha-voltar { justify-self: start; font-size: 13.5px }
