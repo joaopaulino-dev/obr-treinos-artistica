@@ -26,6 +26,15 @@
     <a class="back" href="/">Menu</a>
   </header>
 
+  <section class="sg-hero" aria-labelledby="sgHeroH">
+    <h2 id="sgHeroH">Ajude a melhorar o Nacional</h2>
+    <p id="sgHeroTxt">Envie sugestões e elogios para a organização e vote nas ideias das outras equipes. As mais votadas ganham destaque, e as que colocarmos em prática recebem o selo <span class="sg-impl">✓ Sugestão implementada</span>.</p>
+    <div class="sg-hero-acts">
+      <a class="btn" href="#nova">💡 Enviar sugestão</a>
+      <a class="btn" href="#votar">▲ Votar nas sugestões</a>
+    </div>
+  </section>
+
   <section class="panel sg-equipe" aria-labelledby="sgEquipeLbl">
     <div>
       <label for="sgBusca" id="sgEquipeLbl">Sua equipe</label>
@@ -42,7 +51,16 @@
     <p class="hint" id="sgVotos">Escolha a sua equipe para enviar e votar. Cada equipe tem 4 votos para destacar as sugestões que mais quer ver.</p>
   </section>
 
-  <section class="panel" aria-labelledby="sgNovaH">
+
+  <h2 class="docs-h" id="votar">Mais votadas · use os 4 votos da sua equipe</h2>
+  <div class="tabs" role="tablist" aria-label="Filtro">
+    <button role="tab" aria-selected="true" data-filtro="">Todas</button>
+    <button role="tab" aria-selected="false" data-filtro="sugestao" tabindex="-1">Sugestões</button>
+    <button role="tab" aria-selected="false" data-filtro="elogio" tabindex="-1">Elogios</button>
+  </div>
+  <section class="sg-lista" id="sgLista" aria-live="polite"><p class="hint">Carregando…</p></section>
+
+  <section class="panel" id="nova" aria-labelledby="sgNovaH">
     <h2 id="sgNovaH" class="sg-h">Deixe sua sugestão ou elogio</h2>
     <form id="sgForm" class="sg-form" novalidate>
       <div class="sg-cat" role="radiogroup" aria-label="Categoria">
@@ -60,13 +78,6 @@
       <button class="btn primary" type="submit" id="sgEnviar">Enviar</button>
     </form>
   </section>
-
-  <div class="tabs" role="tablist" aria-label="Filtro">
-    <button role="tab" aria-selected="true" data-filtro="">Todas</button>
-    <button role="tab" aria-selected="false" data-filtro="sugestao" tabindex="-1">Sugestões</button>
-    <button role="tab" aria-selected="false" data-filtro="elogio" tabindex="-1">Elogios</button>
-  </div>
-  <section class="sg-lista" id="sgLista" aria-live="polite"><p class="hint">Carregando…</p></section>
 
   <section class="panel admin" id="admin" hidden aria-label="Coordenação">
     <form id="adminForm" class="admin-row">

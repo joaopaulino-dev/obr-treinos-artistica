@@ -41,6 +41,17 @@
     <span class="go" aria-hidden="true">›</span>
   </a>
 
+  <a class="sg-destaque" href="/sugestoes">
+    <span class="sg-d-top">
+      <span class="sg-d-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z"/><path d="M9 11h6M9 14.5h3.5"/></svg>
+      </span>
+      <span class="sg-d-t"><strong>Sugestões e elogios</strong><span class="sub" id="sgdResumo">Deixe sua ideia e vote nas que mais quer ver. Cada equipe tem 4 votos.</span></span>
+      <span class="sg-d-cta">Participar ›</span>
+    </span>
+    <ol class="sg-d-lista" id="sgdLista" hidden></ol>
+  </a>
+
   <div class="tabs" role="tablist" aria-label="Modalidade">
     <button role="tab" id="tab-artistica" aria-controls="artistica" aria-selected="true">Artística</button>
     <button role="tab" id="tab-resgate" aria-controls="resgate" aria-selected="false" tabindex="-1">Resgate</button>
@@ -93,13 +104,6 @@
       <span class="go" aria-hidden="true">›</span>
     </a>
 
-    <a class="item link" href="/sugestoes">
-      <span class="ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z"/><path d="M9 11h6M9 14.5h3.5"/></svg>
-      </span>
-      <span class="item-t"><strong>Sugestões e elogios</strong><span class="sub">Deixe sua ideia e vote nas que mais quer ver</span></span>
-      <span class="go" aria-hidden="true">›</span>
-    </a>
   </section>
 
   <section class="mod" id="resgate" role="tabpanel" aria-labelledby="tab-resgate" hidden>
@@ -122,13 +126,6 @@
       <span class="go" aria-hidden="true">›</span>
     </a>
 
-    <a class="item link" href="/sugestoes">
-      <span class="ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z"/><path d="M9 11h6M9 14.5h3.5"/></svg>
-      </span>
-      <span class="item-t"><strong>Sugestões e elogios</strong><span class="sub">Deixe sua ideia e vote nas que mais quer ver</span></span>
-      <span class="go" aria-hidden="true">›</span>
-    </a>
   </section>
 
   <p class="foot">Dúvidas ou divergências? Procure a coordenação da modalidade.</p>
@@ -163,6 +160,19 @@
     });
   });
   if (location.hash === "#resgate") abrir("resgate");
+
+  // Destaque das sugestões: total e as 3 mais votadas, ao vivo.
+  const escH = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  fetch("/api/sugestoes").then((r) => r.ok ? r.json() : null).then((d) => {
+    if (!d || !d.sugestoes) return;
+    const l = d.sugestoes, votos = l.reduce((n, x) => n + x.votos, 0);
+    if (!l.length) return;
+    document.getElementById("sgdResumo").textContent =
+      l.length + (l.length === 1 ? " mensagem enviada" : " mensagens enviadas") + " · " + votos + (votos === 1 ? " voto" : " votos") + ". Deixe a sua e vote nas favoritas!";
+    const ol = document.getElementById("sgdLista");
+    ol.innerHTML = l.slice(0, 3).map((x) => `<li><span class="sg-d-v">▲ ${x.votos}</span><span class="sg-d-n">${x.categoria === "elogio" ? "👏" : "💡"} ${escH(x.titulo)}</span>${x.implementada ? '<span class="sg-impl">✓</span>' : ""}</li>`).join("");
+    ol.hidden = false;
+  }).catch(() => {});
 })();
 </script>
 </body>
