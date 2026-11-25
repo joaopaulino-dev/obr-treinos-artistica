@@ -92,7 +92,10 @@
       return;
     }
     const semVotos = state.equipe && meusVotos() >= VOTOS();
-    $("sgLista").innerHTML = itens.map((s, i) => {
+    // Implementadas vêm primeiro (servidor); o "Top N" conta só as que ainda estão em votação.
+    const emVotacao = itens.filter((s) => !s.implementada);
+    $("sgLista").innerHTML = itens.map((s) => {
+      const i = s.implementada ? 99 : emVotacao.indexOf(s);
       const minha = s.autor === state.equipe;
       const votei = state.equipe && s.votantes.includes(state.equipe);
       const voto = minha

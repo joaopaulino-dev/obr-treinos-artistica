@@ -91,3 +91,13 @@ test("hoje: bloqueia horários que já começaram, exceto forçando", () => {
   assert.equal(motivoBloqueio(c, "A", 60), null); // 10:00
   assert.equal(motivoBloqueio(c, "A", 59, { forcar: true }), null);
 });
+
+test("cancelamento pela equipe: só a própria reserva e até 15 min antes", async () => {
+  const { motivoCancelamento } = await import("../lib/regras.js");
+  const base = { ...ctx([r(S + 6, "A")]) }; // treino às 09:00
+  assert.equal(motivoCancelamento(base, "A", S + 6), null); // outro dia: sempre pode
+  assert.equal(motivoCancelamento(base, "B", S + 6), "Essa reserva não existe mais");
+  assert.equal(motivoCancelamento({ ...base, agoraMin: 9 * 60 - 15 }, "A", S + 6), null); // 08:45
+  assert.match(motivoCancelamento({ ...base, agoraMin: 9 * 60 - 14 }, "A", S + 6), /15 minutos/); // 08:46
+  assert.match(motivoCancelamento({ ...base, agoraMin: 9 * 60 + 5 }, "A", S + 6), /15 minutos/); // já começou
+});

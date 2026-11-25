@@ -214,7 +214,7 @@
   const pSug = json("/api/sugestoes");
   pSug.then((d) => {
     if (!d || !d.sugestoes) return;
-    const l = d.sugestoes, votos = l.reduce((n, x) => n + x.votos, 0);
+    const l = [...d.sugestoes].sort((a, b) => b.votos - a.votos), votos = l.reduce((n, x) => n + x.votos, 0);
     if (!l.length) return;
     document.getElementById("sgdResumo").textContent =
       l.length + (l.length === 1 ? " mensagem enviada" : " mensagens enviadas") + " · " + votos + (votos === 1 ? " voto" : " votos") + ". Deixe a sua e vote nas favoritas!";

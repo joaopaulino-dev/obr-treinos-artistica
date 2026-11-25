@@ -7,6 +7,7 @@
   const MODO_COORD = params.has("coordenacao");
   const MODO_AGENDA = location.pathname.startsWith("/agendar"); // acesso limitado: só cria reservas, N1 e N2
   const AVISO_KEY = "obr-aviso-n" + NIVEL;
+  const CANCELA_ATE_MIN = 15; // mesmo valor de lib/config.js
   const CRONOGRAMA = {
     1: "https://obr.robocup.org.br/wp-content/uploads/2026/11/Artistica-Cronograma-N1.pdf",
     2: "https://obr.robocup.org.br/wp-content/uploads/2026/11/Artistica-Cronograma-N2.pdf",
@@ -23,6 +24,7 @@
     agenda: false,       // logado no agendamento limitado
     senhaAgenda: "",
     auditoria: [],       // [{slot, equipe, criadoEm, origem}] (só coordenação)
+    cancelamentos: [],   // [{slot, equipe, origem, origemReserva, criadoEm}] (só coordenação)
     soLivres: false,
     verEncerrados: false, // horários que já passaram ficam recolhidos numa linha
     pending: null,       // ação aberta na folha de baixo
@@ -50,6 +52,8 @@
   const comMesa = (e) => e; // nomes das equipes aparecem sem o número da mesa
   const cred = (n) => n + (n === 1 ? " crédito" : " créditos");
   const passou = (s) => state.cfg.agoraMin != null && s * g().duracaoMin < state.cfg.agoraMin;
+  // Cancelamento pela própria equipe até CANCELA_ATE_MIN minutos antes do início (lib/regras.js).
+  const cancelavel = (s) => state.cfg.agoraMin == null || s * g().duracaoMin - state.cfg.agoraMin >= CANCELA_ATE_MIN;
   // Repescagem (lib/regras.js): quem já treinou tudo pode pegar o próximo horário livre.
   const proximo = () => state.cfg.agoraMin == null ? null : Math.floor(state.cfg.agoraMin / g().duracaoMin) + 1;
   const jaTreinou = (e) => {
@@ -87,7 +91,10 @@
 
   async function carregarAuditoria() {
     if (!state.admin) return;
-    try { state.auditoria = (await admin("auditoria")).reservas || []; } catch (e) { state.auditoria = []; }
+    try {
+      const d = await admin("auditoria");
+      state.auditoria = d.reservas || []; state.cancelamentos = d.cancelamentos || [];
+    } catch (e) { state.auditoria = []; state.cancelamentos = []; }
   }
 
   async function carregar() {
@@ -184,6 +191,8 @@
       $("creditsText").textContent = livres ? (livres === 1 ? "1 livre" : livres + " livres") : "Sem créditos";
       const meus = state.reservas.filter((r) => r.equipe === e).map((r) => r.slot).sort((a, b) => a - b).map((s) => ini(s) + "–" + fim(s));
       $("mine").textContent = meus.length ? "Seus horários: " + meus.join(" · ") : "Sua equipe ainda não tem horário neste dia.";
+      const podeCancelar = !MODO_AGENDA && !state.admin && state.reservas.some((r) => r.equipe === e && cancelavel(r.slot));
+      if (podeCancelar) $("mine").append(el("span", "mine-hint", " Imprevisto? Toque no seu horário na grade para cancelar até " + CANCELA_ATE_MIN + " min antes; o crédito volta."));
     } else {
       $("mine").textContent = "Escolha a sua equipe para ver os horários disponíveis.";
     }
@@ -226,8 +235,10 @@
         const nome = aqui[k];
         let c;
         if (nome) {
-          c = el(state.admin ? "button" : "div", "seat " + (nome === e ? "own" : "taken"), nome);
+          const podeCancelar = !state.admin && !state.agenda && nome === e && cancelavel(s);
+          c = el(state.admin || podeCancelar ? "button" : "div", "seat " + (nome === e ? "own" : "taken"), nome);
           if (state.admin) { c.type = "button"; c.dataset.ocupada = String(s); c.dataset.equipe = nome; c.title = "Mover ou liberar"; }
+          else if (podeCancelar) { c.type = "button"; c.dataset.cancelar = String(s); c.title = "Cancelar este treino"; c.append(el("small", "seat-act", "Cancelar")); }
         } else if (state.admin) {
           c = el("button", "seat free", "Livre"); c.type = "button"; c.dataset.livreAdmin = String(s);
         } else if (state.agenda && !passou(s)) {
@@ -278,9 +289,9 @@
     const com = Object.entries(c.extras || {}).map(([nome, n]) => nome + " (+" + n + ")");
     $("xLista").textContent = com.length ? "Com extras neste dia: " + com.join(" · ") : "Nenhuma equipe com créditos extras neste dia. Use 0 para remover.";
 
-    // Aparelhos que reservaram para mais de uma equipe.
+    // Aparelhos que reservaram ou cancelaram para mais de uma equipe.
     const porOrigem = {};
-    for (const r of state.auditoria) {
+    for (const r of state.auditoria.concat(state.cancelamentos)) {
       if (!r.origem || r.origem === "coordenacao" || r.origem === "agendamento") continue;
       (porOrigem[r.origem] = porOrigem[r.origem] || new Set()).add(r.equipe);
     }
@@ -288,6 +299,16 @@
     $("auditLista").replaceChildren(...(suspeitos.length
       ? suspeitos.map(([o, eqs]) => el("li", "", "Aparelho " + o + ": " + [...eqs].map(comMesa).join(", ")))
       : [el("li", "", "Nenhum caso até agora.")]));
+
+    // Cancelamentos do dia; destaca quando o aparelho que cancelou não é o que reservou.
+    $("cancelLista").replaceChildren(...(state.cancelamentos.length
+      ? state.cancelamentos.map((x) => {
+        const outro = x.origemReserva && x.origemReserva !== "coordenacao" && x.origemReserva !== "agendamento" && x.origem !== x.origemReserva;
+        const li = el("li", outro ? "alerta" : "", ini(x.slot) + " · " + x.equipe + " · cancelado " + fmtData(x.criadoEm) + " pelo aparelho " + (x.origem || "?"));
+        if (outro) li.append(el("strong", "", " (reservado pelo aparelho " + x.origemReserva + ")"));
+        return li;
+      })
+      : [el("li", "", "Nenhum cancelamento neste dia.")]));
   }
 
   function renderSheet() {
@@ -302,11 +323,20 @@
 
     if (p.tipo === "reservar") {
       main.textContent = "Reservar " + ini(p.slot) + "–" + fim(p.slot) + " para " + comMesa(p.equipe) + "?";
-      sub.textContent = "Usa 1 crédito do dia e não pode ser remarcada.";
+      sub.textContent = "Usa 1 crédito do dia. Se precisar, a equipe pode cancelar até " + CANCELA_ATE_MIN + " minutos antes e o crédito volta.";
       txt.append(el("span", "sub warnline", "Somente para a sua equipe. Reservar por outra equipe pode levar à desclassificação."));
       acts.replaceChildren(voltar, botao("Confirmar reserva", "primary", () => executar(
         () => post("/api/reservar", { nivel: NIVEL, dia: state.dia, slot: p.slot, equipe: p.equipe }),
         "Reserva confirmada: " + ini(p.slot) + " para " + p.equipe + ". Confira seus horários acima.")));
+    }
+
+    if (p.tipo === "cancelar") {
+      main.textContent = "Cancelar o treino de " + comMesa(p.equipe) + " às " + ini(p.slot) + "?";
+      sub.textContent = "O horário fica livre para outras equipes e o crédito volta para a sua equipe. Vale até " + CANCELA_ATE_MIN + " minutos antes do início.";
+      txt.append(el("span", "sub warnline", "Somente a própria equipe pode cancelar o seu treino. Todo cancelamento fica registrado com o aparelho usado: identificaremos se uma equipe cancelar o treino de outra."));
+      acts.replaceChildren(voltar, botao("Cancelar treino", "danger", () => executar(
+        () => post("/api/reservar", { acao: "cancelar", nivel: NIVEL, dia: state.dia, slot: p.slot, equipe: p.equipe }),
+        "Treino das " + ini(p.slot) + " cancelado. O crédito voltou para " + p.equipe + ".")));
     }
 
     if (p.tipo === "admin-livre") {
@@ -431,7 +461,10 @@
     const b = ev.target.closest("button"); if (!b || state.busy || !state.cfg) return;
     const d = b.dataset;
     if (d.fold) { state.verEncerrados = !state.verEncerrados; renderGrid(); return; }
-    if (d.reservar !== undefined) {
+    if (d.cancelar !== undefined) {
+      if (!state.equipe) return;
+      state.pending = { tipo: "cancelar", slot: Number(d.cancelar), equipe: state.equipe };
+    } else if (d.reservar !== undefined) {
       if (!state.equipe) { $("team").focus(); toast("Escolha a sua equipe antes de reservar."); return; }
       state.pending = { tipo: "reservar", slot: Number(d.reservar), equipe: state.equipe };
     } else if (d.livreAgenda !== undefined) {

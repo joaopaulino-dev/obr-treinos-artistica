@@ -5,10 +5,10 @@
 //   liberar   { slot, equipe }               remove a reserva
 //   extra     { equipe, extra }              créditos extras de uma equipe no dia (0 remove)
 //   grade     { porSlot, creditosBase, inicioMin, fimMin }   ajusta a grade do dia (creditosBase null = automático)
-//   auditoria                                devolve as reservas com data/hora e origem (hash do aparelho)
+//   auditoria                                devolve reservas e cancelamentos com data/hora e origem (hash do aparelho)
 //   zerar     { master }                     apaga todas as reservas do nível no dia (senha digitada de novo)
 import { validar, motivoBloqueio, erro, slotValido, inteiro } from "../lib/regras.js";
-import { comBanco, emTransacao, listarAuditoria } from "../lib/db.js";
+import { comBanco, emTransacao, listarAuditoria, listarCancelamentos } from "../lib/db.js";
 import { carregarDia, montarEstado, resolverGrade } from "../lib/grade.js";
 import { DURACAO_MIN } from "../lib/config.js";
 import { responderErro, corpo, senhaConfere } from "../lib/http.js";
@@ -98,8 +98,9 @@ export default async function handler(req, res) {
     if (b.acao === "entrar") return res.status(200).json({ ok: true });
     if (b.acao === "auditoria") {
       const p = validar(b);
-      const reservas = await comBanco((pool) => listarAuditoria(pool, p.nivel, p.dia));
-      return res.status(200).json({ reservas });
+      const [reservas, cancelamentos] = await comBanco((pool) =>
+        Promise.all([listarAuditoria(pool, p.nivel, p.dia), listarCancelamentos(pool, p.nivel, p.dia)]));
+      return res.status(200).json({ reservas, cancelamentos });
     }
     const fn = ACOES[b.acao];
     if (!fn) throw erro(400, "Ação desconhecida.");

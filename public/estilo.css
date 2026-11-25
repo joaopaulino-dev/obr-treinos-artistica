@@ -530,3 +530,10 @@ details.item:hover, details.item[open] { border-color: var(--accent) }
 details.item .go { transition: transform .15s }
 details.item[open] .go { transform: rotate(90deg) }
 details.item > .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 16px 16px }
+
+/* ---------- cancelar treino ---------- */
+button.seat.own { gap: 2px; align-content: center }
+button.seat.own:hover { filter: brightness(1.08) }
+.seat .seat-act { font-size: 11px; font-weight: 600; opacity: .85; text-decoration: underline; text-underline-offset: 2px }
+.mine .mine-hint { display: block; margin-top: 4px; font-size: 13px; opacity: .8 }
+.audit li.alerta { color: var(--bad) }

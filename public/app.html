@@ -75,6 +75,12 @@
         <ul class="audit" id="auditLista"></ul>
       </div>
 
+      <div class="admin-block">
+        <h3>Cancelamentos do dia</h3>
+        <p class="hint">As equipes podem cancelar o próprio treino até 15 minutos antes. Em destaque: cancelado por um aparelho diferente do que reservou (pode ser outra pessoa da equipe; confira antes de agir).</p>
+        <ul class="audit" id="cancelLista"></ul>
+      </div>
+
       <form id="gradeForm" class="admin-block">
         <h3>Grade deste dia</h3>
         <div class="fields">
@@ -112,6 +118,7 @@
 
   <div class="aviso" id="avisoRegra" role="note">
     <p><strong>Nova regra nos treinos:</strong> se a sua equipe já treinou e está sem créditos, pode reservar o próximo horário que estiver livre, a partir de 10 minutos antes dele começar.</p>
+    <p><strong>Novo: cancelar treino.</strong> Teve um imprevisto? Toque no horário da sua equipe na grade para cancelar até 15 minutos antes do início; o crédito volta. <strong>Somente a própria equipe pode cancelar o seu treino.</strong> Todo cancelamento fica registrado e identificaremos se uma equipe cancelar o treino de outra.</p>
   </div>
 
   <section class="teambar" id="teambar" aria-label="Sua equipe">
@@ -170,7 +177,7 @@
       <li><strong id="mDur">Cada slot dura 10 minutos</strong> e <span id="mCred">cada equipe tem 1 crédito por dia</span> (1 crédito = 1 slot).</li>
       <li><strong>Não vale reservar dois horários seguidos.</strong></li>
       <li><strong>Já treinou e acabaram os créditos?</strong> Você pode reservar o próximo horário livre, a partir de 10 minutos antes dele começar. Ex.: às 13h50, se ninguém pegou o das 14h, ele pode ser seu.</li>
-      <li><strong>Não há remarcação.</strong> Para trocar de horário, combine direto com outra equipe e avisem a coordenação.</li>
+      <li><strong>Imprevisto? Cancele até 15 minutos antes.</strong> Toque no horário da sua equipe na grade: o horário fica livre e o crédito volta, para reservar outro. <strong>Só a própria equipe pode cancelar o seu treino</strong>; todo cancelamento fica registrado e identificaremos se uma equipe cancelar o de outra.</li>
       <li><strong id="mAbre">Só é possível agendar para o dia seguinte após as 18h do dia vigente.</strong> Antes disso, as reservas valem para o dia de hoje.</li>
       <li><strong>Confira seus horários</strong> depois de reservar. Se encontrar qualquer divergência, avise a coordenação da Artística.</li>
     </ol>
