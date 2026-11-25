@@ -33,6 +33,21 @@
     <p class="hero-eyebrow">Etapa Nacional · João Pessoa/PB · 23 a 29/11</p>
   </header>
 
+  <section class="minha" id="minha" aria-labelledby="minhaT">
+    <div class="minha-esc" id="minhaEsc">
+      <strong id="minhaT">Qual é a sua equipe?</strong>
+      <span class="sub">Escolha uma vez e veja aqui o seu próximo treino, o Super Teams e os seus votos.</span>
+      <select id="minhaSel" aria-label="Sua equipe" disabled><option value="">Carregando equipes…</option></select>
+    </div>
+    <div class="minha-ok" id="minhaOk" hidden>
+      <div class="minha-head">
+        <span class="minha-nome"><strong id="minhaNome"></strong><span class="sub" id="minhaInfo"></span></span>
+        <button type="button" class="linkbtn" id="minhaTrocar">Trocar</button>
+      </div>
+      <ul class="minha-lista" id="minhaLista"></ul>
+    </div>
+  </section>
+
   <a class="card-link primary" href="/mapa">
     <span class="ico" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
@@ -143,6 +158,7 @@
     </div>
   </div>
 </aside>
+<script src="/equipe.js"></script>
 <script>
 (() => {
   // Abertura: some sozinha pelo CSS; clique/tecla pula. Só toca uma vez por sessão.
@@ -176,7 +192,9 @@
 
   // Destaque das sugestões: total e as 3 mais votadas, ao vivo.
   const escH = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  fetch("/api/sugestoes").then((r) => r.ok ? r.json() : null).then((d) => {
+  const json = (u) => fetch(u).then((r) => r.ok ? r.json() : null).catch(() => null);
+  const pSug = json("/api/sugestoes");
+  pSug.then((d) => {
     if (!d || !d.sugestoes) return;
     const l = d.sugestoes, votos = l.reduce((n, x) => n + x.votos, 0);
     if (!l.length) return;
@@ -192,6 +210,107 @@
       t.hidden = false;
     }
   }).catch(() => {});
+
+  // Cartão "Sua equipe": próximo treino, Super Teams e votos, a partir da equipe lembrada no aparelho.
+  (() => {
+    const $ = (id) => document.getElementById(id);
+    const EQ = window.OBR_EQUIPE;
+    const pad = (n) => String(n).padStart(2, "0");
+    const hhmm = (m) => pad(Math.floor(m / 60)) + ":" + pad(m % 60);
+    let equipes = [];
+    const item = (ico, html, href, cta) =>
+      `<li><span class="mi-ico" aria-hidden="true">${ico}</span><span class="mi-t">${html}</span>${href ? `<a class="pill${cta === "solid" ? " solid" : ""}" href="${href}">${cta === "solid" ? "Reservar" : escH(cta)}</a>` : ""}</li>`;
+    const ICO = {
+      treino: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>',
+      st: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c.6-.3 1.3-.5 2-.5 2.2 0 4 1.8 4 4"/></svg>',
+      voto: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z"/><path d="M9 11h6M9 14.5h3.5"/></svg>',
+    };
+
+    function escolhida() {
+      const e = EQ.get();
+      if (!e) return null;
+      // Completa o nível de quem só tinha escolhido a equipe nas sugestões.
+      const achada = equipes.find((x) => x.modalidade === e.modalidade && x.nome === e.nome);
+      return achada ? { modalidade: achada.modalidade, nivel: achada.nivel, nome: achada.nome } : (equipes.length ? null : e);
+    }
+
+    async function linhaTreino(e) {
+      const d = await json("/api/estado?nivel=" + e.nivel);
+      if (!d) return item(ICO.treino, "<strong>Treino</strong><span>Não foi possível carregar a grade agora.</span>", "/n" + e.nivel, "Ver grade");
+      const dur = d.grade.duracaoMin, quando = d.dia === d.dias[0].id ? "hoje" : "amanhã";
+      const meus = d.reservas.filter((r) => r.equipe === e.nome).map((r) => r.slot).sort((a, b) => a - b);
+      const agora = d.agoraMin;
+      const prox = meus.find((s) => agora == null || (s + 1) * dur > agora);
+      const livres = Math.max(0, d.grade.creditos + ((d.extras || {})[e.nome] || 0) - meus.length);
+      const palco = escH(d.palco);
+      if (prox != null) {
+        const ja = agora != null && prox * dur <= agora;
+        const txt = ja ? `Treinando agora, até ${hhmm((prox + 1) * dur)}` : `Próximo treino ${quando}, ${hhmm(prox * dur)}–${hhmm((prox + 1) * dur)}`;
+        return item(ICO.treino, `<strong>${txt}</strong><span>${palco}${livres ? ` · ${livres === 1 ? "1 crédito livre" : livres + " créditos livres"}` : ""}</span>`, "/n" + e.nivel, "Ver grade");
+      }
+      if (livres) return item(ICO.treino, `<strong>Sem treino reservado para ${quando}</strong><span>${palco} · ${livres === 1 ? "1 crédito livre" : livres + " créditos livres"}</span>`, "/n" + e.nivel, "solid");
+      return item(ICO.treino, `<strong>Treino de ${quando} já feito</strong><span>${palco} · se sobrar horário, veja a repescagem na grade</span>`, "/n" + e.nivel, "Ver grade");
+    }
+
+    async function linhaSuperTeams(e) {
+      const d = await json("/api/superteams");
+      if (!d) return "";
+      const time = (d.times || []).find((t) => t.equipes.some((x) => x.equipe === e.nome));
+      if (time) return item(ICO.st, `<strong>${escH(time.nome)}</strong><span>Sua equipe foi sorteada para este Super Team</span>`, "/superteams", "Ver times");
+      if (d.times) return item(ICO.st, "<strong>Super Teams sorteados</strong><span>Sua equipe não está entre as inscritas</span>", "/superteams", "Ver times");
+      if ((d.inscritas || []).includes(e.nome)) return item(ICO.st, "<strong>Super Teams: interesse registrado</strong><span>O sorteio acontece depois das entrevistas</span>", "/superteams", "Ver");
+      if (d.aberto) return item(ICO.st, "<strong>Super Teams: ainda não inscrita</strong><span>ODS 10 · participação opcional</span>", "/superteams", "Participar");
+      return item(ICO.st, "<strong>Super Teams: inscrições encerradas</strong><span>O resultado aparece na página</span>", "/superteams", "Ver");
+    }
+
+    async function linhaVotos(e) {
+      const d = await pSug;
+      if (!d) return "";
+      const k = EQ.chave(e), max = d.votosPorEquipe || 4;
+      const usados = d.sugestoes.filter((s) => s.votantes.includes(k)).length;
+      const r = Math.max(0, max - usados);
+      return item(ICO.voto, `<strong>${r ? `${r} de ${max} votos disponíveis` : `Os ${max} votos já foram usados`}</strong><span>Sugestões e elogios do Nacional</span>`, "/sugestoes", r ? "Votar" : "Ver");
+    }
+
+    async function render() {
+      const e = escolhida();
+      $("minhaEsc").hidden = !!e;
+      $("minhaOk").hidden = !e;
+      if (!e) return;
+      $("minhaNome").textContent = e.nome;
+      $("minhaInfo").textContent = e.modalidade + (e.nivel ? " · Nível " + e.nivel : "");
+      const lista = $("minhaLista");
+      if (!lista.children.length) lista.innerHTML = '<li class="mi-load">Carregando…</li>';
+      const art = e.modalidade === "Artística" && e.nivel;
+      const linhas = await Promise.all([art ? linhaTreino(e) : "", art ? linhaSuperTeams(e) : "", linhaVotos(e)]);
+      if (escolhida()?.nome !== e.nome) return; // trocou de equipe enquanto carregava
+      lista.innerHTML = linhas.join("");
+    }
+
+    pSug.then((d) => {
+      equipes = (d && d.equipes) || [];
+      const sel = $("minhaSel");
+      if (!equipes.length) { sel.innerHTML = '<option value="">Não foi possível carregar as equipes</option>'; render(); return; }
+      const grupos = {};
+      for (const x of equipes) (grupos[x.modalidade + " · Nível " + x.nivel] = grupos[x.modalidade + " · Nível " + x.nivel] || []).push(x);
+      sel.innerHTML = '<option value="">Escolha a sua equipe…</option>' + Object.entries(grupos).map(([g, l]) =>
+        `<optgroup label="${escH(g)}">${l.map((x) => `<option value="${escH(x.chave)}">${escH(x.nome)}</option>`).join("")}</optgroup>`).join("");
+      sel.disabled = false;
+      sel.addEventListener("change", () => {
+        const x = equipes.find((q) => q.chave === sel.value);
+        if (!x) return;
+        EQ.set({ modalidade: x.modalidade, nivel: x.nivel, nome: x.nome });
+        $("minhaLista").innerHTML = "";
+        render();
+      });
+      render();
+    });
+    $("minhaTrocar").addEventListener("click", () => {
+      $("minhaEsc").hidden = false; $("minhaOk").hidden = true;
+      $("minhaSel").value = ""; $("minhaSel").focus();
+    });
+    setInterval(() => { if (document.visibilityState === "visible" && !$("minhaOk").hidden) render(); }, 60000);
+  })();
 
   // Convite discreto para sugerir/elogiar: sobe do rodapé depois da abertura.
   // "Agora não" ou × esconde por 6 horas; quem já foi às sugestões não vê de novo por 12 horas.

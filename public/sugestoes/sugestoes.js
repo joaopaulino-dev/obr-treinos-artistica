@@ -4,6 +4,7 @@
   const MODO_COORD = new URLSearchParams(location.search).has("coordenacao");
   const state = { dados: null, lista: [], equipe: "", categoria: "sugestao", filtro: "", senha: "", admin: false, busy: false };
   try { state.equipe = localStorage.getItem("obr-sugestoes-equipe") || ""; } catch (e) {}
+  if (!state.equipe && window.OBR_EQUIPE) state.equipe = window.OBR_EQUIPE.chave(window.OBR_EQUIPE.get());
   try { state.senha = sessionStorage.getItem("obr-coord") || ""; } catch (e) {}
 
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -62,6 +63,7 @@
   function escolher(e) {
     state.equipe = e ? e.chave : "";
     try { localStorage.setItem("obr-sugestoes-equipe", state.equipe); } catch (er) {}
+    if (e && window.OBR_EQUIPE) window.OBR_EQUIPE.set({ modalidade: e.modalidade, nivel: e.nivel, nome: e.nome });
     $("sgBusca").value = "";
     fecharOpcoes();
     render();

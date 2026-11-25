@@ -475,3 +475,32 @@ html.sem-intro .intro { display: none }
   .convite { padding: 14px 12px 12px; gap: 10px }
   .convite-acts .btn { flex: 1 1 auto }
 }
+
+/* ---------- cartão "Sua equipe" (menu) ---------- */
+.minha { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); padding: 16px }
+.minha strong { font-family: var(--font-d) }
+.minha .sub { display: block; color: var(--muted); font-size: 13.5px }
+.minha-esc { display: grid; gap: 8px }
+.minha-esc > strong { font-size: 18px }
+.minha select { width: 100%; min-height: 48px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink) }
+.minha-ok { display: grid; gap: 12px }
+.minha-head { display: flex; align-items: flex-start; gap: 12px }
+.minha-nome { min-width: 0; flex: 1 }
+.minha-nome strong { display: block; font-size: 19px; line-height: 1.2; overflow-wrap: anywhere }
+.minha-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px }
+.minha-lista li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: var(--bg) }
+.minha-lista li.mi-load { display: block; color: var(--muted); font-size: 13.5px }
+.mi-ico { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent) }
+.mi-ico svg { width: 20px; height: 20px }
+.mi-t { min-width: 0 }
+.mi-t strong { display: block; font-size: 15px; line-height: 1.25 }
+.mi-t span { display: block; color: var(--muted); font-size: 12.5px }
+.minha-lista .pill { min-height: 38px; padding: 0 14px; font-size: 13.5px; white-space: nowrap }
+
+/* ---------- grade: horários encerrados recolhidos ---------- */
+.row.fold { display: flex; width: 100%; align-items: center; gap: 10px; padding: 12px 10px; background: var(--off); color: var(--off-ink);
+  border: 0; border-bottom: 1px solid var(--line); cursor: pointer; text-align: left; font-size: 13px }
+.row.fold:hover { color: var(--ink) }
+.fold-t { font-weight: 600; font-variant-numeric: tabular-nums; width: 86px; flex: none }
+.fold-n { flex: 1; min-width: 0 }
+.fold-a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px }

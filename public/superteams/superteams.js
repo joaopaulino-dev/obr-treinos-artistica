@@ -34,6 +34,8 @@
     sel.innerHTML = '<option value="">Escolha a sua equipe</option>' + Object.entries(equipes).map(([n, lista]) =>
       `<optgroup label="Nível ${n}">` + [...lista].sort((a, b) => a.localeCompare(b, "pt-BR")).map((e) => `<option>${esc(e)}</option>`).join("") + "</optgroup>").join("");
     sel.dataset.pronto = "1";
+    const eq = window.OBR_EQUIPE && window.OBR_EQUIPE.get();
+    if (eq && eq.modalidade === "Artística" && Object.values(equipes).some((l) => l.includes(eq.nome))) sel.value = eq.nome;
   }
 
   function cardsTimes(times) {
@@ -80,6 +82,7 @@
     try {
       state.pub = await post("/api/superteams", { equipe, integrantes });
       try { localStorage.setItem(CHAVE_LOCAL, equipe); } catch (e) {}
+      if (window.OBR_EQUIPE) window.OBR_EQUIPE.set({ modalidade: "Artística", nivel: Number(Object.keys(state.pub.equipes).find((n) => state.pub.equipes[n].includes(equipe))) || null, nome: equipe });
       $("stForm").reset();
       renderPublico();
       toast("Interesse registrado. Boa sorte no sorteio!");

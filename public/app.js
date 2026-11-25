@@ -24,6 +24,7 @@
     senhaAgenda: "",
     auditoria: [],       // [{slot, equipe, criadoEm, origem}] (só coordenação)
     soLivres: false,
+    verEncerrados: false, // horários que já passaram ficam recolhidos numa linha
     pending: null,       // ação aberta na folha de baixo
     busy: false,
     erroCarga: "",
@@ -31,6 +32,10 @@
   };
 
   try { state.equipe = localStorage.getItem("obr-equipe-n" + NIVEL) || ""; } catch (e) {}
+  if (!state.equipe && window.OBR_EQUIPE) {
+    const eq = window.OBR_EQUIPE.get();
+    if (eq && eq.modalidade === "Artística" && eq.nivel === NIVEL) state.equipe = eq.nome;
+  }
   try { state.senha = sessionStorage.getItem("obr-coord") || ""; } catch (e) {}
   try { state.senhaAgenda = sessionStorage.getItem("obr-agenda") || ""; } catch (e) {}
 
@@ -198,7 +203,19 @@
     head.append(el("div", "status", "Situação"));
     linhas.push(head);
     let mostradas = 0;
+    // Horários encerrados (sempre no começo do dia) viram uma linha só, para a grade abrir perto de agora.
+    const encerrados = slotsDoDia().filter(passou);
+    const recolher = encerrados.length >= 2;
+    if (recolher) {
+      const b = el("button", "row fold");
+      b.type = "button"; b.dataset.fold = "1"; b.setAttribute("aria-expanded", String(state.verEncerrados));
+      b.append(el("span", "fold-t", ini(encerrados[0]) + "–" + fim(encerrados[encerrados.length - 1])),
+        el("span", "fold-n", encerrados.length + " horários encerrados"),
+        el("span", "fold-a", state.verEncerrados ? "Ocultar" : "Mostrar"));
+      linhas.push(b);
+    }
     for (const s of slotsDoDia()) {
+      if (recolher && !state.verEncerrados && passou(s)) continue;
       const aqui = naquele(s);
       const livres = gr.porSlot - Math.min(gr.porSlot, aqui.length);
       if (state.soLivres && !livres) continue;
@@ -384,23 +401,27 @@
   }
 
   /* ---------- janela de regras ---------- */
+  // Aparece uma vez por dia em cada aparelho; depois fica em "Ver regras".
   const dlg = $("regras");
+  const hojeLocal = () => new Date().toLocaleDateString("sv-SE", { timeZone: "America/Fortaleza" });
+  const marcarVisto = () => { try { localStorage.setItem(AVISO_KEY, hojeLocal()); } catch (e) {} };
   function abrirRegras() { if (dlg.showModal) { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute("open", ""); }
   function fecharRegras() {
-    try { sessionStorage.setItem(AVISO_KEY, "1"); } catch (e) {}
+    marcarVisto();
     if (dlg.close) dlg.close(); else dlg.removeAttribute("open");
   }
   $("entendi").addEventListener("click", fecharRegras);
   $("verRegras").addEventListener("click", abrirRegras);
-  dlg.addEventListener("cancel", () => { try { sessionStorage.setItem(AVISO_KEY, "1"); } catch (e) {} });
+  dlg.addEventListener("cancel", marcarVisto);
   let jaViu = false;
-  try { jaViu = sessionStorage.getItem(AVISO_KEY) === "1"; } catch (e) {}
+  try { jaViu = localStorage.getItem(AVISO_KEY) === hojeLocal(); } catch (e) {}
   if (!jaViu && !MODO_COORD && !MODO_AGENDA) abrirRegras();
 
   /* ---------- eventos ---------- */
   $("team").addEventListener("change", (ev) => {
     state.equipe = ev.target.value; state.pending = null;
     try { localStorage.setItem("obr-equipe-n" + NIVEL, state.equipe); } catch (e) {}
+    if (state.equipe && window.OBR_EQUIPE) window.OBR_EQUIPE.set({ modalidade: "Artística", nivel: NIVEL, nome: state.equipe });
     render();
   });
 
@@ -409,6 +430,7 @@
   $("grid").addEventListener("click", (ev) => {
     const b = ev.target.closest("button"); if (!b || state.busy || !state.cfg) return;
     const d = b.dataset;
+    if (d.fold) { state.verEncerrados = !state.verEncerrados; renderGrid(); return; }
     if (d.reservar !== undefined) {
       if (!state.equipe) { $("team").focus(); toast("Escolha a sua equipe antes de reservar."); return; }
       state.pending = { tipo: "reservar", slot: Number(d.reservar), equipe: state.equipe };
