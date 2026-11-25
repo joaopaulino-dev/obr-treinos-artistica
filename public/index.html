@@ -188,7 +188,7 @@
     const top = l.find((x) => x.votos > 0);
     if (top) {
       const t = document.getElementById("conviteTop");
-      t.innerHTML = `Mais votada agora: <strong>${escH(top.titulo)}</strong> (▲ ${top.votos})`;
+      t.innerHTML = `<span class="ct">Mais votada agora: <strong>${escH(top.titulo)}</strong> (▲ ${top.votos})</span>`;
       t.hidden = false;
     }
   }).catch(() => {});
@@ -208,7 +208,9 @@
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !conv.hidden) fecharConvite(); });
   if (Date.now() > ate) {
     const mostrar = () => { conv.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => conv.classList.add("on"))); };
-    const esperar = () => document.getElementById("intro") ? setTimeout(esperar, 400) : setTimeout(mostrar, 1800);
+    // Espera a abertura terminar (quando já foi vista na sessão ela fica escondida e não conta).
+    const abrindo = () => { const i = document.getElementById("intro"); return i && getComputedStyle(i).display !== "none" && !i.classList.contains("fora"); };
+    const esperar = () => abrindo() ? setTimeout(esperar, 400) : setTimeout(mostrar, 1800);
     esperar();
   }
 })();

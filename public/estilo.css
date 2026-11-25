@@ -440,9 +440,38 @@ html.sem-intro .intro { display: none }
 .convite-corpo { display: grid; gap: 6px; padding-right: 18px }
 .convite-corpo strong { font-family: var(--font-d); font-size: 16px }
 .convite-corpo p { margin: 0; font-size: 13.5px; color: var(--muted) }
-.convite-top { background: var(--accent-soft); color: var(--accent-strong) !important; padding: 6px 10px; border-radius: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.convite-top { background: var(--accent-soft); color: var(--accent-strong) !important; padding: 6px 10px; border-radius: 8px }
 .convite-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px }
 .convite-acts .btn { min-height: 40px; padding: 8px 14px; text-decoration: none; display: inline-grid; place-items: center }
 .convite-x { position: absolute; top: 6px; right: 8px; width: 32px; height: 32px; border: 0; background: none; color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; border-radius: 8px }
 .convite-x:hover { background: var(--off) }
 @media (prefers-reduced-motion: reduce) { .convite { transition: none } }
+
+/* ---------- ajustes de celular (sugestões, menu e convite) ---------- */
+.sg-tag, .sg-top, .sg-impl { white-space: nowrap }
+.sg-meta { align-items: center }
+.sg-escolhida > span { min-width: 0; overflow-wrap: anywhere }
+.sg-escolhida .chip-btn { flex: none }
+.sg-autor { overflow-wrap: anywhere }
+.sg-d-n, .convite-top .ct { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden }
+.sg-d-n { line-height: 1.3 }
+.sg-d-lista .sg-impl { flex: none }
+.suggest li span:last-child { min-width: 0; overflow-wrap: anywhere }
+@media (max-width: 420px) {
+  .topbar { gap: 10px }
+  .topbar .logo { height: 28px }
+  .topbar .eyebrow { font-size: 10.5px; letter-spacing: .06em }
+  .sg-card { grid-template-columns: 50px minmax(0, 1fr); gap: 10px; padding: 12px }
+  .sg-voto { min-height: 58px; padding: 6px 2px }
+  .sg-voto b { font-size: 18px }
+  .sg-corpo h3 { font-size: 16px }
+  .sg-corpo p { font-size: 14px }
+  .sg-hero { padding: 16px }
+  .sg-hero-acts .btn { flex-basis: 100% }
+  .suggest li { grid-template-columns: 38px minmax(0, 1fr); gap: 8px; padding: 9px 10px }
+  .sg-d-top { gap: 12px }
+  .sg-d-ico { width: 42px; height: 42px }
+  .sg-destaque { padding: 14px }
+  .convite { padding: 14px 12px 12px; gap: 10px }
+  .convite-acts .btn { flex: 1 1 auto }
+}

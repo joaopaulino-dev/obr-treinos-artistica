@@ -181,7 +181,7 @@
   document.querySelectorAll("[data-cat]").forEach((b) => b.addEventListener("click", () => {
     state.categoria = b.dataset.cat;
     document.querySelectorAll("[data-cat]").forEach((x) => x.setAttribute("aria-checked", String(x === b)));
-    $("sgTitulo").placeholder = state.categoria === "elogio" ? "Ex.: Equipe de arbitragem muito atenciosa" : "Ex.: Mais tomadas perto das mesas";
+    $("sgTitulo").placeholder = state.categoria === "elogio" ? "Ex.: Arbitragem muito atenciosa" : "Ex.: Mais tomadas nas mesas";
   }));
 
   function atualizarContador() {
