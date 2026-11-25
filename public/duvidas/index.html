@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7A1C1C">
+<title>Perguntas frequentes | OBR 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/estilo.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="topbar">
+    <a href="/" aria-label="Voltar ao menu">
+      <picture>
+        <source srcset="/assets/logo-obr-2026-branco.png" media="(prefers-color-scheme: dark)">
+        <img class="logo" src="/assets/logo-obr-2026-vinho.png" alt="OBR 2026" width="560" height="237">
+      </picture>
+    </a>
+    <div class="titles">
+      <span class="eyebrow">Robótica Artística · Etapa Nacional</span>
+      <h1>Perguntas frequentes</h1>
+    </div>
+    <a class="back" href="/">Menu</a>
+  </header>
+
+  <section class="faq" aria-label="Perguntas frequentes da Artística">
+    <details id="poster">
+      <summary>O horário do pôster bate com outra atividade. E agora?</summary>
+      <div class="resp">
+        <p>Não é preciso ficar junto ao pôster. A equipe coloca o pôster no início do horário e volta para retirá-lo ao final.</p>
+        <p>Dê prioridade às avaliações de sala (entrevista) e às apresentações.</p>
+      </div>
+    </details>
+
+    <details id="stand">
+      <summary>O stand conta pontuação?</summary>
+      <div class="resp">
+        <p>Sim. A presença no stand vale <strong>até 5 pontos</strong> para a equipe. A organização faz um check para confirmar que a equipe esteve no stand durante o horário reservado.</p>
+        <p>Não há avaliação qualitativa no stand: o que conta é a presença.</p>
+      </div>
+    </details>
+
+    <details id="treino">
+      <summary>Posso treinar mais de uma vez por dia?</summary>
+      <div class="resp">
+        <p>Sim. Cada equipe tem um crédito de treino por dia, mas, depois de treinar, pode reservar pelo aplicativo o próximo horário que estiver livre (a partir de 10 minutos antes dele começar).</p>
+        <p>Se tiver dificuldade, procure o credenciamento na entrada da área da OBR.</p>
+        <p><a href="/n1">Reservar treino · Nível 1</a> · <a href="/n2">Nível 2</a></p>
+      </div>
+    </details>
+
+    <details id="palco">
+      <summary>Por onde é a entrada e a saída do palco?</summary>
+      <div class="resp">
+        <p><strong>Entrada:</strong> olhando o palco da arquibancada (plateia), a entrada fica à esquerda, pela rampa e pela escada perto da mesa do DJ.</p>
+        <p><strong>Saída:</strong> pela direita (à esquerda de quem está apresentando). Se precisar, use a rampa do outro lado.</p>
+      </div>
+    </details>
+
+    <details id="som">
+      <summary>Como funciona a passagem de som e vídeo?<span class="hoje" id="somHoje" hidden>é hoje</span></summary>
+      <div class="resp">
+        <p>A passagem de som e vídeo deve ser feita na <strong>quarta-feira, 25/11</strong>, sem agendamento: basta ir até a mesa do DJ e fazer os testes.</p>
+        <p>Leve a música e o vídeo da apresentação (de preferência com uma cópia de reserva) e confira se tudo toca como esperado.</p>
+      </div>
+    </details>
+
+    <details id="cabos">
+      <summary>Quem fornece cabos e equipamentos de conexão?</summary>
+      <div class="resp">
+        <p>Cabos, adaptadores e demais equipamentos de conexão são de <strong>inteira responsabilidade da equipe</strong>, assim como o seu funcionamento.</p>
+        <p>Aproveite a passagem de som e vídeo para testar tudo antes da apresentação.</p>
+      </div>
+    </details>
+
+    <details id="superteams">
+      <summary>O que é o Super Teams?</summary>
+      <div class="resp">
+        <p>Uma apresentação extra, criada por duas ou mais equipes sorteadas, sobre o tema ODS 10. A participação é opcional.</p>
+        <p><a href="/superteams">Saiba mais e demonstre interesse</a></p>
+      </div>
+    </details>
+  </section>
+
+  <p class="foot">Não achou sua dúvida? Procure a coordenação da Robótica Artística.</p>
+</main>
+<script>
+(() => {
+  // Selo "é hoje" na passagem de som, pelo fuso do evento.
+  const hoje = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Fortaleza" }).format(new Date());
+  if (hoje === "2026-11-25") document.getElementById("somHoje").hidden = false;
+  // Link direto para uma pergunta (ex.: /duvidas#stand) já abre a resposta.
+  const alvo = location.hash && document.getElementById(location.hash.slice(1));
+  if (alvo && alvo.tagName === "DETAILS") alvo.open = true;
+})();
+</script>
+</body>
+</html>

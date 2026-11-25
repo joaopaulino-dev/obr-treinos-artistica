@@ -317,3 +317,49 @@ html.sem-intro .intro { display: none }
   .intro { animation: intro-sai .3s linear 1.2s forwards }
   .intro-mascote, .intro-logo, .intro-num, .intro-txt, .intro-sub, .intro-sub::before { animation: none }
 }
+
+/* ---------- super teams ---------- */
+.st-tema { display: grid; gap: 10px; padding: 20px; border-radius: var(--radius); background: var(--accent); color: var(--accent-ink) }
+.st-tema h2 { font-size: clamp(19px, 4.8vw, 25px); line-height: 1.25 }
+.st-tema p { margin: 0; font-size: 14px; opacity: .9 }
+.st-ods { justify-self: start; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,.16) }
+.st-form h2 { font-size: 20px; margin-bottom: 4px }
+.st-enviar { align-self: end }
+.st-ok, .st-fechado { padding: 12px 14px; border-radius: 10px; font-size: 14px }
+.st-ok { background: var(--free); color: var(--free-ink); border: 1px solid var(--free-line) }
+.st-fechado { background: var(--off); color: var(--ink) }
+.st-info { display: grid; gap: 10px }
+.st-info p { margin: 0 }
+.st-passos { margin: 0; padding: 0; list-style: none; counter-reset: passo; display: grid; gap: 10px }
+.st-passos li { counter-increment: passo; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 2px 12px; padding: 12px 14px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line) }
+.st-passos li::before { content: counter(passo); grid-row: span 2; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-family: var(--font-d); font-weight: 700 }
+.st-passos strong { font-family: var(--font-d) }
+.st-passos span { color: var(--muted); font-size: 14px }
+.st-resultado { display: grid; gap: 10px }
+.st-times { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px }
+.st-nivel { grid-column: 1 / -1; font-size: 15px; margin-top: 4px }
+.st-time { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 8px }
+.st-time header { display: flex; justify-content: space-between; gap: 8px; align-items: baseline }
+.st-time header strong { font-family: var(--font-d); color: var(--accent) }
+.st-time header span, .st-time li span { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums }
+.st-time ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 14px }
+.st-time li { display: flex; justify-content: space-between; gap: 8px }
+.st-acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+.st-tabela-wrap { overflow-x: auto }
+.st-tabela { width: 100%; border-collapse: collapse; font-size: 13.5px }
+.st-tabela th { text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--line) }
+.st-tabela td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: middle }
+.st-x { font: inherit; font-size: 12.5px; font-weight: 600; color: var(--bad); background: none; border: 1px solid var(--bad-line); border-radius: 8px; padding: 6px 10px; cursor: pointer }
+.item.destaque { border-color: var(--accent); background: var(--accent-soft) }
+
+/* ---------- perguntas frequentes ---------- */
+.faq { display: grid; gap: 10px }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius) }
+.faq details[open] { border-color: var(--accent) }
+.faq summary { cursor: pointer; list-style: none; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 14px 16px; min-height: 56px; font-family: var(--font-d); font-weight: 700; font-size: 16px }
+.faq summary::-webkit-details-marker { display: none }
+.faq summary::after { content: "+"; font-size: 22px; color: var(--muted); line-height: 1 }
+.faq details[open] summary::after { content: "–" }
+.faq .resp { padding: 0 16px 14px; display: grid; gap: 8px; font-size: 14.5px }
+.faq .resp p { margin: 0 }
+.faq .hoje { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 999px; background: var(--note); color: var(--note-ink) }

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7A1C1C">
+<title>Super Teams | OBR 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/estilo.css">
+</head>
+<body>
+<main class="wrap st-wrap">
+  <header class="topbar">
+    <a href="/" aria-label="Voltar ao menu">
+      <picture>
+        <source srcset="/assets/logo-obr-2026-branco.png" media="(prefers-color-scheme: dark)">
+        <img class="logo" src="/assets/logo-obr-2026-vinho.png" alt="OBR 2026" width="560" height="237">
+      </picture>
+    </a>
+    <div class="titles">
+      <span class="eyebrow">Robótica Artística · Etapa Nacional</span>
+      <h1>Super Teams</h1>
+    </div>
+    <a class="back" href="/">Menu</a>
+  </header>
+
+  <section class="st-tema" aria-labelledby="st-tema-h">
+    <span class="st-ods">ODS 10 · Redução das Desigualdades</span>
+    <h2 id="st-tema-h">“Mesmo código, mesmos sonhos: na construção ou na programação, o talento não tem raça!”</h2>
+    <p>O tema do Super Teams deste ano vem do Objetivo de Desenvolvimento Sustentável 10 da ONU: reduzir as desigualdades e promover a inclusão de todas as pessoas, sem distinção de raça, cor ou origem. Os times criam uma apresentação sobre isso.</p>
+  </section>
+
+  <section class="panel st-form" id="inscricao" aria-labelledby="st-form-h">
+    <div>
+      <h2 id="st-form-h">Quero participar do Super Teams</h2>
+      <p class="hint" id="stTotal">Carregando…</p>
+    </div>
+    <form id="stForm" class="fields" novalidate>
+      <div class="wide">
+        <label for="stEquipe">Sua equipe</label>
+        <select id="stEquipe" required><option value="">Carregando equipes…</option></select>
+      </div>
+      <div>
+        <label for="stIntegrantes">Integrantes presentes</label>
+        <input id="stIntegrantes" type="number" inputmode="numeric" min="1" max="15" required placeholder="Ex.: 4">
+      </div>
+      <button class="btn primary st-enviar" type="submit" id="stEnviar">Quero participar</button>
+    </form>
+    <p class="hint">Cada equipe se inscreve uma única vez. Combine com o grupo antes de enviar: inscrição feita por engano só é removida pela coordenação.</p>
+    <div class="st-ok" id="stOk" hidden role="status"></div>
+    <div class="st-fechado" id="stFechado" hidden role="status"><strong>Inscrições encerradas.</strong> Acompanhe o resultado do sorteio aqui e com a coordenação da Artística.</div>
+  </section>
+
+  <section class="st-resultado" id="stResultado" hidden aria-labelledby="st-res-h">
+    <h2 id="st-res-h" class="docs-h">Resultado do sorteio</h2>
+    <div class="st-times" id="stTimes"></div>
+  </section>
+
+  <section class="st-info" aria-labelledby="st-oque-h">
+    <h2 id="st-oque-h" class="docs-h">O que é</h2>
+    <p>O <strong>Desafio Super Team</strong> é uma apresentação robótica criada por um grupo de <strong>duas ou mais equipes</strong> que cooperam entre si. Os Super Teams têm pouco tempo para criar a apresentação juntos, misturando robôs, ideias e pessoas de escolas e estados diferentes.</p>
+    <p>A participação <strong>não é obrigatória</strong> e não muda a sua nota na competição oficial. É uma diversão extra no Nacional e uma ótima chance de conhecer outras equipes.</p>
+
+    <h2 class="docs-h">Como funciona</h2>
+    <ol class="st-passos">
+      <li><strong>Inscrição</strong><span>A equipe demonstra interesse aqui, ao longo do primeiro dia de competição.</span></li>
+      <li><strong>Sorteio</strong><span>Depois das entrevistas, a coordenação sorteia os times. As equipes do Nível 1 ficam com o Nível 1 e as do Nível 2 com o Nível 2, e o sorteio equilibra o número de integrantes entre os times.</span></li>
+      <li><strong>Criação</strong><span>Cada Super Team tem um período curto para criar a apresentação em conjunto, sobre o tema ODS 10.</span></li>
+      <li><strong>Apresentação</strong><span>Os Super Teams se apresentam depois do fim da competição oficial da Artística.</span></li>
+    </ol>
+    <p class="hint">Os demais detalhes (horários, local e materiais) serão passados pela organização durante o evento. Fonte: Manual de Regras da Etapa Nacional de Robótica Artística, OBR 2026.</p>
+  </section>
+
+  <section class="panel admin" id="admin" hidden aria-label="Coordenação">
+    <div class="admin-head"><h2>Coordenação · Super Teams</h2></div>
+    <form id="adminForm" class="admin-row">
+      <div>
+        <label for="senha">Senha da coordenação</label>
+        <input id="senha" type="password" autocomplete="current-password">
+      </div>
+      <button class="btn primary" type="submit">Entrar</button>
+    </form>
+    <div class="admin-tools" id="adminTools" hidden>
+      <div class="admin-block">
+        <h3>Inscrições</h3>
+        <p class="hint" id="admStatus"></p>
+        <div class="st-acts">
+          <button class="btn" type="button" id="admAbrir"></button>
+          <button class="btn" type="button" id="admCsv">Baixar CSV</button>
+        </div>
+        <div class="st-tabela-wrap">
+          <table class="st-tabela">
+            <thead><tr><th>Equipe</th><th>Nível</th><th>Pessoas</th><th>Inscrita</th><th></th></tr></thead>
+            <tbody id="admLista"></tbody>
+          </table>
+        </div>
+      </div>
+      <form class="admin-block" id="sorteioForm">
+        <h3>Sorteio</h3>
+        <p class="hint">Separado por nível e equilibrado pelo número de pessoas. Sortear fecha as inscrições. Se a divisão não for exata, as equipes que sobram entram nos times já formados.</p>
+        <div class="admin-row">
+          <div>
+            <label for="admTamanho">Equipes por time</label>
+            <input id="admTamanho" type="number" inputmode="numeric" min="2" max="6" value="2">
+          </div>
+          <button class="btn primary" type="submit" id="admSortear">Sortear</button>
+        </div>
+        <div id="admAvisos"></div>
+        <div class="st-times" id="admTimes"></div>
+        <div class="st-acts" id="admPubBox" hidden>
+          <button class="btn primary" type="button" id="admPublicar"></button>
+          <span class="hint" id="admPubStatus"></span>
+        </div>
+      </form>
+      <button class="btn" type="button" id="adminSair">Sair da coordenação</button>
+    </div>
+  </section>
+
+  <p class="foot">Dúvidas? Procure a coordenação da Robótica Artística.</p>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script src="/superteams/superteams.js"></script>
+</body>
+</html>
