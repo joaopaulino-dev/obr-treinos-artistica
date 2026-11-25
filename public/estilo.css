@@ -585,3 +585,35 @@ button.seat.own:hover { filter: brightness(1.08) }
 .minha .search input { background: var(--bg) }
 .minha .suggest { z-index: 20 }
 .minha-voltar { justify-self: start; font-size: 13.5px }
+
+/* ---------- páginas dentro da tela única da coordenação (?coordenacao&embed) ---------- */
+html.embed body { background: var(--bg) }
+html.embed .wrap { padding-top: 12px }
+html.embed .topbar, html.embed .foot,
+html.embed .st-tema, html.embed #inscricao, html.embed .st-info, html.embed #stResultado,
+html.embed .sg-hero, html.embed .sg-equipe, html.embed #votar, html.embed .sg-como, html.embed .sg-ordem, html.embed #nova,
+html.embed #avisoRegra, html.embed #linkSugestoes, html.embed #teambar,
+html.embed #login, html.embed #area { display: none !important }
+html.embed #adminSair, html.embed #agendaSair { display: none }
+
+/* ---------- tela única da coordenação ---------- */
+.co-login { display: grid; gap: 12px }
+.co-topo { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap }
+.co-sec { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden }
+.co-sec + .co-sec { margin-top: 10px }
+.co-sec > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 14px 16px }
+.co-sec > summary::-webkit-details-marker { display: none }
+.co-sec > summary .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent) }
+.co-sec > summary .ico svg { width: 22px; height: 22px }
+.co-sec > summary strong { font-family: var(--font-d); font-size: 16.5px; display: block }
+.co-sec > summary .sub { display: block; font-size: 13px; color: var(--muted); overflow-wrap: anywhere }
+.co-sec > summary .seta { color: var(--muted); font-size: 22px; transition: transform .2s }
+.co-sec[open] > summary .seta { transform: rotate(90deg) }
+.co-sec[open] > summary { border-bottom: 1px solid var(--line) }
+.co-corpo { display: grid; gap: 10px; padding: 12px }
+.co-corpo .co-acoes { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+.co-frame { width: 100%; height: min(82dvh, 980px); border: 1px solid var(--line); border-radius: 12px; background: var(--bg) }
+.co-grupo { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 18px 2px 8px }
+.co-links { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none }
+.co-links li { display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; padding: 10px 12px; border-radius: 10px; background: var(--bg); font-size: 14px }
+.co-links code { font-size: 12.5px; overflow-wrap: anywhere }

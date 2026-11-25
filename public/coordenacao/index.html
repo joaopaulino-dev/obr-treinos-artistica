@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7A1C1C">
+<meta name="robots" content="noindex">
+<title>Coordenação | OBR 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/estilo.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="topbar">
+    <a href="/" aria-label="Voltar ao menu">
+      <picture>
+        <source srcset="/assets/logo-obr-2026-branco.png" media="(prefers-color-scheme: dark)">
+        <img class="logo" src="/assets/logo-obr-2026-vinho.png" alt="OBR 2026" width="560" height="237">
+      </picture>
+    </a>
+    <div class="titles">
+      <span class="eyebrow">Etapa Nacional · uso interno</span>
+      <h1>Coordenação</h1>
+    </div>
+    <a class="back" href="/">Menu</a>
+  </header>
+
+  <section class="panel co-login" id="login" hidden>
+    <h2>Entrar na coordenação</h2>
+    <p class="hint">Uma senha só para tudo: treinos, Super Teams, sugestões e voluntários.</p>
+    <form id="loginForm" class="admin-row">
+      <div>
+        <label for="senha">Senha da coordenação</label>
+        <input id="senha" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn primary" type="submit">Entrar</button>
+    </form>
+  </section>
+
+  <div id="painel" hidden>
+    <div class="co-topo">
+      <p class="hint">Toque em um tópico para abrir. Cada parte carrega só quando é aberta.</p>
+      <button class="btn" type="button" id="sair">Sair</button>
+    </div>
+
+    <h2 class="co-grupo">Treinos da Artística</h2>
+    <details class="co-sec" data-src="/n1?coordenacao&amp;embed">
+      <summary><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></span>
+        <span><strong>Treinos · Nível 1</strong><span class="sub" data-resumo="n1">Carregando…</span></span><span class="seta" aria-hidden="true">›</span></summary>
+      <div class="co-corpo"></div>
+    </details>
+    <details class="co-sec" data-src="/n2?coordenacao&amp;embed">
+      <summary><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></span>
+        <span><strong>Treinos · Nível 2</strong><span class="sub" data-resumo="n2">Carregando…</span></span><span class="seta" aria-hidden="true">›</span></summary>
+      <div class="co-corpo"></div>
+    </details>
+
+    <h2 class="co-grupo">Super Teams</h2>
+    <details class="co-sec" data-src="/superteams?coordenacao&amp;embed">
+      <summary><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c.6-.3 1.3-.5 2-.5 2.2 0 4 1.8 4 4"/></svg></span>
+        <span><strong>Super Teams · Artística</strong><span class="sub" data-resumo="st">Carregando…</span></span><span class="seta" aria-hidden="true">›</span></summary>
+      <div class="co-corpo"></div>
+    </details>
+    <details class="co-sec" data-src="/superteams/resgate?coordenacao&amp;embed">
+      <summary><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c.6-.3 1.3-.5 2-.5 2.2 0 4 1.8 4 4"/></svg></span>
+        <span><strong>Super Teams · Resgate</strong><span class="sub" data-resumo="str">Carregando…</span></span><span class="seta" aria-hidden="true">›</span></summary>
+      <div class="co-corpo"></div>
+    </details>
+
+    <h2 class="co-grupo">Equipes e equipe de trabalho</h2>
+    <details class="co-sec" data-src="/sugestoes?coordenacao&amp;embed">
+      <summary><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z"/><path d="M9 11h6M9 14.5h3.5"/></svg></span>
+        <span><strong>Sugestões e elogios</strong><span class="sub" data-resumo="sg">Carregando…</span></span><span class="seta" aria-hidden="true">›</span></summary>
+      <div class="co-corpo"></div>
+    </details>
+    <details class="co-sec" data-src="/voluntarios?coordenacao&amp;embed">
+      <summary><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="m16 11 2 2 4-4"/></svg></span>
+        <span><strong>Voluntários</strong><span class="sub">Check-in e vale almoço do dia</span></span><span class="seta" aria-hidden="true">›</span></summary>
+      <div class="co-corpo"></div>
+    </details>
+
+    <h2 class="co-grupo">Acessos</h2>
+    <details class="co-sec">
+      <summary><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></span>
+        <span><strong>Links e acessos</strong><span class="sub">Agendamento limitado, páginas públicas e atalhos</span></span><span class="seta" aria-hidden="true">›</span></summary>
+      <div class="co-corpo">
+        <ul class="co-links">
+          <li><span><strong>Agendamento limitado</strong> (só cria reservas, N1 e N2; senha própria do agendamento)<br><code>/agendar</code></span><a class="pill" href="/agendar" target="_blank" rel="noopener">Abrir</a></li>
+          <li><span><strong>Menu público</strong><br><code>/</code></span><a class="pill" href="/" target="_blank" rel="noopener">Abrir</a></li>
+          <li><span><strong>Reservas das equipes</strong><br><code>/n1</code> · <code>/n2</code></span><span class="co-acoes"><a class="pill" href="/n1" target="_blank" rel="noopener">N1</a><a class="pill" href="/n2" target="_blank" rel="noopener">N2</a></span></li>
+          <li><span><strong>Super Teams</strong><br><code>/superteams</code> · <code>/superteams/resgate</code></span><span class="co-acoes"><a class="pill" href="/superteams" target="_blank" rel="noopener">Artística</a><a class="pill" href="/superteams/resgate" target="_blank" rel="noopener">Resgate</a></span></li>
+          <li><span><strong>Sugestões, dúvidas, mapa e materiais</strong></span><span class="co-acoes"><a class="pill" href="/sugestoes" target="_blank" rel="noopener">Sugestões</a><a class="pill" href="/duvidas" target="_blank" rel="noopener">Dúvidas</a><a class="pill" href="/mapa" target="_blank" rel="noopener">Mapa</a><a class="pill" href="/materiais" target="_blank" rel="noopener">Materiais</a></span></li>
+          <li><span><strong>Área do voluntário</strong><br><code>/voluntarios</code></span><a class="pill" href="/voluntarios" target="_blank" rel="noopener">Abrir</a></li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script src="/coordenacao/coordenacao.js"></script>
+</body>
+</html>
