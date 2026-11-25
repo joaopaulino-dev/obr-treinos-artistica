@@ -49,12 +49,15 @@
     ev.preventDefault();
     if (st.busy) return;
     const nome = $("nome").value.trim();
-    if (nome.split(/\s+/).length < 2) { mostrarLogin("Digite o primeiro e o último nome."); return; }
+    const senha = $("senhaVol").value;
+    if (!nome) { mostrarLogin("Digite o seu nome."); return; }
+    if (!senha) { mostrarLogin("Digite a senha."); return; }
     st.busy = true; $("entrar").disabled = true;
     try {
-      const d = await post("/api/voluntarios", { acao: "entrar", nome });
+      const d = await post("/api/voluntarios", { acao: "entrar", nome, senha });
       st.token = d.token;
       try { localStorage.setItem(CHAVE, d.token); } catch (e) {}
+      $("senhaVol").value = "";
       st.dados = d; render();
     } catch (e) { mostrarLogin(e.message); }
     finally { st.busy = false; $("entrar").disabled = false; }
@@ -62,7 +65,7 @@
 
   $("sair").addEventListener("click", () => {
     try { localStorage.removeItem(CHAVE); } catch (e) {}
-    st.token = ""; st.dados = null; $("nome").value = ""; mostrarLogin();
+    st.token = ""; st.dados = null; $("nome").value = ""; $("senhaVol").value = ""; mostrarLogin();
   });
 
   /* ---------- render ---------- */

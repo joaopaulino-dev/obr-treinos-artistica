@@ -1,5 +1,5 @@
 // POST /api/voluntarios  { acao, ... }
-//   entrar   { nome }                      primeiro e último nome → token + estado
+//   entrar   { nome, senha }               nome + senha dos voluntários → token + estado
 //   estado   { token }                     escala, vales, check-in de hoje, contatos
 //   checkin  { token, lat, lng, precisao } check-in do dia, só perto do Centro de Convenções
 //   vale     { token }                     consome o vale almoço de hoje (uma vez)
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     const acao = String(b.acao || "");
 
     if (acao === "entrar") {
-      const v = acharVoluntario(b.nome);
+      const v = acharVoluntario(b.nome, b.senha);
       const estado = await comBanco((pool) => estadoVoluntario(pool, v));
       return res.status(200).json({ token: emitirToken(v), ...estado });
     }

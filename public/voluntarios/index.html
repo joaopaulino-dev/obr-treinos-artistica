@@ -29,12 +29,16 @@
   <section class="panel vol-login" id="login" aria-labelledby="loginH" hidden>
     <div>
       <h2 id="loginH">Entre com o seu nome</h2>
-      <p class="hint">Use o primeiro e o último nome, como está na lista de voluntários.</p>
+      <p class="hint">Use o seu nome como está na lista de voluntários e a senha que a coordenação passou.</p>
     </div>
     <form id="loginForm" class="vol-login-form" novalidate>
       <div>
-        <label for="nome">Primeiro e último nome</label>
+        <label for="nome">Nome</label>
         <input id="nome" type="text" autocomplete="name" autocapitalize="words" placeholder="Ex.: João Costa" required>
+      </div>
+      <div>
+        <label for="senhaVol">Senha</label>
+        <input id="senhaVol" type="password" autocomplete="current-password" inputmode="numeric" required>
       </div>
       <button class="btn primary" type="submit" id="entrar">Entrar</button>
     </form>

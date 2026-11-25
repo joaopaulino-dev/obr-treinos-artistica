@@ -1,17 +1,24 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 process.env.VOL_SECRET = "teste";
+process.env.VOL_PASSWORD = "senha-de-teste";
 const { acharVoluntario, emitirToken, lerToken, avaliarPosicao, distanciaM, diaDoEvento, LOCAL } = await import("../lib/voluntarios.js");
 
-test("entrada por primeiro e último nome, sem acento e sem caixa", () => {
-  assert.equal(acharVoluntario("joao costa").id, "joao-costa");
-  assert.equal(acharVoluntario("  JOÃO   da Silva Costa ").id, "joao-costa");
-  assert.throws(() => acharVoluntario("João"), /primeiro e o último/);
-  assert.throws(() => acharVoluntario("João Ninguém"), /não encontrado/);
+test("entrada por nome + senha, sem acento e sem caixa", () => {
+  const S = "senha-de-teste";
+  assert.equal(acharVoluntario("joao costa", S).id, "joao-costa");
+  assert.equal(acharVoluntario("  JOÃO   da Silva Costa ", S).id, "joao-costa");
+  assert.equal(acharVoluntario("jussara", S).id, "jussara");
+  assert.equal(acharVoluntario("Sarah Qualquer", S).id, "sarah");
+  assert.equal(acharVoluntario("carla", S).id, "carla");
+  assert.throws(() => acharVoluntario("João", S), /primeiro e o último/);
+  assert.throws(() => acharVoluntario("João Ninguém", S), /não encontrado/);
+  assert.throws(() => acharVoluntario("Carol", "errada"), /Senha incorreta/);
+  assert.throws(() => acharVoluntario("Carol", ""), /Senha incorreta/);
 });
 
 test("token assinado; adulterado é recusado", () => {
-  const t = emitirToken(acharVoluntario("João Costa"));
+  const t = emitirToken(acharVoluntario("João Costa", "senha-de-teste"));
   assert.equal(lerToken(t).id, "joao-costa");
   assert.throws(() => lerToken(t.replace("joao-costa", "jp")), /Sessão/);
   assert.throws(() => lerToken("lixo"), /Sessão/);

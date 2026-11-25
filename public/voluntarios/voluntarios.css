@@ -4,10 +4,10 @@
 .vol-sec { display: grid; gap: 10px }
 .vol-sec .docs-h { margin: 0 }
 
-.vol-login-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: end }
+.vol-login-form { display: grid; gap: 12px }
+.vol-login-form .btn { width: 100% }
 .vol-login h2 { font-size: 20px; margin-bottom: 4px }
 .vol-erro { margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--bad-soft); color: var(--bad); border: 1px solid var(--bad-line); font-size: 14px }
-@media (max-width: 420px) { .vol-login-form { grid-template-columns: 1fr } .vol-login-form .btn { width: 100% } }
 
 .vol-ola { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap }
 .vol-ola h2 { font-size: 24px; margin-top: 6px }
