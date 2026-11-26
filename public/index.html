@@ -46,7 +46,7 @@
   <section class="minha" id="minha" aria-labelledby="minhaT">
     <div class="minha-esc" id="minhaEsc">
       <strong id="minhaT">Busque a sua equipe</strong>
-      <span class="sub">Digite o nome e veja o resumo: próximo treino, agenda, Super Teams, mesa e votos.</span>
+      <span class="sub">Digite o nome e veja o resumo: próximo treino, agenda e Super Teams.</span>
       <div class="search">
         <svg class="lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="minhaBusca" type="search" autocomplete="off" placeholder="Carregando equipes…" disabled role="combobox" aria-expanded="false" aria-controls="minhaOpcoes" aria-autocomplete="list" aria-labelledby="minhaT">
@@ -64,17 +64,6 @@
     </div>
   </section>
 
-  <a class="sg-destaque" href="/sugestoes">
-    <span class="sg-d-top">
-      <span class="sg-d-ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z"/><path d="M9 11h6M9 14.5h3.5"/></svg>
-      </span>
-      <span class="sg-d-t"><strong>Sugestões e elogios</strong><span class="sub" id="sgdResumo">Deixe sua ideia e vote nas que mais quer ver. Cada equipe tem 4 votos.</span></span>
-      <span class="sg-d-cta">Participar ›</span>
-    </span>
-    <ol class="sg-d-lista" id="sgdLista" hidden></ol>
-  </a>
-
   <div class="tabs" role="tablist" aria-label="Modalidade">
     <button role="tab" id="tab-artistica" aria-controls="artistica" aria-selected="true">Artística</button>
     <button role="tab" id="tab-resgate" aria-controls="resgate" aria-selected="false" tabindex="-1">Resgate</button>
@@ -88,21 +77,6 @@
       <span class="item-t"><strong>Resultado Sorteio Super Teams</strong><span class="sub" id="stSub">ODS 10 · veja o seu Super Team</span><span class="st-prazo" id="stPrazo" hidden>Inscrições até 11h · faltam <b id="stPrazoTempo"></b></span></span>
       <span class="go" aria-hidden="true">›</span>
     </a>
-
-    <details class="item submenu">
-      <summary>
-        <span class="ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-        </span>
-        <span class="item-t"><strong>Cronograma</strong><span class="sub">Stand, pôster, entrevista e apresentações</span></span>
-        <span class="go" aria-hidden="true">›</span>
-      </summary>
-      <div class="pair">
-        <a class="pill" href="/materiais/pdf/apresentacoes-artistica-n1.pdf" target="_blank" rel="noopener">Nível 1</a>
-        <a class="pill" href="/materiais/pdf/apresentacoes-artistica-n2.pdf" target="_blank" rel="noopener">Nível 2</a>
-      </div>
-    </details>
-
     <details class="item submenu pt-item" data-pt="artistica">
       <summary>
         <span class="ico" aria-hidden="true">
@@ -116,7 +90,19 @@
         <span class="pill off" data-pt-nivel="2">N2 · em andamento</span>
       </div>
     </details>
-
+    <details class="item submenu">
+      <summary>
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        </span>
+        <span class="item-t"><strong>Cronograma</strong><span class="sub">Stand, pôster, entrevista e apresentações</span></span>
+        <span class="go" aria-hidden="true">›</span>
+      </summary>
+      <div class="pair">
+        <a class="pill" href="/materiais/pdf/apresentacoes-artistica-n1.pdf" target="_blank" rel="noopener">Nível 1</a>
+        <a class="pill" href="/materiais/pdf/apresentacoes-artistica-n2.pdf" target="_blank" rel="noopener">Nível 2</a>
+      </div>
+    </details>
     <details class="item submenu">
       <summary>
         <span class="ico" aria-hidden="true">
@@ -130,7 +116,6 @@
         <a class="pill solid" href="/n2">Nível 2</a>
       </div>
     </details>
-
     <a class="item link" href="/materiais#artistica">
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
@@ -138,7 +123,6 @@
       <span class="item-t"><strong>Materiais de apoio</strong><span class="sub">Manual de regras, pontuação e avisos</span></span>
       <span class="go" aria-hidden="true">›</span>
     </a>
-
     <a class="item link" href="/duvidas#artistica">
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></svg>
@@ -157,21 +141,6 @@
       <span class="item-t"><strong>Quero participar do Super Teams</strong><span class="sub">N1 e N2 juntos · sem caráter classificatório · proposta em 28/11</span></span>
       <span class="go" aria-hidden="true">›</span>
     </a>
-
-    <details class="item submenu">
-      <summary>
-        <span class="ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-        </span>
-        <span class="item-t"><strong>Cronograma</strong><span class="sub">Rodadas, arenas, pôster e entrevista</span></span>
-        <span class="go" aria-hidden="true">›</span>
-      </summary>
-      <div class="pair">
-        <a class="pill" href="/materiais/pdf/horarios-resgate-n1.pdf" target="_blank" rel="noopener">Nível 1</a>
-        <a class="pill" href="/materiais/pdf/horarios-resgate-n2.pdf" target="_blank" rel="noopener">Nível 2</a>
-      </div>
-    </details>
-
     <details class="item submenu pt-item" data-pt="resgate">
       <summary>
         <span class="ico" aria-hidden="true">
@@ -185,7 +154,19 @@
         <span class="pill off" data-pt-nivel="2">N2 · em andamento</span>
       </div>
     </details>
-
+    <details class="item submenu">
+      <summary>
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        </span>
+        <span class="item-t"><strong>Cronograma</strong><span class="sub">Rodadas, arenas, pôster e entrevista</span></span>
+        <span class="go" aria-hidden="true">›</span>
+      </summary>
+      <div class="pair">
+        <a class="pill" href="/materiais/pdf/horarios-resgate-n1.pdf" target="_blank" rel="noopener">Nível 1</a>
+        <a class="pill" href="/materiais/pdf/horarios-resgate-n2.pdf" target="_blank" rel="noopener">Nível 2</a>
+      </div>
+    </details>
     <a class="item link" href="/materiais#resgate">
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
@@ -193,7 +174,6 @@
       <span class="item-t"><strong>Materiais de apoio</strong><span class="sub">Manual de regras e instruções</span></span>
       <span class="go" aria-hidden="true">›</span>
     </a>
-
     <a class="item link" href="/duvidas#resgate">
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></svg>
@@ -209,6 +189,14 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
     </span>
     <span class="item-t"><strong>Mapa geral</strong><span class="sub">Mesas, palcos, arenas e o caminho a partir da entrada</span></span>
+    <span class="go" aria-hidden="true">›</span>
+  </a>
+
+  <a class="item link" href="/sugestoes" id="sgItem">
+    <span class="ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z"/><path d="M9 11h6M9 14.5h3.5"/></svg>
+    </span>
+    <span class="item-t"><strong>Sugestões e elogios</strong><span class="sub">Deixe sua ideia e vote nas favoritas</span></span>
     <span class="go" aria-hidden="true">›</span>
   </a>
 
@@ -275,20 +263,13 @@
   });
   if (location.hash === "#resgate") abrir("resgate");
 
-  // Destaque das sugestões: total e as 3 mais votadas, ao vivo.
+  // Sugestões: a mais votada aparece no convite.
   const escH = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const json = (u) => fetch(u).then((r) => r.ok ? r.json() : null).catch(() => null);
   const pSug = json("/api/sugestoes");
   pSug.then((d) => {
     if (!d || !d.sugestoes) return;
-    const l = d.sugestoes.filter((x) => !x.implementada).sort((a, b) => b.votos - a.votos), votos = l.reduce((n, x) => n + x.votos, 0);
-    const n = d.sugestoes.length;
-    if (!n) return;
-    document.getElementById("sgdResumo").textContent =
-      n + (n === 1 ? " mensagem enviada" : " mensagens enviadas") + " · " + votos + (votos === 1 ? " voto" : " votos") + ". Deixe a sua e vote nas favoritas!";
-    const ol = document.getElementById("sgdLista");
-    ol.innerHTML = l.slice(0, 3).map((x) => `<li><span class="sg-d-v">👍 ${x.votos}</span><span class="sg-d-n">${x.categoria === "elogio" ? "👏" : "💡"} ${escH(x.titulo)}</span>${x.implementada ? '<span class="sg-impl">✓</span>' : ""}</li>`).join("");
-    ol.hidden = false;
+    const l = d.sugestoes.filter((x) => !x.implementada).sort((a, b) => b.votos - a.votos);
     const top = l.find((x) => x.votos > 0);
     if (top) {
       const t = document.getElementById("conviteTop");
@@ -370,16 +351,7 @@
       return item(ICO.st, "<strong>Super Teams: inscrições encerradas</strong><span>O resultado aparece na página</span>", url, "Ver");
     }
 
-    async function linhaVotos(e) {
-      const d = await pSug;
-      if (!d) return "";
-      const k = EQ.chave(e), max = d.votosPorEquipe || 4;
-      const usados = d.sugestoes.filter((s) => s.votantes.includes(k)).length;
-      const r = Math.max(0, max - usados);
-      return item(ICO.voto, `<strong>${r ? `${r} de ${max} votos disponíveis` : `Os ${max} votos já foram usados`}</strong><span>Sugestões e elogios do Nacional</span>`, "/sugestoes", r ? "Votar" : "Ver");
-    }
 
-    const pMesas = json("/mapa/equipes.json");
 
     // Agenda da equipe na Artística (stand, entrevista, pôster, apresentações), dos PDFs de cronograma.
     const pAgenda = json("/agenda-artistica.json");
@@ -414,12 +386,6 @@
         }).join("") + "</ol>";
       box.hidden = false;
     }
-    async function linhaMesa(e) {
-      const l = await pMesas;
-      const m = (l || []).find((x) => x.tipo === e.modalidade && x.equipe === e.nome);
-      if (!m) return item(ICO.mapa, "<strong>Mapa</strong><span>Mesas, palcos e o caminho a partir da entrada</span>", "/mapa", "Ver mapa");
-      return item(ICO.mapa, `<strong>Sua mesa: nº ${m.mesa}</strong><span>Veja no mapa o caminho a partir da entrada</span>`, "/mapa#mesa-" + m.mesa, "Ver mapa");
-    }
 
     async function render() {
       const e = escolhida();
@@ -433,7 +399,7 @@
       if (!lista.children.length) lista.innerHTML = '<li class="mi-load">Carregando…</li>';
       const art = e.modalidade === "Artística" && e.nivel;
       renderAgenda(e);
-      const linhas = await Promise.all([art ? linhaTreino(e) : "", linhaSuperTeams(e), linhaVotos(e), linhaMesa(e)]);
+      const linhas = await Promise.all([art ? linhaTreino(e) : "", linhaSuperTeams(e)]);
       if (escolhida()?.nome !== e.nome) return; // trocou de equipe enquanto carregava
       lista.innerHTML = linhas.join("");
     }
@@ -517,7 +483,7 @@
   document.getElementById("conviteX").addEventListener("click", fecharConvite);
   document.getElementById("conviteDepois").addEventListener("click", fecharConvite);
   document.getElementById("conviteIr").addEventListener("click", () => adiar(12));
-  document.querySelector('.sg-destaque[href="/sugestoes"]').addEventListener("click", () => adiar(12));
+  document.getElementById("sgItem").addEventListener("click", () => adiar(12));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !conv.hidden) fecharConvite(); });
   // Super Teams Artística: até as 11h de 26/11 o convite dele entra no lugar do de sugestões, com contagem regressiva.
   const ST_FIM = Date.parse("2026-11-26T11:00:00-03:00");
