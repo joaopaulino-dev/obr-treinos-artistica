@@ -450,7 +450,10 @@ html.sem-intro .intro { display: none }
 .st-conv-ico svg { width: 22px; height: 22px }
 .st-conv-tag { font-size: 11.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--accent) }
 .st-conv-timer { justify-self: start; background: var(--accent-soft); color: var(--accent-strong) !important; padding: 6px 10px; border-radius: 8px }
-.st-conv-timer b, .st-prazo b { font-variant-numeric: tabular-nums }
+.st-topo { margin-bottom: 0 }
+.st-topo .st-conv-tag { display: block }
+.st-topo-t { white-space: nowrap }
+.st-conv-timer b, .st-prazo b, .st-topo-t { font-variant-numeric: tabular-nums }
 .st-prazo { display: block; margin-top: 4px; font-size: 12.5px; font-weight: 600; color: var(--accent-strong) }
 @media (prefers-reduced-motion: reduce) { .convite { transition: none } }
 
