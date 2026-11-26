@@ -87,3 +87,14 @@ test("Resgate: N1 e N2 misturados, níveis espalhados e pessoas equilibradas", a
     }
   }
 });
+
+test("dividir time: 2 equipes em cada, pessoas equilibradas, no lugar do original", async () => {
+  const { dividirTime } = await import("../lib/superteams.js");
+  const t = (nome, eqs) => ({ nome, nivel: 2, equipes: eqs.map(([equipe, integrantes]) => ({ equipe, integrantes, nivel: 2 })), pessoas: eqs.reduce((s, e) => s + e[1], 0) });
+  const s = { tamanho: 3, times: [t("Super Team N2-A", [["a", 4], ["b", 4], ["c", 3]]), t("Super Team N2-B", [["Modern Times", 4], ["Armadillos", 4], ["Alien Bot", 2], ["Curto circuito", 2]]), t("Super Team N2-C", [["d", 4]])] };
+  const r = dividirTime(s, "Super Team N2-B");
+  assert.deepEqual(r.times.map((x) => x.nome), ["Super Team N2-A", "Super Team N2-B1", "Super Team N2-B2", "Super Team N2-C"]);
+  for (const x of r.times.slice(1, 3)) { assert.equal(x.equipes.length, 2); assert.equal(x.pessoas, 6); }
+  assert.throws(() => dividirTime(s, "Super Team N2-A"), /4 equipes/);
+  assert.throws(() => dividirTime(s, "Nada"), /não existe/);
+});

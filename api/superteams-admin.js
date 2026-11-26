@@ -5,10 +5,11 @@
 //   abrir     { aberto }        abre/fecha as inscrições
 //   remover   { equipe }        apaga uma inscrição (e invalida o sorteio, se houver)
 //   sortear   { tamanho }       fecha as inscrições, sorteia por nível e despublica
+//   dividir   { time }          divide um time em dois, equilibrando pessoas (mantém a publicação)
 //   publicar  { publicado }     mostra/esconde o resultado na página pública
 import { erro, inteiro } from "../lib/regras.js";
 import { comBanco, emTransacaoChave } from "../lib/db.js";
-import { carregarSuperTeams, gravarMeta, sortear, modDe, TAMANHO_MIN, TAMANHO_MAX } from "../lib/superteams.js";
+import { carregarSuperTeams, gravarMeta, sortear, dividirTime, modDe, TAMANHO_MIN, TAMANHO_MAX } from "../lib/superteams.js";
 import { responderErro, corpo, senhaConfere } from "../lib/http.js";
 
 const ACOES = {
@@ -29,6 +30,10 @@ const ACOES = {
     await gravarMeta(client, mod.meta + "aberto", "0");
     await gravarMeta(client, mod.meta + "sorteio", JSON.stringify(sortear(st.inscritas, tamanho, undefined, { misturar: mod.misturar })));
     await gravarMeta(client, mod.meta + "publicado", "0");
+  },
+
+  async dividir(client, b, st, mod) {
+    await gravarMeta(client, mod.meta + "sorteio", JSON.stringify(dividirTime(st.sorteio, String(b.time || ""))));
   },
 
   async publicar(client, b, st, mod) {

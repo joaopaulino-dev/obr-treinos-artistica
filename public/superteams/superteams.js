@@ -43,10 +43,11 @@
     if (eq && eq.modalidade === MOD && Object.values(equipes).some((l) => l.includes(eq.nome))) sel.value = eq.nome;
   }
 
-  function cardsTimes(times) {
+  function cardsTimes(times, adm) {
+    const div = (t) => adm && t.equipes.length >= 4 ? `<button class="st-x" type="button" data-dividir="${esc(t.nome)}">Dividir em 2</button>` : "";
     if (RESGATE) return times.map((t) => `
         <article class="st-time">
-          <header><strong>${esc(t.nome)}</strong><span>${t.pessoas} pessoa${t.pessoas === 1 ? "" : "s"}</span></header>
+          <header><strong>${esc(t.nome)}</strong><span>${t.pessoas} pessoa${t.pessoas === 1 ? "" : "s"}</span>${div(t)}</header>
           <ul>${t.equipes.map((e) => `<li>${esc(e.equipe)} <span>N${e.nivel} · ${e.integrantes}</span></li>`).join("")}</ul>
         </article>`).join("");
     return [1, 2].map((n) => {
@@ -54,7 +55,7 @@
       if (!doNivel.length) return "";
       return `<h3 class="st-nivel">Nível ${n}</h3>` + doNivel.map((t) => `
         <article class="st-time">
-          <header><strong>${esc(t.nome)}</strong><span>${t.pessoas} pessoa${t.pessoas === 1 ? "" : "s"}</span></header>
+          <header><strong>${esc(t.nome)}</strong><span>${t.pessoas} pessoa${t.pessoas === 1 ? "" : "s"}</span>${div(t)}</header>
           <ul>${t.equipes.map((e) => `<li>${esc(e.equipe)} <span>${e.integrantes}</span></li>`).join("")}</ul>
         </article>`).join("");
     }).join("");
@@ -123,7 +124,7 @@
     $("admSortear").textContent = s ? "Sortear de novo" : "Sortear";
     if (s) $("admTamanho").value = s.tamanho;
     $("admAvisos").innerHTML = s && s.avisos && s.avisos.length ? `<div class="aviso" role="note">${s.avisos.map((a) => `<p>${esc(a)}</p>`).join("")}</div>` : "";
-    $("admTimes").innerHTML = s ? cardsTimes(s.times) : "";
+    $("admTimes").innerHTML = s ? cardsTimes(s.times, true) : "";
     $("admPubBox").hidden = !s;
     $("admPublicar").textContent = d.publicado ? "Ocultar resultado" : "Publicar resultado";
     $("admPubStatus").textContent = s ? `Sorteado em ${hora(s.feitoEm)} · ${d.publicado ? "visível na página pública" : "ainda não publicado"}` : "";
@@ -182,6 +183,14 @@
       : `Sortear com ${tamanho} equipes por time? As inscrições serão fechadas.`;
     if (!confirm(msg)) return;
     executar(() => admin("sortear", { tamanho }), "Sorteio feito. Confira e publique quando quiser.");
+  });
+
+  $("admTimes").addEventListener("click", (ev) => {
+    const b = ev.target.closest("[data-dividir]");
+    if (!b) return;
+    const time = b.dataset.dividir;
+    if (!confirm(`Dividir ${time} em 2 times (${time}1 e ${time}2), equilibrando o total de pessoas?`)) return;
+    executar(() => admin("dividir", { time }), `${time} dividido em 2.`);
   });
 
   $("admPublicar").addEventListener("click", () => {
