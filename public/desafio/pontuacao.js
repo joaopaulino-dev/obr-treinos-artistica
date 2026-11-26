@@ -1,82 +1,46 @@
 // Desafio Técnico · Resgate (OBR 2026, Etapa Nacional).
-// Pontuação convencional do Manual de Regras do Resgate Nacional 2026 (Caderno Verde).
+// Regras do Desafio Técnico passadas pela organização (Carla, 25/11): cálculo é só contagem (soma, sem multiplicador).
 // Arquivo compartilhado: o navegador usa para mostrar a nota ao vivo e o servidor (lib/desafio.js)
 // usa o mesmo cálculo para gravar. Mudou a regra? Mude só aqui.
 
-export const TEMPO_ROUND_SEG = 8 * 60; // 8 minutos por round, N1 e N2
+export const TEMPO_ROUND_SEG = 4 * 60; // 4 minutos por round, N1 e N2 (provisório: a organização vai definir)
 export const ARENAS = [1, 2, 3, 4, 5, 6];
 export const ROUNDS = [1, 2];
-export const VIVAS_MAX = 2; // "Serão exatamente duas Vítimas Vivas e uma Vítima Morta."
-export const MULT_VITIMA = 1.3;
 
-// Perigos do trajeto: pontos por superação (cada perigo pontua uma vez por direção).
-export const PERIGOS = [
-  { id: "gangorra", nome: "Gangorra", pontos: 20 },
-  { id: "intersecao", nome: "Interseção ou beco sem saída", pontos: 20 },
-  { id: "obstaculo", nome: "Obstáculo desviado", pontos: 20 },
-  { id: "rampa", nome: "Ladrilho de rampa (subir ou descer)", pontos: 10 },
-  { id: "gap", nome: "Ladrilho com gap(s)", pontos: 10 },
-  { id: "lombada", nome: "Ladrilho com lombada(s)", pontos: 10 },
-  { id: "passagem", nome: "Passagem", pontos: 0 },
+// tipo "qtd": o juiz conta quantas vezes (pontos × quantidade); tipo "sim": sim/não (pontos uma vez).
+export const ITENS = [
+  { id: "intersecao", nome: "Interseção", tipo: "qtd", pontos: 40 },
+  { id: "obstaculo", nome: "Obstáculo", tipo: "qtd", pontos: 40 },
+  { id: "fitaVermelha", nome: "Identificação da fita vermelha", tipo: "sim", pontos: 40 },
+  { id: "fitaPrata", nome: "Identificação da fita prata", tipo: "sim", pontos: 40 },
+  { id: "vitima", nome: "Identificação de vítima", tipo: "sim", pontos: 40 },
+  { id: "posse", nome: "Posse da vítima", tipo: "sim", pontos: 40 },
+  { id: "prataComVitima", nome: "Atingiu a fita prata em posse da vítima", tipo: "sim", pontos: 60 },
 ];
-
-export const PONTOS_INICIO = 5; // superar o ladrilho de início
-export const CHEGADA_MAX = 60; // ladrilho de chegada: 60 − 5 × falhas de progresso, nunca negativo
-export const CHEGADA_POR_FALHA = 5;
-
-// Pontos por ladrilho de um trecho entre checkpoints, conforme a tentativa em que o robô chegou ao checkpoint.
-export function pontosPorLadrilho(tentativa) {
-  return tentativa === 1 ? 5 : tentativa === 2 ? 3 : tentativa === 3 ? 1 : 0;
-}
+const QTD_MAX = 99; // só para evitar erro de toque; a regra não tem limite
 
 const int = (v, min, max) => {
   const n = Math.trunc(Number(v));
   return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : min;
 };
-const arred = (n) => Math.round(n * 100) / 100;
 
 // Normaliza o que veio do pontuador (limpa campos estranhos e limita valores).
 export function normalizarRound(d = {}) {
-  const perigos = {};
-  for (const p of PERIGOS) perigos[p.id] = int(d.perigos?.[p.id], 0, 99);
-  const trechos = (Array.isArray(d.trechos) ? d.trechos : []).slice(0, 40).map((t) => ({
-    ladrilhos: int(t?.ladrilhos, 0, 200),
-    tentativa: int(t?.tentativa, 1, 99),
-    pulado: t?.pulado === true,
-  }));
-  const vivas = int(d.vivas, 0, VIVAS_MAX);
-  return {
-    noShow: d.noShow === true,
-    perigos,
-    inicio: d.inicio === true,
-    trechos,
-    falhas: int(d.falhas, 0, 999),
-    chegada: d.chegada === true,
-    vivas,
-    morta: d.morta === true && vivas === VIVAS_MAX, // a morta só vale depois de todas as vivas
-    tempoSeg: int(d.tempoSeg, 0, 3600),
-    obs: String(d.obs || "").slice(0, 500),
-  };
+  const itens = {};
+  for (const i of ITENS) itens[i.id] = i.tipo === "qtd" ? int(d.itens?.[i.id], 0, QTD_MAX) : d.itens?.[i.id] === true;
+  return { noShow: d.noShow === true, itens, tempoSeg: int(d.tempoSeg, 0, 3600) };
 }
 
 // Calcula a nota detalhada de um round (entrada normalizada ou não).
 export function calcular(dados) {
   const d = normalizarRound(dados);
-  if (d.noShow) {
-    return { d, perigos: 0, checkpoints: 0, chegada: 0, base: 0, multiplicador: 1, total: 0, itensPerigo: [], itensTrecho: [] };
-  }
-  const itensPerigo = PERIGOS.map((p) => ({ ...p, qtd: d.perigos[p.id], subtotal: d.perigos[p.id] * p.pontos }));
-  const perigos = itensPerigo.reduce((s, i) => s + i.subtotal, 0);
-  const itensTrecho = d.trechos.map((t, i) => {
-    const porLadrilho = t.pulado ? 0 : pontosPorLadrilho(t.tentativa);
-    return { n: i + 1, ...t, porLadrilho, subtotal: porLadrilho * t.ladrilhos };
+  const itens = ITENS.map((i) => {
+    const v = d.itens[i.id];
+    const qtd = i.tipo === "qtd" ? v : v ? 1 : 0;
+    return { ...i, valor: v, subtotal: d.noShow ? 0 : qtd * i.pontos };
   });
-  const checkpoints = (d.inicio ? PONTOS_INICIO : 0) + itensTrecho.reduce((s, t) => s + t.subtotal, 0);
-  const chegada = d.chegada ? Math.max(0, CHEGADA_MAX - CHEGADA_POR_FALHA * d.falhas) : 0;
-  const base = perigos + checkpoints + chegada;
-  const multiplicador = arred(MULT_VITIMA ** d.vivas * (d.morta ? MULT_VITIMA : 1) * 10000) / 10000;
-  const total = arred(base * MULT_VITIMA ** d.vivas * (d.morta ? MULT_VITIMA : 1));
-  return { d, perigos, checkpoints, chegada, base, multiplicador, total, itensPerigo, itensTrecho };
+  const total = itens.reduce((s, i) => s + i.subtotal, 0);
+  return { d, itens, total };
 }
 
 // Ranking de um nível: vale a melhor nota entre os rounds; empate → menor tempo no round da melhor nota.
@@ -91,6 +55,7 @@ export function ranking(rounds, equipes, nivel) {
       equipe,
       r1: rs.find((r) => r.round === 1) || null,
       r2: rs.find((r) => r.round === 2) || null,
+      melhorRound: melhor,
       melhor: melhor ? melhor.pontos : null,
       tempoMelhor: melhor && !melhor.noShow ? melhor.tempoSeg : null,
       rounds: rs.length,

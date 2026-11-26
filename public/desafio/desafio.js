@@ -1,7 +1,7 @@
 // Desafio Técnico · Resgate: abertura, login, pontuador do juiz e painel do admin.
 import {
-  PERIGOS, ARENAS, ROUNDS, TEMPO_ROUND_SEG, VIVAS_MAX, PONTOS_INICIO,
-  calcular, normalizarRound, ranking, pontosPorLadrilho, mmss,
+  ITENS, ARENAS, ROUNDS, TEMPO_ROUND_SEG,
+  calcular, normalizarRound, ranking, mmss,
 } from "/desafio/pontuacao.js";
 
 const $ = (id) => document.getElementById(id);
@@ -19,7 +19,7 @@ const st = {
   sessao: ls.get(K.sessao),
   equipes: [], rounds: [],
   escolha: { arena: ls.get(K.arena), nivel: ls.get(K.nivel) || 1, equipe: null, round: null },
-  r: ls.get(K.rascunho), // round em andamento
+  r: (() => { const r = ls.get(K.rascunho); return r?.dados?.itens ? r : null; })(), // round em andamento
   admin: { dados: null, nivel: 1, abertos: new Set(), todos: false },
   visao: null,
 };
@@ -203,8 +203,7 @@ function novoRound(noShow = false) {
   return {
     equipe: e.equipe, nivel: e.nivel, arena: e.arena, round: e.round,
     envio: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
-    dados: { noShow, perigos: {}, inicio: false, trechos: [], falhas: 0, chegada: false, vivas: 0, morta: false, tempoSeg: 0, obs: "" },
-    trecho: { ladrilhos: 0, tentativa: 1 },
+    dados: { noShow, itens: {}, tempoSeg: 0 },
     timer: { acumuladoMs: 0, inicioTs: null, alarmou: false },
   };
 }
@@ -230,87 +229,37 @@ const stepper = (key, val, min, max) => `<div class="dt-step" data-step="${key}"
 
 function renderPontuar() {
   const r = st.r; if (!r) return;
-  const d = r.dados;
+  const v = r.dados.itens;
   $("pTime").textContent = r.equipe;
   $("pMeta").textContent = `Nível ${r.nivel} · Arena ${r.arena} · Round ${r.round}`;
-
-  $("perigos").innerHTML = PERIGOS.map((p) => `<div class="dt-item">
-    <span class="nm">${esc(p.nome)}<small>${p.pontos} pts cada${d.perigos[p.id] ? ` · ${d.perigos[p.id] * p.pontos} pts` : ""}</small></span>
-    ${stepper(`perigo:${p.id}`, d.perigos[p.id] || 0, 0, 99)}</div>`).join("");
-
-  $("inicio").checked = d.inicio;
-  const t = r.trecho, ppl = pontosPorLadrilho(t.tentativa);
-  const ord = (n) => `${n}ª`;
-  $("trechoAtual").innerHTML = `
-    <div class="dt-trecho-topo"><strong>Trecho ${d.trechos.length + 1}</strong>
-      <span class="dt-tent t${Math.min(t.tentativa, 4)}">${ord(t.tentativa)} tentativa · ${ppl} pt${ppl === 1 ? "" : "s"}/ladrilho</span></div>
-    <div class="dt-item"><span class="nm">Ladrilhos deste trecho<small>${t.ladrilhos} × ${ppl} = ${t.ladrilhos * ppl} pts ao alcançar o checkpoint</small></span>${stepper("ladrilhos", t.ladrilhos, 0, 200)}</div>
-    <div class="dt-trecho-acoes">
-      <button class="btn falha" type="button" data-acao="falha">Falha de progresso</button>
-      <button class="btn primary" type="button" data-acao="checkpoint" ${t.ladrilhos ? "" : "disabled"}>Checkpoint alcançado</button>
-      ${t.tentativa >= 3 ? `<button class="btn full" type="button" data-acao="pular">Pular para o próximo checkpoint (0 pts no trecho)</button>` : ""}
-      ${t.tentativa > 1 ? `<button class="btn full" type="button" data-acao="desfazTentativa">Desfazer última falha</button>` : ""}
-    </div>`;
-  $("trechos").innerHTML = d.trechos.map((x, i) => {
-    const p = x.pulado ? 0 : pontosPorLadrilho(x.tentativa);
-    return `<li><span class="n">${i + 1}</span><span>${x.ladrilhos} ladrilho${x.ladrilhos === 1 ? "" : "s"} · ${x.pulado ? "pulado" : `${ord(x.tentativa)} tentativa`}</span>
-      <span class="pts">${x.ladrilhos * p} pts</span><button class="x" type="button" data-remove="${i}" aria-label="Remover trecho ${i + 1}">×</button></li>`;
+  $("itens").innerHTML = ITENS.map((i) => {
+    if (i.tipo === "qtd") {
+      const n = v[i.id] || 0;
+      return `<div class="dt-item"><span class="nm">${esc(i.nome)}<small>${i.pontos} pts cada${n ? ` · ${n * i.pontos} pts` : ""}</small></span>${stepper(i.id, n, 0, 99)}</div>`;
+    }
+    return `<label class="dt-toggle"><input type="checkbox" data-sim="${i.id}" ${v[i.id] ? "checked" : ""}> <span>${esc(i.nome)} <b>+${i.pontos}</b></span></label>`;
   }).join("");
-
-  $("falhasItem").innerHTML = `<span class="nm">Falhas de progresso<small>Cada falha tira 5 pts da chegada (a falha do trecho já soma aqui)</small></span>${stepper("falhas", d.falhas, 0, 999)}`;
-  $("chegada").checked = d.chegada;
-  $("vivasItem").innerHTML = `<span class="nm">Vítimas vivas na área verde<small>× 1,3 cada (são ${VIVAS_MAX})</small></span>${stepper("vivas", d.vivas, 0, VIVAS_MAX)}`;
-  $("morta").disabled = d.vivas < VIVAS_MAX;
-  if (d.vivas < VIVAS_MAX) d.morta = false;
-  $("morta").checked = d.morta;
-  if (document.activeElement !== $("obs")) $("obs").value = d.obs;
-  renderTotais();
-}
-
-function renderTotais() {
-  const c = calcular(st.r.dados);
+  const c = calcular(r.dados);
   $("pTotal").textContent = fmt(c.total);
-  $("subPerigos").textContent = `${fmt(c.perigos)} pts`;
-  $("subCheckpoints").textContent = `${fmt(c.checkpoints)} pts`;
-  $("subChegada").textContent = `${fmt(c.chegada)} pts`;
-  $("chegadaVal").textContent = `+${Math.max(0, 60 - 5 * c.d.falhas)}`;
-  $("subMult").textContent = `× ${fmt(c.multiplicador)}`;
+  $("subItens").textContent = `${fmt(c.total)} pts`;
 }
 
 function mudou() { salvarRascunho(); renderPontuar(); }
 
-$("pontuar").addEventListener("click", (ev) => {
-  const r = st.r; if (!r) return;
-  const d = r.dados;
+$("itens").addEventListener("click", (ev) => {
   const s = ev.target.closest(".dt-step button");
-  if (s && !s.disabled) {
-    const key = s.closest(".dt-step").dataset.step, delta = Number(s.dataset.d);
-    if (key.startsWith("perigo:")) { const id = key.slice(7); d.perigos[id] = Math.max(0, (d.perigos[id] || 0) + delta); }
-    else if (key === "ladrilhos") r.trecho.ladrilhos = Math.max(0, r.trecho.ladrilhos + delta);
-    else if (key === "falhas") d.falhas = Math.max(0, d.falhas + delta);
-    else if (key === "vivas") d.vivas = Math.min(VIVAS_MAX, Math.max(0, d.vivas + delta));
-    navigator.vibrate?.(8);
-    return mudou();
-  }
-  const a = ev.target.closest("[data-acao]");
-  if (a) {
-    const acao = a.dataset.acao;
-    if (acao === "falha") { r.trecho.tentativa += 1; d.falhas += 1; navigator.vibrate?.([20, 40, 20]); toast(`Falha registrada · agora é a ${r.trecho.tentativa}ª tentativa`); }
-    if (acao === "desfazTentativa" && r.trecho.tentativa > 1) { r.trecho.tentativa -= 1; d.falhas = Math.max(0, d.falhas - 1); }
-    if (acao === "checkpoint" || acao === "pular") {
-      d.trechos.push({ ladrilhos: r.trecho.ladrilhos, tentativa: r.trecho.tentativa, pulado: acao === "pular" });
-      r.trecho = { ladrilhos: 0, tentativa: 1 };
-      toast(acao === "pular" ? "Trecho pulado (0 pts)." : `Checkpoint ${d.trechos.length} alcançado.`);
-    }
-    return mudou();
-  }
-  const rm = ev.target.closest("[data-remove]");
-  if (rm && confirm("Remover este trecho?")) { d.trechos.splice(Number(rm.dataset.remove), 1); mudou(); }
+  if (!s || s.disabled || !st.r) return;
+  const id = s.closest(".dt-step").dataset.step, v = st.r.dados.itens;
+  v[id] = Math.min(99, Math.max(0, (v[id] || 0) + Number(s.dataset.d)));
+  navigator.vibrate?.(8);
+  mudou();
 });
-$("inicio").addEventListener("change", (ev) => { st.r.dados.inicio = ev.target.checked; mudou(); });
-$("chegada").addEventListener("change", (ev) => { st.r.dados.chegada = ev.target.checked; mudou(); });
-$("morta").addEventListener("change", (ev) => { st.r.dados.morta = ev.target.checked; mudou(); });
-$("obs").addEventListener("input", (ev) => { st.r.dados.obs = ev.target.value; salvarRascunho(); });
+$("itens").addEventListener("change", (ev) => {
+  const c = ev.target.closest("[data-sim]");
+  if (!c || !st.r) return;
+  st.r.dados.itens[c.dataset.sim] = c.checked;
+  mudou();
+});
 
 $("cancelar").addEventListener("click", () => {
   if (!confirm("Cancelar este round? Nada será enviado e o que foi marcado será perdido.")) return;
@@ -368,21 +317,13 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && st
 function resumoHTML(c, meta) {
   const d = c.d;
   if (d.noShow) return `<div class="dt-res"><div class="dt-res-ns">NO-SHOW · 0 pontos</div>${meta ? `<p class="dt-res-meta">${meta}</p>` : ""}</div>`;
-  const linha = (nome, qtd, pts) => `<tr class="${pts ? "" : "zero"}"><td>${esc(nome)}${qtd !== null ? ` × ${qtd}` : ""}</td><td>${fmt(pts)}</td></tr>`;
-  const per = c.itensPerigo.map((p) => linha(p.nome, p.qtd, p.subtotal)).join("");
-  const tre = [linha(`Ladrilho de início${d.inicio ? "" : " (não)"}`, null, d.inicio ? PONTOS_INICIO : 0)]
-    .concat(c.itensTrecho.map((t) => linha(`Trecho ${t.n}: ${t.ladrilhos} ladr. · ${t.pulado ? "pulado" : `${t.tentativa}ª tent. (${t.porLadrilho}/ladr.)`}`, null, t.subtotal))).join("");
+  const linhas = c.itens.map((i) => {
+    const marca = i.tipo === "qtd" ? ` × ${i.valor}` : i.valor ? " · sim" : " · não";
+    return `<tr class="${i.subtotal ? "" : "zero"}"><td>${esc(i.nome)}${marca}</td><td>${fmt(i.subtotal)}</td></tr>`;
+  }).join("");
   return `<div class="dt-res">
-    <div class="dt-res-sec"><h3>Perigos · ${fmt(c.perigos)} pts</h3><table>${per}</table></div>
-    <div class="dt-res-sec"><h3>Checkpoints · ${fmt(c.checkpoints)} pts</h3><table>${tre}</table></div>
-    <div class="dt-res-sec"><h3>Chegada · ${fmt(c.chegada)} pts</h3><table>
-      <tr class="${d.falhas ? "" : "zero"}"><td>Falhas de progresso</td><td>${d.falhas}</td></tr>
-      ${linha(d.chegada ? `Chegada: 60 − 5 × ${d.falhas}` : "Não parou na chegada", null, c.chegada)}</table></div>
-    <div class="dt-res-sec"><h3>Resgate · × ${fmt(c.multiplicador)}</h3><table>
-      <tr class="${d.vivas ? "" : "zero"}"><td>Vítimas vivas (× 1,3 cada)</td><td>${d.vivas}</td></tr>
-      <tr class="${d.morta ? "" : "zero"}"><td>Vítima morta (× 1,3)</td><td>${d.morta ? "sim" : "não"}</td></tr></table></div>
-    ${d.obs ? `<p class="dt-res-meta"><b>Obs.:</b> ${esc(d.obs)}</p>` : ""}
-    <p class="dt-res-conta">(${fmt(c.perigos)} + ${fmt(c.checkpoints)} + ${fmt(c.chegada)}) × ${fmt(c.multiplicador)} · tempo ${mmss(d.tempoSeg)}</p>
+    <div class="dt-res-sec"><table>${linhas}</table></div>
+    <p class="dt-res-conta">Soma dos itens · tempo ${mmss(d.tempoSeg)}</p>
     <div class="dt-res-total"><span>Total</span><strong>${fmt(c.total)}</strong></div>
     ${meta ? `<p class="dt-res-meta">${meta}</p>` : ""}
   </div>`;
@@ -392,8 +333,7 @@ $("fim").addEventListener("click", () => {
   const r = st.r; if (!r) return;
   if (r.timer.inicioTs) { r.timer.acumuladoMs += Date.now() - r.timer.inicioTs; r.timer.inicioTs = null; pararTimer(); }
   atualizarTimer(); salvarRascunho();
-  const aviso = r.trecho.ladrilhos ? `<p class="dt-aviso">Há ${r.trecho.ladrilhos} ladrilho(s) no trecho atual sem checkpoint marcado. Eles não contam pontos. Volte e toque em <b>Checkpoint alcançado</b> se o robô chegou lá.</p>` : "";
-  $("revCorpo").innerHTML = `<p class="dt-res-meta"><b>${esc(r.equipe)}</b> · Nível ${r.nivel} · Arena ${r.arena} · Round ${r.round}</p>${aviso}${resumoHTML(calcular(r.dados))}`;
+  $("revCorpo").innerHTML = `<p class="dt-res-meta"><b>${esc(r.equipe)}</b> · Nível ${r.nivel} · Arena ${r.arena} · Round ${r.round}</p>${resumoHTML(calcular(r.dados))}`;
   $("revisao").showModal();
 });
 $("revisao").addEventListener("close", () => {
@@ -563,26 +503,14 @@ function linhasRounds() {
   return [...rounds].sort((a, b) => a.nivel - b.nivel || a.equipe.localeCompare(b.equipe, "pt-BR") || a.round - b.round).map((r) => {
     const c = calcular(r.dados), d = c.d;
     const o = { "Nível": r.nivel, "Time": r.equipe, "Round": r.round, "Arena": r.arena, "No-show": d.noShow ? "sim" : "não" };
-    for (const p of PERIGOS) o[`${p.nome} (qtd)`] = d.perigos[p.id];
+    for (const i of c.itens) o[i.tipo === "qtd" ? `${i.nome} (qtd)` : i.nome] = i.tipo === "qtd" ? i.valor : i.valor ? "sim" : "não";
     Object.assign(o, {
-      "Pontos perigos": c.perigos,
-      "Ladrilho de início": d.inicio ? "sim" : "não",
-      "Trechos (ladrilhos/tentativa)": d.trechos.map((t, i) => `T${i + 1}: ${t.ladrilhos}L ${t.pulado ? "pulado" : `${t.tentativa}ªt`}`).join(" | "),
-      "Pontos checkpoints": c.checkpoints,
-      "Falhas de progresso": d.falhas,
-      "Chegada": d.chegada ? "sim" : "não",
-      "Pontos chegada": c.chegada,
-      "Pontos do percurso": c.base,
-      "Vítimas vivas": d.vivas,
-      "Vítima morta": d.morta ? "sim" : "não",
-      "Multiplicador": c.multiplicador,
       "Total": r.pontos,
       "Tempo (s)": d.tempoSeg,
       "Tempo": mmss(d.tempoSeg),
       "Juiz": r.juizNome || r.juiz,
       "Login do juiz": r.juiz,
       "Registrado em": hora(r.criadoEm),
-      "Observações": d.obs,
     });
     return o;
   });

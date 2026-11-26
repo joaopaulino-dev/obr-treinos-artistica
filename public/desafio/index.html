@@ -149,7 +149,7 @@
         <span id="pMeta"></span>
       </div>
       <div class="dt-timer" id="timer">
-        <span class="dt-relogio" id="relogio" aria-live="off">8:00</span>
+        <span class="dt-relogio" id="relogio" aria-live="off">4:00</span>
         <button class="dt-play" type="button" id="play" aria-label="Iniciar o tempo">▶</button>
       </div>
       <div class="dt-total"><span id="pTotal">0</span><small>pts</small></div>
@@ -157,35 +157,10 @@
     </section>
     <p class="dt-esgotado" id="esgotado" role="alert" hidden>Tempo esgotado: o round terminou. Confira os itens e envie.</p>
 
-    <section class="panel" aria-labelledby="perH">
-      <div class="dt-head"><h2 id="perH">Perigos do percurso</h2><span class="dt-sub" id="subPerigos">0 pts</span></div>
-      <div class="dt-lista" id="perigos"></div>
-    </section>
-
-    <section class="panel" aria-labelledby="cpH">
-      <div class="dt-head"><h2 id="cpH">Checkpoints</h2><span class="dt-sub" id="subCheckpoints">0 pts</span></div>
-      <label class="dt-toggle"><input type="checkbox" id="inicio"> <span>Superou o ladrilho de início <b>+5</b></span></label>
-      <div class="dt-trecho" id="trechoAtual"></div>
-      <ol class="dt-trechos" id="trechos"></ol>
-      <p class="hint">Conte os ladrilhos do trecho e toque em <b>Checkpoint alcançado</b> quando o robô passar da metade do ladrilho do checkpoint. Os pontos por ladrilho dependem da tentativa: 1ª = 5, 2ª = 3, 3ª = 1, 4ª ou mais = 0. A partir da 3ª tentativa a equipe pode pular para o próximo checkpoint.</p>
-    </section>
-
-    <section class="panel" aria-labelledby="chH">
-      <div class="dt-head"><h2 id="chH">Falhas e chegada</h2><span class="dt-sub" id="subChegada">0 pts</span></div>
-      <div class="dt-item" id="falhasItem"></div>
-      <label class="dt-toggle"><input type="checkbox" id="chegada"> <span>Parou no ladrilho de chegada por 5 s <b id="chegadaVal">+60</b></span></label>
-    </section>
-
-    <section class="panel" aria-labelledby="rsH">
-      <div class="dt-head"><h2 id="rsH">Sala de resgate</h2><span class="dt-sub" id="subMult">× 1</span></div>
-      <div class="dt-item" id="vivasItem"></div>
-      <label class="dt-toggle"><input type="checkbox" id="morta"> <span>Vítima morta na área vermelha, depois das 2 vivas <b>× 1,3</b></span></label>
-      <p class="hint">Vítima entregue na área errada ou fora de ordem não ganha multiplicador.</p>
-    </section>
-
-    <section class="panel" aria-labelledby="obsH">
-      <h2 id="obsH">Observações</h2>
-      <textarea id="obs" rows="2" maxlength="500" placeholder="Opcional: algo que o admin precise saber"></textarea>
+    <section class="panel" aria-labelledby="itH">
+      <div class="dt-head"><h2 id="itH">Itens do desafio</h2><span class="dt-sub" id="subItens">0 pts</span></div>
+      <div class="dt-lista" id="itens"></div>
+      <p class="hint">A nota é a soma dos itens. Interseção e obstáculo: conte cada vez que o robô superar.</p>
     </section>
 
     <div class="dt-rodape">
@@ -236,7 +211,7 @@
     </section>
   </div>
 
-  <p class="foot">OBR 2026 · Desafio Técnico do Resgate · pontuação conforme o Manual de Regras do Resgate Nacional 2026</p>
+  <p class="foot">OBR 2026 · Desafio Técnico do Resgate · regras do Desafio Técnico definidas pela organização</p>
 </main>
 
 <dialog class="dt-dialog" id="revisao" aria-labelledby="revH">

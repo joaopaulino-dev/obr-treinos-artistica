@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { scryptSync } from "node:crypto";
-import { calcular, ranking, normalizarRound, pontosPorLadrilho } from "../public/desafio/pontuacao.js";
+import { calcular, ranking, normalizarRound, TEMPO_ROUND_SEG } from "../public/desafio/pontuacao.js";
 
 const h = (senha, sal) => scryptSync(senha, sal, 32).toString("hex");
 process.env.DT_SECRET = "teste";
@@ -29,31 +29,19 @@ function bancoFalso() {
   };
 }
 
-test("pontos por ladrilho seguem a tentativa (5/3/1/0)", () => {
-  assert.deepEqual([1, 2, 3, 4, 7].map(pontosPorLadrilho), [5, 3, 1, 0, 0]);
+test("desafio técnico: soma simples dos itens (quantidade × 40, sim/não 40 ou 60)", () => {
+  const c = calcular({ itens: { intersecao: 3, obstaculo: 2, fitaVermelha: true, fitaPrata: true, vitima: true, posse: true, prataComVitima: true }, tempoSeg: 200 });
+  assert.equal(c.total, 3 * 40 + 2 * 40 + 40 + 40 + 40 + 40 + 60); // 420
+  assert.equal(calcular({ itens: { intersecao: 1, posse: true } }).total, 80);
+  assert.equal(calcular({}).total, 0);
+  assert.equal(TEMPO_ROUND_SEG, 240);
 });
 
-test("round completo: perigos + checkpoints + chegada, vezes multiplicadores", () => {
-  const c = calcular({
-    perigos: { gangorra: 1, intersecao: 2, obstaculo: 1, rampa: 2, gap: 1, lombada: 1, passagem: 3 },
-    inicio: true,
-    trechos: [{ ladrilhos: 6, tentativa: 1 }, { ladrilhos: 5, tentativa: 2 }, { ladrilhos: 4, tentativa: 3 }, { ladrilhos: 3, tentativa: 4 }, { ladrilhos: 8, tentativa: 3, pulado: true }],
-    falhas: 5, chegada: true, vivas: 2, morta: true, tempoSeg: 412,
-  });
-  assert.equal(c.perigos, 20 + 40 + 20 + 20 + 10 + 10 + 0); // 120
-  assert.equal(c.checkpoints, 5 + 30 + 15 + 4 + 0 + 0); // 54
-  assert.equal(c.chegada, 35); // 60 − 5 × 5
-  assert.equal(c.base, 209);
-  assert.equal(c.total, Math.round(209 * 1.3 ** 3 * 100) / 100); // 459.17
-});
-
-test("chegada nunca negativa; morta só vale com as 2 vivas; no-show é zero", () => {
-  assert.equal(calcular({ chegada: true, falhas: 30 }).chegada, 0);
-  assert.equal(calcular({ vivas: 1, morta: true }).d.morta, false);
-  assert.equal(calcular({ vivas: 5 }).d.vivas, 2);
-  assert.equal(calcular({ noShow: true, perigos: { gangorra: 9 } }).total, 0);
-  assert.equal(normalizarRound({ perigos: { gangorra: -3, xyz: 9 } }).perigos.gangorra, 0);
-  assert.equal(normalizarRound({ perigos: { xyz: 9 } }).perigos.xyz, undefined);
+test("normaliza: sim/não só com true, quantidade sem negativo, campos estranhos somem; no-show é zero", () => {
+  const d = normalizarRound({ itens: { intersecao: -2, obstaculo: "4", vitima: "sim", xyz: 9 }, perigos: { gangorra: 3 } });
+  assert.deepEqual(d.itens, { intersecao: 0, obstaculo: 4, fitaVermelha: false, fitaPrata: false, vitima: false, posse: false, prataComVitima: false });
+  assert.equal(d.perigos, undefined);
+  assert.equal(calcular({ noShow: true, itens: { intersecao: 5, posse: true } }).total, 0);
 });
 
 test("ranking: melhor round vale; empate desempata pelo menor tempo", () => {
@@ -90,8 +78,8 @@ test("registrar: só times do Resgate, nível certo, 1 vez por round; reenvio do
   await assert.rejects(registrarRound(q, { equipe: "Alfa Robóticos - Artística", nivel: 1, round: 1, arena: 1, dados: {} }, juiz), /Resgate/);
   await assert.rejects(registrarRound(q, { equipe: t.nome, nivel: 2, round: 1, arena: 1, dados: {} }, juiz), /Nível 1/);
   await assert.rejects(registrarRound(q, { equipe: t.nome, nivel: 1, round: 1, arena: 7, dados: {} }, juiz), /arena/);
-  const ok = await registrarRound(q, { equipe: t.nome, nivel: 1, round: 1, arena: 3, envio: "x1", dados: { perigos: { gangorra: 2 } } }, juiz);
-  assert.equal(ok.pontos, 40);
+  const ok = await registrarRound(q, { equipe: t.nome, nivel: 1, round: 1, arena: 3, envio: "x1", dados: { itens: { intersecao: 2, posse: true } } }, juiz);
+  assert.equal(ok.pontos, 120);
   assert.equal((await registrarRound(q, { equipe: t.nome, nivel: 1, round: 1, arena: 3, envio: "x1", dados: {} }, juiz)).repetido, true);
   await assert.rejects(registrarRound(q, { equipe: t.nome, nivel: 1, round: 1, arena: 3, envio: "x2", dados: {} }, juiz), /já foi pontuado/);
 });
