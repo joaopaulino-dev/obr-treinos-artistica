@@ -114,3 +114,21 @@ test("refazer nível: times de 2 ou 3, juntas no mesmo time, pessoas equilibrada
   for (const t of times) { assert.equal(t.nivel, 2); assert.ok(t.nome.startsWith("Super Team N2-")); }
   assert.throws(() => sortearNivelFlex(insc, 2, { juntas: ["Fantasma"] }), /não está inscrita/);
 });
+
+test("sorteio da Artística: nunca passa de 3 equipes por time, juntas respeitadas", async () => {
+  const { sortearArtistica } = await import("../lib/superteams.js");
+  for (const [n1, n2] of [[24, 16], [13, 4], [5, 7], [1, 2]]) {
+    const insc = [...ins(N1.slice(0, n1), 1, [4, 3, 1, 4]), ...ins(N2.slice(0, n2), 2, [4, 2, 4])];
+    const juntas = n2 >= 2 ? [N2[0], N2[1]] : [];
+    const r = sortearArtistica(insc, 3, { juntas });
+    const todas = r.times.flatMap((t) => t.equipes.map((e) => e.equipe));
+    assert.equal(new Set(todas).size, n1 + n2);
+    for (const t of r.times) {
+      assert.ok(t.equipes.length <= 3, `${t.nome} com ${t.equipes.length}`);
+      if (n1 > 1 || t.nivel === 2) assert.ok(t.equipes.length >= 2);
+      for (const e of t.equipes) assert.equal(nivelDaEquipe(e.equipe), t.nivel);
+    }
+    if (juntas.length) assert.ok(r.times.some((t) => juntas.every((j) => t.equipes.some((e) => e.equipe === j))));
+  }
+  assert.throws(() => sortearArtistica(ins([N1[0], N2[0]], 1, [3]).map((x, i) => ({ ...x, nivel: i + 1 })), 3, { juntas: [N1[0], N2[0]] }), /mesmo nível/);
+});

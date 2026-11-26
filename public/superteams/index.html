@@ -100,11 +100,19 @@
       </div>
       <form class="admin-block" id="sorteioForm">
         <h3>Sorteio</h3>
-        <p class="hint">Separado por nível e equilibrado pelo número de pessoas. Sortear fecha as inscrições. Se a divisão não for exata, as equipes que sobram entram nos times já formados.</p>
+        <p class="hint" id="admSorteioHint">Separado por nível e equilibrado pelo número de pessoas. Sortear fecha as inscrições. Se a divisão não for exata, as equipes que sobram entram nos times já formados.</p>
         <div class="admin-row">
           <div>
-            <label for="admTamanho">Equipes por time</label>
-            <input id="admTamanho" type="number" inputmode="numeric" min="2" max="6" value="2">
+            <label for="admTamanho" id="admTamanhoL">Equipes por time</label>
+            <input id="admTamanho" type="number" inputmode="numeric" min="2" max="6" value="3">
+          </div>
+          <div class="st-juntas" hidden>
+            <label for="sorJunta1">Manter juntas (opcional)</label>
+            <select id="sorJunta1"></select>
+          </div>
+          <div class="st-juntas" hidden>
+            <label for="sorJunta2">e</label>
+            <select id="sorJunta2"></select>
           </div>
           <button class="btn primary" type="submit" id="admSortear">Sortear</button>
         </div>
@@ -112,7 +120,7 @@
       </form>
       <form class="admin-block" id="refazerForm" hidden>
         <h3>Refazer um nível</h3>
-        <p class="hint">Sorteia de novo só o nível escolhido, com times de 2 ou 3 equipes (o máximo possível de 3), equilibrando pessoas. O outro nível e a publicação ficam como estão.</p>
+        <p class="hint">Sorteia de novo só o nível escolhido, com times de 2 ou 3 equipes (nunca mais de 3), equilibrando pessoas. O outro nível e a publicação ficam como estão.</p>
         <div class="admin-row">
           <div>
             <label for="refNivel">Nível</label>

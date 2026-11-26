@@ -28,6 +28,11 @@
     return dados;
   }
   const post = (caminho, corpo) => api(caminho, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo) });
+  if (!RESGATE) {
+    document.getElementById("admSorteioHint").textContent = "Separado por nível e equilibrado pelo número de pessoas. Nenhum time passa do máximo: com 3, os times ficam com 2 ou 3 equipes. Sortear fecha as inscrições e despublica o resultado.";
+    document.getElementById("admTamanhoL").textContent = "Máximo de equipes por time";
+    document.querySelectorAll(".st-juntas").forEach((e) => { e.hidden = false; });
+  }
   const admin = (acao, extra) => post("/api/superteams-admin", { senha: state.senha, acao, modalidade: RESGATE ? "resgate" : "", ...extra });
 
   /* ---------- página pública ---------- */
@@ -180,15 +185,25 @@
   $("sorteioForm").addEventListener("submit", (ev) => {
     ev.preventDefault();
     const tamanho = Number($("admTamanho").value);
+    const juntas = RESGATE ? [] : [...new Set([$("sorJunta1").value, $("sorJunta2").value].filter(Boolean))];
+    if (juntas.length === 1) { toast("Escolha as duas equipes que ficam juntas, ou deixe as duas em branco.", true); return; }
     const msg = state.adm.sorteio
-      ? `Sortear de novo com ${tamanho} equipes por time? O resultado atual será substituído e despublicado.`
-      : `Sortear com ${tamanho} equipes por time? As inscrições serão fechadas.`;
+      ? `Sortear de novo com até ${tamanho} equipes por time? O resultado atual será substituído e despublicado.`
+      : `Sortear com até ${tamanho} equipes por time? As inscrições serão fechadas.`;
     if (!confirm(msg)) return;
-    executar(() => admin("sortear", { tamanho }), "Sorteio feito. Confira e publique quando quiser.");
+    executar(() => admin("sortear", { tamanho, juntas }), "Sorteio feito. Confira e publique quando quiser.");
   });
 
   function preencherJuntas() {
     if (!state.adm) return;
+    if (!RESGATE) {
+      const todas = (n) => state.adm.inscritas.filter((i) => i.nivel === n).map((i) => i.equipe).sort((a, b) => a.localeCompare(b, "pt-BR"));
+      for (const id of ["sorJunta1", "sorJunta2"]) {
+        const sel = $(id), v = sel.value;
+        sel.innerHTML = '<option value="">—</option>' + [1, 2].map((n) => `<optgroup label="Nível ${n}">` + todas(n).map((e) => `<option>${esc(e)}</option>`).join("") + "</optgroup>").join("");
+        sel.value = v;
+      }
+    }
     const n = Number($("refNivel").value);
     const nomes = state.adm.inscritas.filter((i) => i.nivel === n).map((i) => i.equipe).sort((a, b) => a.localeCompare(b, "pt-BR"));
     for (const id of ["refJunta1", "refJunta2"]) {
