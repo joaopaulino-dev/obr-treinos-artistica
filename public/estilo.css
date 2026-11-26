@@ -279,6 +279,8 @@ body.expandido .mapa-top { display: none }
   font-weight: 600; font-size: 14px; text-decoration: none; white-space: nowrap }
 .pill:hover { background: var(--accent-soft) }
 .pill.solid { background: var(--accent); color: var(--accent-ink) }
+.pill.off { opacity: .6; border-style: dashed; cursor: default; font-size: 13.5px }
+.pill.off:hover { background: none }
 .pill.solid:hover { background: var(--accent-strong); border-color: var(--accent-strong) }
 @media (max-width: 560px) {
   .item .pair { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr }
