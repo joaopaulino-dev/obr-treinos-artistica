@@ -85,10 +85,11 @@ test("dia ativo: até 18h vale hoje, depois vale amanhã (horário de João Pess
   assert.equal(somarDias("2026-12-31", 1), "2027-01-01");
 });
 
-test("hoje: bloqueia horários que já começaram, exceto forçando", () => {
-  const c = { ...ctx(), agoraMin: 600 }; // 10:00
-  assert.equal(motivoBloqueio(c, "A", 59), "Esse horário já passou"); // 09:50
-  assert.equal(motivoBloqueio(c, "A", 60), null); // 10:00
+test("hoje: bloqueia só horários que já terminaram; livre em andamento pode, e forçando sempre", () => {
+  const c = { ...ctx(), agoraMin: 605 }; // 10:05
+  assert.equal(motivoBloqueio(c, "A", 59), "Esse horário já passou"); // 09:50–10:00
+  assert.equal(motivoBloqueio(c, "A", 60), null); // 10:00–10:10, em andamento
+  assert.equal(motivoBloqueio({ ...c, agoraMin: 600 }, "A", 59), "Esse horário já passou"); // terminou às 10:00
   assert.equal(motivoBloqueio(c, "A", 59, { forcar: true }), null);
 });
 

@@ -51,10 +51,11 @@
   const limite = (e) => g().creditos + ((state.cfg.extras || {})[e] || 0);
   const comMesa = (e) => e; // nomes das equipes aparecem sem o número da mesa
   const cred = (n) => n + (n === 1 ? " crédito" : " créditos");
-  const passou = (s) => state.cfg.agoraMin != null && s * g().duracaoMin < state.cfg.agoraMin;
+  // Encerrado = já terminou; um horário livre em andamento ainda pode ser reservado (lib/regras.js).
+  const passou = (s) => state.cfg.agoraMin != null && (s + 1) * g().duracaoMin <= state.cfg.agoraMin;
   // Cancelamento pela própria equipe até CANCELA_ATE_MIN minutos antes do início (lib/regras.js).
   const cancelavel = (s) => state.cfg.agoraMin == null || s * g().duracaoMin - state.cfg.agoraMin >= CANCELA_ATE_MIN;
-  // Repescagem (lib/regras.js): quem já treinou tudo pode pegar o próximo horário livre.
+  // Repescagem (lib/regras.js): quem já treinou tudo pode pegar o horário em andamento ou o próximo, se livres.
   const proximo = () => state.cfg.agoraMin == null ? null : Math.floor(state.cfg.agoraMin / g().duracaoMin) + 1;
   const jaTreinou = (e) => {
     const meus = state.reservas.filter((r) => r.equipe === e);
@@ -67,7 +68,7 @@
     if (aqui.includes(e)) return "Já está neste horário";
     if (passou(s)) return "Encerrado";
     if (aqui.length >= g().porSlot) return "Ocupado";
-    if (usados(e) >= limite(e) && !(s === proximo() && jaTreinou(e))) return "Sem créditos";
+    if (usados(e) >= limite(e) && !((s === proximo() || s === proximo() - 1) && jaTreinou(e))) return "Sem créditos";
     if (state.reservas.some((r) => r.equipe === e && Math.abs(r.slot - s) === 1)) return "Seguido de outro ensaio";
     return null;
   }
