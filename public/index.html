@@ -344,7 +344,7 @@
       if (!d) return "";
       const url = res ? "/superteams/resgate" : "/superteams";
       const time = (d.times || []).find((t) => t.equipes.some((x) => x.equipe === e.nome));
-      if (time) return item(ICO.st, `<strong>${escH(time.nome)}</strong><span>Sua equipe foi sorteada para este Super Team</span>`, url, "Ver times");
+      if (time) return item(ICO.st, `<strong>${escH(time.nome)}</strong><span>${time.apresentacao ? escH(time.apresentacao) : "Sua equipe foi sorteada para este Super Team"}</span>`, url, "Ver times");
       if (d.times) return item(ICO.st, "<strong>Super Teams sorteados</strong><span>Sua equipe não está entre as inscritas</span>", url, "Ver times");
       if ((d.inscritas || []).includes(e.nome)) return item(ICO.st, `<strong>Super Teams: interesse registrado</strong><span>${res ? "O sorteio mistura N1 e N2; proposta em 28/11" : "O sorteio acontece depois das entrevistas"}</span>`, url, "Ver");
       if (d.aberto) return item(ICO.st, `<strong>Super Teams: ainda não inscrita</strong><span>${res ? "N1 e N2 juntos · sem caráter classificatório" : "ODS 10 · participação opcional"}</span>`, url, "Participar");
