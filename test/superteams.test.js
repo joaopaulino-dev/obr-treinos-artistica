@@ -133,12 +133,14 @@ test("sorteio da Artística: nunca passa de 3 equipes por time, juntas respeitad
   assert.throws(() => sortearArtistica(ins([N1[0], N2[0]], 1, [3]).map((x, i) => ({ ...x, nivel: i + 1 })), 3, { juntas: [N1[0], N2[0]] }), /mesmo nível/);
 });
 
-test("time com CAV NEO JAZZ recebe a marcação de apresentação no sábado", async () => {
+test("apresentação: N1 no sábado, N2 no domingo", async () => {
   const { marcarApresentacao } = await import("../lib/superteams.js");
   const r = marcarApresentacao([
-    { nome: "A", equipes: [{ equipe: "X" }, { equipe: "CAV NEO JAZZ" }] },
-    { nome: "B", equipes: [{ equipe: "Y" }], apresentacao: "velha" },
+    { nome: "A", nivel: 1, equipes: [{ equipe: "CAV NEO JAZZ" }] },
+    { nome: "B", nivel: 2, equipes: [{ equipe: "Y" }], apresentacao: "velha" },
+    { nome: "C", nivel: null, equipes: [], apresentacao: "velha" },
   ]);
-  assert.match(r[0].apresentacao, /sábado/);
-  assert.equal(r[1].apresentacao, undefined);
+  assert.match(r[0].apresentacao, /sábado, 28\/11/);
+  assert.match(r[1].apresentacao, /domingo, 29\/11/);
+  assert.equal(r[2].apresentacao, undefined);
 });
