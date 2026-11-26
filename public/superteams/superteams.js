@@ -125,6 +125,8 @@
     if (s) $("admTamanho").value = s.tamanho;
     $("admAvisos").innerHTML = s && s.avisos && s.avisos.length ? `<div class="aviso" role="note">${s.avisos.map((a) => `<p>${esc(a)}</p>`).join("")}</div>` : "";
     $("admTimes").innerHTML = s ? cardsTimes(s.times, true) : "";
+    $("refazerForm").hidden = RESGATE || !s;
+    preencherJuntas();
     $("admPubBox").hidden = !s;
     $("admPublicar").textContent = d.publicado ? "Ocultar resultado" : "Publicar resultado";
     $("admPubStatus").textContent = s ? `Sorteado em ${hora(s.feitoEm)} · ${d.publicado ? "visível na página pública" : "ainda não publicado"}` : "";
@@ -183,6 +185,27 @@
       : `Sortear com ${tamanho} equipes por time? As inscrições serão fechadas.`;
     if (!confirm(msg)) return;
     executar(() => admin("sortear", { tamanho }), "Sorteio feito. Confira e publique quando quiser.");
+  });
+
+  function preencherJuntas() {
+    if (!state.adm) return;
+    const n = Number($("refNivel").value);
+    const nomes = state.adm.inscritas.filter((i) => i.nivel === n).map((i) => i.equipe).sort((a, b) => a.localeCompare(b, "pt-BR"));
+    for (const id of ["refJunta1", "refJunta2"]) {
+      const sel = $(id), v = sel.value;
+      sel.innerHTML = '<option value="">—</option>' + nomes.map((e) => `<option>${esc(e)}</option>`).join("");
+      if (nomes.includes(v)) sel.value = v;
+    }
+  }
+  $("refNivel").addEventListener("change", preencherJuntas);
+  $("refazerForm").addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const nivel = Number($("refNivel").value);
+    const juntas = [...new Set([$("refJunta1").value, $("refJunta2").value].filter(Boolean))];
+    if (juntas.length === 1) { toast("Escolha as duas equipes que ficam juntas, ou deixe as duas em branco.", true); return; }
+    const txt = juntas.length ? ` mantendo ${juntas.join(" e ")} juntas` : "";
+    if (!confirm(`Refazer o sorteio do Nível ${nivel} com times de 2 ou 3 equipes${txt}? Os times atuais do Nível ${nivel} serão substituídos${state.adm.publicado ? " e o novo resultado aparece direto na página pública" : ""}.`)) return;
+    executar(() => admin("refazerNivel", { nivel, juntas }), `Nível ${nivel} sorteado de novo.`);
   });
 
   $("admTimes").addEventListener("click", (ev) => {

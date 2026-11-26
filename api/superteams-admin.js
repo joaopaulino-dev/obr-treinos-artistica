@@ -5,11 +5,12 @@
 //   abrir     { aberto }        abre/fecha as inscrições
 //   remover   { equipe }        apaga uma inscrição (e invalida o sorteio, se houver)
 //   sortear   { tamanho }       fecha as inscrições, sorteia por nível e despublica
+//   refazerNivel { nivel, juntas } refaz só um nível: times de 2 ou 3 equipes, juntas no mesmo time (mantém o outro nível e a publicação)
 //   dividir   { time }          divide um time em dois, equilibrando pessoas (mantém a publicação)
 //   publicar  { publicado }     mostra/esconde o resultado na página pública
 import { erro, inteiro } from "../lib/regras.js";
 import { comBanco, emTransacaoChave } from "../lib/db.js";
-import { carregarSuperTeams, gravarMeta, sortear, dividirTime, modDe, TAMANHO_MIN, TAMANHO_MAX } from "../lib/superteams.js";
+import { carregarSuperTeams, gravarMeta, sortear, dividirTime, sortearNivelFlex, modDe, TAMANHO_MIN, TAMANHO_MAX } from "../lib/superteams.js";
 import { responderErro, corpo, senhaConfere } from "../lib/http.js";
 
 const ACOES = {
@@ -30,6 +31,18 @@ const ACOES = {
     await gravarMeta(client, mod.meta + "aberto", "0");
     await gravarMeta(client, mod.meta + "sorteio", JSON.stringify(sortear(st.inscritas, tamanho, undefined, { misturar: mod.misturar })));
     await gravarMeta(client, mod.meta + "publicado", "0");
+  },
+
+  async refazerNivel(client, b, st, mod) {
+    if (mod.misturar) throw erro(400, "No Resgate os níveis são misturados: use o sorteio normal.");
+    if (!st.sorteio) throw erro(409, "Faça o sorteio antes de refazer um nível.");
+    const nivel = Number(b.nivel);
+    if (nivel !== 1 && nivel !== 2) throw erro(400, "Nível inválido.");
+    const juntas = [...new Set((Array.isArray(b.juntas) ? b.juntas : []).map(String).filter(Boolean))];
+    const novos = sortearNivelFlex(st.inscritas, nivel, { juntas });
+    const times = [...st.sorteio.times.filter((t) => t.nivel !== nivel), ...novos].sort((a, b) => a.nivel - b.nivel);
+    const avisos = (st.sorteio.avisos || []).filter((a) => !a.includes(`Nível ${nivel}`));
+    await gravarMeta(client, mod.meta + "sorteio", JSON.stringify({ ...st.sorteio, times, avisos, feitoEm: new Date().toISOString() }));
   },
 
   async dividir(client, b, st, mod) {

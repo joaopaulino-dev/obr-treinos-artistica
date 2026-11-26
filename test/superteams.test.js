@@ -98,3 +98,19 @@ test("dividir time: 2 equipes em cada, pessoas equilibradas, no lugar do origina
   assert.throws(() => dividirTime(s, "Super Team N2-A"), /4 equipes/);
   assert.throws(() => dividirTime(s, "Nada"), /não existe/);
 });
+
+test("refazer nível: times de 2 ou 3, juntas no mesmo time, pessoas equilibradas", async () => {
+  const { sortearNivelFlex } = await import("../lib/superteams.js");
+  const pessoas = [4, 4, 3, 4, 4, 2, 2, 4, 4, 4, 4, 4, 3, 4, 4, 4];
+  const nomes = N2.slice(0, 16);
+  const insc = [...nomes.map((equipe, i) => ({ equipe, nivel: 2, integrantes: pessoas[i] })), { equipe: N1[0], nivel: 1, integrantes: 3 }];
+  const juntas = [nomes[3], nomes[9]];
+  const times = sortearNivelFlex(insc, 2, { juntas, tentativas: 500 });
+  assert.equal(times.length, 6);
+  assert.deepEqual(times.map((t) => t.equipes.length).sort(), [2, 2, 3, 3, 3, 3]);
+  const todas = times.flatMap((t) => t.equipes.map((e) => e.equipe));
+  assert.equal(new Set(todas).size, 16);
+  assert.ok(times.some((t) => juntas.every((j) => t.equipes.some((e) => e.equipe === j))));
+  for (const t of times) { assert.equal(t.nivel, 2); assert.ok(t.nome.startsWith("Super Team N2-")); }
+  assert.throws(() => sortearNivelFlex(insc, 2, { juntas: ["Fantasma"] }), /não está inscrita/);
+});
