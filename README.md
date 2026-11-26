@@ -98,3 +98,9 @@ cp .env.example .env   # preencha DATABASE_URL e ADMIN_PASSWORD
 npx vercel dev
 npm test
 ```
+
+## Desafio Técnico · Resgate
+
+Pontuador dos juízes em `obr-desafio-tecnico.vercel.app` (domínio extra deste mesmo projeto; também abre em `/desafio-tecnico`).
+Código em `public/desafio/` (a regra de pontuação fica em `public/desafio/pontuacao.js`, usada pelo navegador e pelo servidor), `lib/desafio.js` e `api/desafio.js`.
+Logins fixos (admin e juízes iniciais) ficam só na variável `DT_USUARIOS` da Vercel, gerada por `scripts/gerar-dt-usuarios.mjs`; os demais juízes o admin cadastra na própria página.

@@ -4,7 +4,44 @@
   "regions": [
     "gru1"
   ],
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "obr-desafio-tecnico.vercel.app"
+        }
+      ],
+      "destination": "/desafio-tecnico",
+      "permanent": false
+    }
+  ],
   "rewrites": [
+    {
+      "source": "/admin",
+      "has": [
+        {
+          "type": "host",
+          "value": "obr-desafio-tecnico.vercel.app"
+        }
+      ],
+      "destination": "/desafio/index.html"
+    },
+    {
+      "source": "/juiz",
+      "has": [
+        {
+          "type": "host",
+          "value": "obr-desafio-tecnico.vercel.app"
+        }
+      ],
+      "destination": "/desafio/index.html"
+    },
+    {
+      "source": "/desafio-tecnico",
+      "destination": "/desafio/index.html"
+    },
     {
       "source": "/coordenacao",
       "destination": "/coordenacao/index.html"

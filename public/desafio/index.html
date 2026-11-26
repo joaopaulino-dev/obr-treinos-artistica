@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#561111">
+<title>Desafio Técnico | Resgate OBR 2026</title>
+<meta name="description" content="Pontuador do Desafio Técnico do Resgate, Etapa Nacional da OBR 2026.">
+<link rel="icon" href="/assets/mascote-obr.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/estilo.css">
+<link rel="stylesheet" href="/desafio/desafio.css">
+</head>
+<body>
+
+<!-- abertura -->
+<div class="ab" id="abertura" role="dialog" aria-label="Abertura do Desafio Técnico" hidden>
+  <svg class="ab-pista" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <pattern id="abGrade" width="80" height="80" patternUnits="userSpaceOnUse">
+        <path d="M80 0H0V80" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1.5"/>
+      </pattern>
+      <radialGradient id="abLuz" cx="50%" cy="38%" r="65%">
+        <stop offset="0" stop-color="#A3302B" stop-opacity=".9"/>
+        <stop offset="1" stop-color="#2A0707" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="400" height="800" fill="url(#abGrade)"/>
+    <rect width="400" height="800" fill="url(#abLuz)"/>
+    <path id="abTrilha" class="ab-linha" pathLength="1"
+      d="M-20 690 H90 Q130 690 130 650 V560 Q130 520 170 520 H250 Q290 520 290 480 V380 Q290 340 250 340 H120 Q80 340 80 300 V210 Q80 170 120 170 H300 Q340 170 340 130 V-20"/>
+    <g class="ab-marcas">
+      <rect x="138" y="585" width="14" height="14" rx="2" class="ab-verde"/>
+      <rect x="62" y="248" width="14" height="14" rx="2" class="ab-verde"/>
+      <rect x="226" y="508" width="40" height="7" class="ab-gap"/>
+      <circle cx="210" cy="420" r="9" class="ab-viva ab-v1"/>
+      <circle cx="350" cy="300" r="9" class="ab-viva ab-v2"/>
+      <circle cx="170" cy="250" r="9" class="ab-morta ab-v3"/>
+      <circle cx="130" cy="470" r="7" class="ab-cp"/>
+      <circle cx="300" cy="230" r="7" class="ab-cp"/>
+    </g>
+    <g class="ab-robo">
+      <rect x="-13" y="-13" width="26" height="26" rx="6" fill="#F59E0B" stroke="#FFF7E6" stroke-width="2"/>
+      <circle cx="-5" cy="-3" r="3" fill="#2A0707"/><circle cx="5" cy="-3" r="3" fill="#2A0707"/>
+      <rect x="-7" y="5" width="14" height="3" rx="1.5" fill="#2A0707"/>
+      <animateMotion class="ab-motion" dur="3.2s" begin="indefinite" fill="freeze" rotate="auto" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines=".45 0 .25 1">
+        <mpath href="#abTrilha"/>
+      </animateMotion>
+    </g>
+  </svg>
+  <div class="ab-palco">
+    <img class="ab-mascote" src="/assets/mascote-obr.png" alt="" width="350" height="640">
+    <div class="ab-texto">
+      <img class="ab-logo" src="/assets/logo-obr-2026-branco.png" alt="OBR 2026" width="560" height="237">
+      <p class="ab-k">Etapa Nacional · Resgate</p>
+      <h1 class="ab-titulo"><span>Desafio</span> <span>Técnico</span></h1>
+      <p class="ab-sub">Pontuador oficial dos juízes</p>
+    </div>
+  </div>
+  <button class="ab-pular" type="button" id="abPular">Toque para começar</button>
+</div>
+
+<main class="wrap dt-wrap">
+  <header class="topbar">
+    <picture>
+      <source srcset="/assets/logo-obr-2026-branco.png" media="(prefers-color-scheme: dark)">
+      <img class="logo" src="/assets/logo-obr-2026-vinho.png" alt="OBR 2026" width="560" height="237">
+    </picture>
+    <div class="titles">
+      <span class="eyebrow">Etapa Nacional · Resgate</span>
+      <h1>Desafio Técnico</h1>
+    </div>
+    <div class="dt-user" id="user" hidden>
+      <span class="dt-user-nome" id="userNome"></span>
+      <button class="back" type="button" id="sair">Sair</button>
+    </div>
+  </header>
+
+  <nav class="dt-tabs" id="abasAdmin" hidden aria-label="Visão">
+    <button type="button" data-visao="admin" aria-pressed="true">Painel admin</button>
+    <button type="button" data-visao="juiz" aria-pressed="false">Pontuar</button>
+  </nav>
+
+  <!-- login -->
+  <section class="panel dt-login" id="login" aria-labelledby="loginH" hidden>
+    <div>
+      <h2 id="loginH">Entrar</h2>
+      <p class="hint">Use o login e a senha que a coordenação do Resgate passou para você.</p>
+    </div>
+    <form id="loginForm" class="dt-login-form" novalidate>
+      <div>
+        <label for="loginUser">Login</label>
+        <input id="loginUser" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+      </div>
+      <div>
+        <label for="loginSenha">Senha</label>
+        <input id="loginSenha" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn primary" type="submit" id="entrar">Entrar</button>
+    </form>
+    <p class="dt-erro" id="loginErro" role="alert" hidden></p>
+  </section>
+
+  <!-- juiz: escolha do round -->
+  <section class="panel" id="setup" aria-labelledby="setupH" hidden>
+    <div class="dt-head">
+      <h2 id="setupH">Novo round</h2>
+      <span class="dt-pend" id="pendentes" hidden></span>
+    </div>
+
+    <div class="dt-campo">
+      <span class="dt-rot" id="arenaRot">Arena</span>
+      <div class="dt-seg dt-seg-6" id="arenas" role="group" aria-labelledby="arenaRot"></div>
+    </div>
+
+    <div class="dt-campo">
+      <span class="dt-rot" id="nivelRot">Nível</span>
+      <div class="dt-seg" id="niveis" role="group" aria-labelledby="nivelRot">
+        <button type="button" data-nivel="1" aria-pressed="true">Nível 1</button>
+        <button type="button" data-nivel="2" aria-pressed="false">Nível 2</button>
+      </div>
+    </div>
+
+    <div class="dt-campo">
+      <label for="busca" class="dt-rot">Time</label>
+      <input id="busca" type="search" placeholder="Buscar time do Resgate" autocomplete="off">
+      <div class="dt-times" id="times" role="listbox" aria-label="Times do Resgate"></div>
+    </div>
+
+    <div class="dt-campo" id="roundCampo" hidden>
+      <span class="dt-rot" id="roundRot">Round</span>
+      <div class="dt-seg" id="rounds" role="group" aria-labelledby="roundRot"></div>
+      <p class="hint">São 2 rounds por time e vale a melhor nota. Round já pontuado só é refeito se o admin apagar.</p>
+    </div>
+
+    <div class="dt-acoes">
+      <button class="btn" type="button" id="noShow" disabled>No-show (0 pontos)</button>
+      <button class="btn primary" type="button" id="iniciar" disabled>Começar a pontuar</button>
+    </div>
+  </section>
+
+  <!-- juiz: pontuação -->
+  <div class="dt-pontuar" id="pontuar" hidden>
+    <section class="dt-barra" aria-label="Round em andamento">
+      <div class="dt-barra-info">
+        <strong id="pTime"></strong>
+        <span id="pMeta"></span>
+      </div>
+      <div class="dt-timer" id="timer">
+        <span class="dt-relogio" id="relogio" aria-live="off">8:00</span>
+        <button class="dt-play" type="button" id="play" aria-label="Iniciar o tempo">▶</button>
+      </div>
+      <div class="dt-total"><span id="pTotal">0</span><small>pts</small></div>
+      <div class="dt-tempo-barra"><i id="tempoBarra"></i></div>
+    </section>
+    <p class="dt-esgotado" id="esgotado" role="alert" hidden>Tempo esgotado: o round terminou. Confira os itens e envie.</p>
+
+    <section class="panel" aria-labelledby="perH">
+      <div class="dt-head"><h2 id="perH">Perigos do percurso</h2><span class="dt-sub" id="subPerigos">0 pts</span></div>
+      <div class="dt-lista" id="perigos"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="cpH">
+      <div class="dt-head"><h2 id="cpH">Checkpoints</h2><span class="dt-sub" id="subCheckpoints">0 pts</span></div>
+      <label class="dt-toggle"><input type="checkbox" id="inicio"> <span>Superou o ladrilho de início <b>+5</b></span></label>
+      <div class="dt-trecho" id="trechoAtual"></div>
+      <ol class="dt-trechos" id="trechos"></ol>
+      <p class="hint">Conte os ladrilhos do trecho e toque em <b>Checkpoint alcançado</b> quando o robô passar da metade do ladrilho do checkpoint. Os pontos por ladrilho dependem da tentativa: 1ª = 5, 2ª = 3, 3ª = 1, 4ª ou mais = 0. A partir da 3ª tentativa a equipe pode pular para o próximo checkpoint.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="chH">
+      <div class="dt-head"><h2 id="chH">Falhas e chegada</h2><span class="dt-sub" id="subChegada">0 pts</span></div>
+      <div class="dt-item" id="falhasItem"></div>
+      <label class="dt-toggle"><input type="checkbox" id="chegada"> <span>Parou no ladrilho de chegada por 5 s <b id="chegadaVal">+60</b></span></label>
+    </section>
+
+    <section class="panel" aria-labelledby="rsH">
+      <div class="dt-head"><h2 id="rsH">Sala de resgate</h2><span class="dt-sub" id="subMult">× 1</span></div>
+      <div class="dt-item" id="vivasItem"></div>
+      <label class="dt-toggle"><input type="checkbox" id="morta"> <span>Vítima morta na área vermelha, depois das 2 vivas <b>× 1,3</b></span></label>
+      <p class="hint">Vítima entregue na área errada ou fora de ordem não ganha multiplicador.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="obsH">
+      <h2 id="obsH">Observações</h2>
+      <textarea id="obs" rows="2" maxlength="500" placeholder="Opcional: algo que o admin precise saber"></textarea>
+    </section>
+
+    <div class="dt-rodape">
+      <button class="btn" type="button" id="cancelar">Cancelar round</button>
+      <button class="btn primary" type="button" id="fim">Fim da rodada · revisar</button>
+    </div>
+  </div>
+
+  <!-- admin -->
+  <div class="dt-admin" id="admin" hidden>
+    <section class="dt-kpis" id="kpis"></section>
+
+    <section class="panel" aria-labelledby="rkH">
+      <div class="dt-head dt-head-wrap">
+        <h2 id="rkH">Ranking</h2>
+        <div class="dt-seg dt-seg-sm" id="rkNivel" role="group" aria-label="Nível do ranking">
+          <button type="button" data-nivel="1" aria-pressed="true">Nível 1</button>
+          <button type="button" data-nivel="2" aria-pressed="false">Nível 2</button>
+        </div>
+      </div>
+      <div class="dt-ferr">
+        <button class="chip-btn" type="button" id="expandir">Expandir tudo</button>
+        <button class="chip-btn" type="button" id="atualizar">Atualizar</button>
+        <span class="dt-ferr-sep"></span>
+        <button class="chip-btn pdf" type="button" data-baixar="xlsx">Baixar XLSX</button>
+        <button class="chip-btn pdf" type="button" data-baixar="csv">CSV</button>
+        <button class="chip-btn pdf" type="button" data-baixar="json">JSON</button>
+      </div>
+      <p class="hint">Vale a melhor nota entre os 2 rounds; no empate, o menor tempo no round da melhor nota. Toque num time para ver o resumo do que o juiz pontuou.</p>
+      <div class="dt-rank" id="ranking"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="ulH">
+      <h2 id="ulH">Últimos rounds</h2>
+      <ol class="dt-ultimos" id="ultimos"></ol>
+    </section>
+
+    <section class="panel" aria-labelledby="jzH">
+      <h2 id="jzH">Juízes</h2>
+      <ul class="dt-juizes" id="juizes"></ul>
+      <form class="dt-juiz-form" id="juizForm" novalidate>
+        <div><label for="jzNome">Nome</label><input id="jzNome" required maxlength="60" placeholder="Ex.: Maria Souza"></div>
+        <div><label for="jzLogin">Login</label><input id="jzLogin" required maxlength="40" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Ex.: mariasouza"></div>
+        <div><label for="jzSenha">Senha</label><input id="jzSenha" required maxlength="100" autocomplete="new-password"></div>
+        <button class="btn primary" type="submit">Adicionar juiz</button>
+      </form>
+      <p class="hint">A senha fica guardada só como hash. Para trocar a senha de um juiz, remova e cadastre de novo.</p>
+    </section>
+  </div>
+
+  <p class="foot">OBR 2026 · Desafio Técnico do Resgate · pontuação conforme o Manual de Regras do Resgate Nacional 2026</p>
+</main>
+
+<dialog class="dt-dialog" id="revisao" aria-labelledby="revH">
+  <form method="dialog" class="dt-dialog-in">
+    <h2 id="revH">Revisar e enviar</h2>
+    <div id="revCorpo"></div>
+    <div class="dt-acoes">
+      <button class="btn" value="voltar" type="submit">Voltar e corrigir</button>
+      <button class="btn primary" value="enviar" type="submit" id="enviar">Confirmar e enviar</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="dt-toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script type="module" src="/desafio/desafio.js"></script>
+</body>
+</html>

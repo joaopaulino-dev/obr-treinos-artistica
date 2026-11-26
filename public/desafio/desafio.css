@@ -1,0 +1,217 @@
+/* Desafio Técnico · Resgate. Usa os tokens de /estilo.css (vinho do logo). */
+:root { --ok: #17652F; --ok-soft: #E3F3E7; --warn: #B45309; --robo: #F59E0B }
+@media (prefers-color-scheme: dark) { :root { --ok: #8FE0A6; --ok-soft: #16351F; --warn: #F4CF8C } }
+
+.dt-wrap { padding-bottom: 120px }
+.dt-user { margin-left: auto; display: flex; align-items: center; gap: 8px; min-width: 0 }
+.dt-user .back { margin-left: 0 }
+.dt-user-nome { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 30vw }
+.dt-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px }
+.dt-head-wrap { flex-wrap: wrap; align-items: center }
+.dt-head h2 { font-size: 19px }
+.dt-sub { font-family: var(--font-d); font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap }
+.dt-erro { margin: 0; color: var(--bad); font-weight: 600; font-size: 14px }
+.dt-login { max-width: 440px; width: 100%; justify-self: center }
+.dt-login-form { display: grid; gap: 12px }
+.panel textarea { width: 100%; font: inherit; font-size: 15px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); resize: vertical }
+
+/* abas do admin */
+.dt-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px }
+.dt-tabs button { border: 0; background: transparent; color: var(--muted); font-weight: 600; padding: 10px; border-radius: 9px; cursor: pointer; min-height: 44px }
+.dt-tabs button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink) }
+
+/* escolha */
+.dt-campo { display: grid; gap: 8px }
+.dt-rot { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; margin: 0 }
+.dt-seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px }
+.dt-seg button { min-height: 48px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font-weight: 700; font-family: var(--font-d); font-size: 16px; cursor: pointer; padding: 6px 8px; line-height: 1.15 }
+.dt-seg button small { display: block; font-family: var(--font-b); font-weight: 500; font-size: 11.5px; color: var(--muted) }
+.dt-seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink) }
+.dt-seg button[aria-pressed="true"] small { color: inherit; opacity: .85 }
+.dt-seg button:disabled { cursor: not-allowed; background: var(--off); color: var(--off-ink) }
+.dt-seg-sm button { min-height: 38px; font-size: 14px; padding: 4px 12px }
+.dt-times { display: flex; flex-direction: column; gap: 6px; max-height: 300px; overflow-y: auto; overscroll-behavior: contain; padding: 2px }
+.dt-time { flex: none; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; text-align: left; padding: 10px 12px; min-height: 48px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font-size: 15px }
+.dt-time[aria-selected="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft) }
+.dt-time .nm { font-weight: 600; overflow-wrap: anywhere }
+.dt-time .mesa { display: block; font-size: 12px; color: var(--muted); font-weight: 500 }
+.dt-badges { display: flex; gap: 4px }
+.dt-badge { font-size: 11px; font-weight: 700; padding: 3px 7px; border-radius: 999px; background: var(--off); color: var(--off-ink); white-space: nowrap; font-variant-numeric: tabular-nums }
+.dt-badge.ok { background: var(--ok-soft); color: var(--ok) }
+.dt-badge.ns { background: var(--bad-soft); color: var(--bad) }
+.dt-vazio { color: var(--muted); font-size: 14px; padding: 10px 2px; margin: 0 }
+.dt-acoes { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px }
+.dt-pend { font-size: 12px; font-weight: 700; color: var(--note-ink); background: var(--note); padding: 4px 10px; border-radius: 999px }
+
+/* pontuação */
+.dt-pontuar { display: grid; gap: 14px }
+.dt-barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 10px 14px;
+  background: var(--accent-strong); color: #FFF; border-radius: var(--radius); padding: 12px 14px 16px; box-shadow: 0 8px 24px rgba(40, 6, 8, .25); overflow: hidden }
+@media (prefers-color-scheme: dark) { .dt-barra { background: #3B1416 } }
+.dt-barra-info { min-width: 0; display: grid }
+.dt-barra-info strong { font-family: var(--font-d); font-size: 17px; line-height: 1.2; overflow-wrap: anywhere }
+.dt-barra-info span { font-size: 12.5px; opacity: .8 }
+.dt-timer { display: flex; align-items: center; gap: 8px }
+.dt-relogio { font-family: var(--font-d); font-weight: 700; font-size: clamp(26px, 8vw, 36px); font-variant-numeric: tabular-nums; letter-spacing: .01em; min-width: 3.6ch; text-align: right }
+.dt-play { width: 44px; height: 44px; border-radius: 50%; border: 0; background: #FFF; color: var(--accent-strong); font-size: 17px; cursor: pointer; display: grid; place-items: center }
+.dt-total { display: grid; justify-items: end; font-family: var(--font-d); font-weight: 700; font-size: 22px; line-height: 1; font-variant-numeric: tabular-nums; padding-left: 12px; border-left: 1px solid rgba(255,255,255,.25) }
+.dt-total small { font-size: 11px; font-weight: 500; opacity: .75; font-family: var(--font-b) }
+.dt-tempo-barra { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: rgba(255,255,255,.15) }
+.dt-tempo-barra i { display: block; height: 100%; width: 100%; background: var(--robo); transform-origin: left; transition: transform .25s linear }
+.dt-barra.alerta .dt-tempo-barra i { background: #FF6B5E }
+.dt-barra.alerta .dt-relogio { color: #FFD3CE }
+.dt-barra.zerou { animation: dt-pisca .5s 6 alternate }
+@keyframes dt-pisca { to { background: #B42318 } }
+.dt-esgotado { margin: 0; padding: 12px 14px; border-radius: 12px; background: var(--bad-soft); color: var(--bad); border: 1px solid var(--bad-line); font-weight: 600 }
+@media (max-width: 520px) {
+  .dt-barra { grid-template-columns: minmax(0, 1fr) auto; }
+  .dt-barra-info { grid-column: 1 / -1 }
+  .dt-total { justify-items: end }
+}
+
+.dt-lista { display: grid; gap: 2px }
+.dt-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line) }
+.dt-lista .dt-item:last-child { border-bottom: 0 }
+.dt-item .nm { font-weight: 600; font-size: 15px }
+.dt-item .nm small { display: block; font-weight: 500; color: var(--muted); font-size: 12.5px }
+.dt-step { display: grid; grid-template-columns: 48px 46px 48px; align-items: center; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--bg) }
+.dt-step button { height: 48px; border: 0; background: transparent; color: var(--accent); font-size: 24px; font-weight: 700; cursor: pointer; touch-action: manipulation }
+.dt-step button:active { background: var(--accent-soft) }
+.dt-step button:disabled { color: var(--off-ink); cursor: default }
+.dt-step output { text-align: center; font-family: var(--font-d); font-weight: 700; font-size: 20px; font-variant-numeric: tabular-nums }
+.dt-toggle { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); cursor: pointer; font-size: 15px; font-weight: 600; min-height: 52px;
+  text-transform: none; letter-spacing: 0; color: var(--ink); margin: 0 }
+.dt-toggle input { width: 24px; height: 24px; accent-color: var(--accent); flex: none; margin: 0 }
+.dt-toggle b { color: var(--accent); margin-left: 4px; white-space: nowrap }
+.dt-toggle:has(input:checked) { border-color: var(--accent); background: var(--accent-soft) }
+.dt-toggle:has(input:disabled) { opacity: .55; cursor: not-allowed }
+
+.dt-trecho { display: grid; gap: 10px; padding: 12px; border-radius: 12px; border: 1px dashed var(--accent); background: var(--accent-soft) }
+.dt-trecho .dt-item { border: 0; padding: 0 }
+.dt-trecho-topo { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap }
+.dt-trecho-topo strong { font-family: var(--font-d); font-size: 16px }
+.dt-tent { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--surface); color: var(--accent) }
+.dt-tent.t2 { color: var(--warn) } .dt-tent.t3, .dt-tent.t4 { color: var(--bad) }
+.dt-trecho-acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px }
+.dt-trecho-acoes .full { grid-column: 1 / -1 }
+.btn.falha { background: var(--bad-soft); color: var(--bad); border-color: var(--bad-line) }
+.dt-trechos { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px }
+.dt-trechos li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); font-size: 14px }
+.dt-trechos .n { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--robo); color: #2A0707; font-weight: 700; font-size: 12.5px }
+.dt-trechos .pts { font-weight: 700; font-variant-numeric: tabular-nums }
+.dt-trechos .x { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); cursor: pointer; font-size: 18px }
+
+.dt-rodape { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px;
+  padding: 12px max(16px, env(safe-area-inset-left)) calc(12px + env(safe-area-inset-bottom)); background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(40, 10, 12, .08) }
+.dt-rodape .btn { min-height: 52px; font-size: 16px }
+@media (min-width: 1012px) { .dt-rodape { left: 50%; right: auto; width: 980px; transform: translateX(-50%); border-radius: 16px 16px 0 0; border: 1px solid var(--line) } }
+
+/* revisão */
+.dt-dialog { border: 0; border-radius: 18px; padding: 0; width: min(560px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); background: var(--surface); color: var(--ink); box-shadow: 0 20px 60px rgba(0,0,0,.35) }
+.dt-dialog::backdrop { background: rgba(20, 6, 8, .55) }
+.dt-dialog-in { display: grid; gap: 14px; padding: 18px }
+.dt-res { display: grid; gap: 10px }
+.dt-aviso { margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--bad-soft); color: var(--bad); border: 1px solid var(--bad-line); font-size: 14px }
+.dt-res-sec h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 4px; font-family: var(--font-b) }
+.dt-res table { width: 100%; border-collapse: collapse; font-size: 14px }
+.dt-res td { padding: 4px 0; border-bottom: 1px solid var(--line); vertical-align: top }
+.dt-res td:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 10px; font-weight: 600 }
+.dt-res .zero td { color: var(--muted); font-weight: 400 }
+.dt-res-total { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 12px 14px; border-radius: 12px; background: var(--accent); color: var(--accent-ink); font-family: var(--font-d) }
+.dt-res-total strong { font-size: 28px; font-variant-numeric: tabular-nums }
+.dt-res-conta { font-size: 13px; color: var(--muted); margin: 0 }
+.dt-res-meta { font-size: 13px; color: var(--muted); margin: 0 }
+.dt-res-ns { padding: 14px; border-radius: 12px; background: var(--bad-soft); color: var(--bad); font-weight: 700; text-align: center }
+
+/* admin */
+.dt-admin { display: grid; gap: 16px }
+.dt-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px }
+.dt-kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px }
+.dt-kpi b { display: block; font-family: var(--font-d); font-size: 26px; font-variant-numeric: tabular-nums }
+.dt-kpi span { font-size: 12.5px; color: var(--muted) }
+.dt-ferr { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+.dt-ferr-sep { flex: 1 }
+.dt-rank { display: grid; gap: 6px }
+.dt-rank details { border: 1px solid var(--line); border-radius: 12px; background: var(--bg); overflow: hidden }
+.dt-rank details[open] { border-color: var(--accent) }
+.dt-rank summary { list-style: none; display: grid; grid-template-columns: 34px minmax(0, 1fr) repeat(3, minmax(50px, auto)); align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; min-height: 52px }
+.dt-rank summary::-webkit-details-marker { display: none }
+.dt-rank .pos { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--off); color: var(--off-ink); font-weight: 700; font-size: 13px; font-family: var(--font-d) }
+.dt-rank .p1 .pos { background: #F5C542; color: #3A2A00 } .dt-rank .p2 .pos { background: #CFD6DE; color: #222 } .dt-rank .p3 .pos { background: #D99A61; color: #2A1405 }
+.dt-rank .nm { font-weight: 600; overflow-wrap: anywhere; line-height: 1.25 }
+.dt-rank .col { text-align: right; font-variant-numeric: tabular-nums; font-size: 14px; color: var(--muted) }
+.dt-rank .col b { color: var(--ink) }
+.dt-rank .col.best { font-family: var(--font-d); font-size: 16px; font-weight: 700; color: var(--accent) }
+.dt-rank .col small { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em }
+.dt-rank .cab { display: grid; grid-template-columns: 34px minmax(0, 1fr) repeat(3, minmax(50px, auto)); gap: 8px; padding: 0 12px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600 }
+.dt-rank .cab span:nth-child(n+3) { text-align: right }
+.dt-det { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; padding: 0 12px 12px }
+.dt-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 10px; align-content: start }
+.dt-card.melhor { border-color: var(--ok); box-shadow: inset 0 0 0 1px var(--ok) }
+.dt-card-topo { display: flex; justify-content: space-between; align-items: baseline; gap: 8px }
+.dt-card-topo strong { font-family: var(--font-d); font-size: 16px }
+.dt-card-topo .tot { font-family: var(--font-d); font-weight: 700; font-size: 22px; color: var(--accent); font-variant-numeric: tabular-nums }
+.dt-tag-melhor { font-size: 11px; font-weight: 700; color: var(--ok); background: var(--ok-soft); padding: 2px 8px; border-radius: 999px; margin-left: 6px }
+.dt-card .vazio { color: var(--muted); font-size: 14px; margin: 0 }
+.dt-apagar { justify-self: start; font-size: 13px; font-weight: 600; color: var(--bad); background: none; border: 1px solid var(--bad-line); border-radius: 8px; padding: 6px 10px; cursor: pointer }
+.dt-ultimos { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 14px }
+.dt-ultimos li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--line) }
+.dt-ultimos li:last-child { border-bottom: 0 }
+.dt-ultimos .h { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12.5px }
+.dt-ultimos .pt { font-weight: 700; font-variant-numeric: tabular-nums }
+.dt-juizes { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px }
+.dt-juizes li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); font-size: 14px }
+.dt-juizes code { font-size: 12.5px; color: var(--muted) }
+.dt-juiz-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; align-items: end }
+
+.dt-toast { position: fixed; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 50; background: var(--ink); color: var(--bg); padding: 12px 16px; border-radius: 12px; font-weight: 600; font-size: 14px; max-width: calc(100vw - 32px); box-shadow: 0 10px 30px rgba(0,0,0,.25) }
+.dt-toast.erro { background: var(--bad); color: #FFF }
+
+/* ---------- abertura ---------- */
+.ab { position: fixed; inset: 0; z-index: 100; overflow: hidden; color: #FFF; cursor: pointer;
+  background: radial-gradient(120% 80% at 50% 30%, #7A1C1C 0%, #3D0B0B 55%, #1C0405 100%); display: grid }
+.ab.saindo { animation: ab-sai .6s ease-in forwards }
+@keyframes ab-sai { to { opacity: 0; transform: scale(1.04); visibility: hidden } }
+.ab-pista { position: absolute; inset: 0; width: 100%; height: 100% }
+.ab-linha { fill: none; stroke: #120203; stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 1px rgba(255,255,255,.35)); animation: ab-linha 2.6s cubic-bezier(.45, 0, .25, 1) .15s forwards }
+@keyframes ab-linha { to { stroke-dashoffset: 0 } }
+.ab-marcas > * { transform-box: fill-box; transform-origin: center; opacity: 0; animation: ab-pop .45s cubic-bezier(.3, 1.6, .5, 1) forwards }
+.ab-verde { fill: #22C55E; animation-delay: .8s !important }
+.ab-gap { fill: #F7F3F2; animation-delay: 1s !important }
+.ab-cp { fill: #F97316; animation-delay: 1.2s !important }
+.ab-viva { fill: #E5E7EB; stroke: #FFF; stroke-width: 2; filter: drop-shadow(0 0 6px rgba(255,255,255,.8)) }
+.ab-morta { fill: #111; stroke: #555; stroke-width: 2 }
+.ab-v1 { animation-delay: 1.4s !important } .ab-v2 { animation-delay: 1.6s !important } .ab-v3 { animation-delay: 1.8s !important }
+@keyframes ab-pop { from { opacity: 0; transform: scale(.2) } to { opacity: 1; transform: scale(1) } }
+.ab-robo { filter: drop-shadow(0 0 10px rgba(245, 158, 11, .9)) }
+.ab-palco { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; align-items: end; justify-items: center;
+  padding: calc(28px + env(safe-area-inset-top)) 16px calc(90px + env(safe-area-inset-bottom)); gap: 8px; pointer-events: none }
+.ab-texto { grid-row: 1; display: grid; justify-items: center; text-align: center; gap: 6px }
+.ab-logo { width: min(250px, 62vw); height: auto; opacity: 0; animation: ab-logo .9s cubic-bezier(.2, 1.4, .4, 1) 2.1s forwards }
+@keyframes ab-logo { from { opacity: 0; transform: translateY(-14px) scale(.85) } to { opacity: 1; transform: none } }
+.ab-k { margin: 6px 0 0; font-size: 12.5px; letter-spacing: .22em; text-transform: uppercase; font-weight: 600; color: #FCD9A6; opacity: 0; animation: ab-fade .6s ease-out 2.5s forwards }
+.ab-titulo { font-family: var(--font-d); font-size: clamp(40px, 12vw, 92px); line-height: .95; letter-spacing: -.02em; margin: 0; text-shadow: 0 6px 30px rgba(0,0,0,.45) }
+.ab-titulo span { display: inline-block; opacity: 0; animation: ab-palavra .7s cubic-bezier(.2, 1.3, .4, 1) forwards }
+.ab-titulo span:first-child { animation-delay: 2.65s }
+.ab-titulo span:last-child { animation-delay: 2.85s; color: var(--robo); background: linear-gradient(90deg, #F59E0B, #FDE68A 45%, #F59E0B 55%, #F59E0B); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: ab-palavra .7s cubic-bezier(.2, 1.3, .4, 1) 2.85s forwards, ab-brilho 2.4s ease-in-out 3.6s infinite }
+@keyframes ab-palavra { from { opacity: 0; transform: translateY(40px) rotate(-4deg) } to { opacity: 1; transform: none } }
+@keyframes ab-brilho { 0% { background-position: 100% 0 } 60%, 100% { background-position: -50% 0 } }
+.ab-sub { margin: 0; font-size: 14px; opacity: 0; animation: ab-fade .6s ease-out 3.2s forwards; color: rgba(255,255,255,.8) }
+@keyframes ab-fade { to { opacity: 1 } }
+.ab-mascote { grid-row: 2; align-self: end; width: auto; height: min(48vh, 440px); opacity: 0; transform-origin: 50% 100%;
+  filter: drop-shadow(0 18px 30px rgba(0,0,0,.45)); animation: ab-mascote 1s cubic-bezier(.25, 1.5, .45, 1) 1.7s forwards, ab-flutua 3s ease-in-out 2.8s infinite }
+@keyframes ab-mascote { from { opacity: 0; transform: translateY(70%) scale(.7) rotate(6deg) } to { opacity: 1; transform: none } }
+@keyframes ab-flutua { 0%, 100% { translate: 0 0 } 50% { translate: 0 -10px } }
+.ab-pular { position: absolute; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 2; border: 1px solid rgba(255,255,255,.45); background: rgba(255,255,255,.12);
+  color: #FFF; font-weight: 600; font-size: 15px; padding: 12px 22px; border-radius: 999px; cursor: pointer; opacity: 0; white-space: nowrap; animation: ab-fade .5s 3.4s forwards, ab-pulsa 1.6s ease-in-out 4s infinite; backdrop-filter: blur(6px) }
+@keyframes ab-pulsa { 50% { box-shadow: 0 0 0 10px rgba(255,255,255,0) ; background: rgba(255,255,255,.22) } }
+@media (min-width: 800px) and (min-aspect-ratio: 1/1) {
+  .ab-palco { grid-template-columns: auto minmax(0, 560px); grid-template-rows: 1fr; align-items: center; justify-content: center; gap: 40px; padding-bottom: 80px }
+  .ab-mascote { grid-row: 1; height: min(70vh, 560px); align-self: center }
+  .ab-texto { grid-row: 1; justify-items: start; text-align: left }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ab *, .ab *::before { animation-duration: .01s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important }
+}
