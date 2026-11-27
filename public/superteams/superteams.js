@@ -130,7 +130,7 @@
     if (s) $("admTamanho").value = s.tamanho;
     $("admAvisos").innerHTML = s && s.avisos && s.avisos.length ? `<div class="aviso" role="note">${s.avisos.map((a) => `<p>${esc(a)}</p>`).join("")}</div>` : "";
     $("admTimes").innerHTML = s ? cardsTimes(s.times, true) : "";
-    $("refazerForm").hidden = RESGATE || !s;
+    if (!RESGATE) $("refazerForm").hidden = !s;
     preencherJuntas();
     $("admPubBox").hidden = !s;
     $("admPublicar").textContent = d.publicado ? "Ocultar resultado" : "Publicar resultado";
@@ -204,6 +204,7 @@
         sel.value = v;
       }
     }
+    if (RESGATE) return; // os campos de "juntas" e "refazer nível" só existem na página da Artística
     const n = Number($("refNivel").value);
     const nomes = state.adm.inscritas.filter((i) => i.nivel === n).map((i) => i.equipe).sort((a, b) => a.localeCompare(b, "pt-BR"));
     for (const id of ["refJunta1", "refJunta2"]) {
@@ -212,8 +213,8 @@
       if (nomes.includes(v)) sel.value = v;
     }
   }
-  $("refNivel").addEventListener("change", preencherJuntas);
-  $("refazerForm").addEventListener("submit", (ev) => {
+  if (!RESGATE) $("refNivel").addEventListener("change", preencherJuntas);
+  if (!RESGATE) $("refazerForm").addEventListener("submit", (ev) => {
     ev.preventDefault();
     const nivel = Number($("refNivel").value);
     const juntas = [...new Set([$("refJunta1").value, $("refJunta2").value].filter(Boolean))];
