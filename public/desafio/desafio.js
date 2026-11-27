@@ -1,6 +1,6 @@
 // Desafio Técnico · Resgate: abertura, login, pontuador do juiz e painel do admin.
 import {
-  ITENS, ARENAS, ROUNDS, TEMPO_ROUND_SEG,
+  itensDo, ARENAS, ROUNDS, TEMPO_ROUND_SEG,
   calcular, normalizarRound, ranking, mmss,
 } from "/desafio/pontuacao.js";
 
@@ -232,14 +232,19 @@ function renderPontuar() {
   const v = r.dados.itens;
   $("pTime").textContent = r.equipe;
   $("pMeta").textContent = `Nível ${r.nivel} · Arena ${r.arena} · Round ${r.round}`;
-  $("itens").innerHTML = ITENS.map((i) => {
+  $("itens").innerHTML = itensDo(r.nivel).map((i) => {
+    if (i.tipo === "opcao") {
+      const pts = (o) => (i.info ? "" : `<small>+${o.pontos}</small>`);
+      return `<div class="dt-item dt-item-op"><span class="nm">${esc(i.nome)}${i.info ? "<small>só registro, não pontua</small>" : ""}</span>
+        <div class="dt-seg" role="group">${i.opcoes.map((o) => `<button type="button" data-opcao="${i.id}" data-valor="${o.id}" aria-pressed="${v[i.id] === o.id}">${esc(o.nome)}${pts(o)}</button>`).join("")}</div></div>`;
+    }
     if (i.tipo === "qtd") {
       const n = v[i.id] || 0;
       return `<div class="dt-item"><span class="nm">${esc(i.nome)}<small>${i.pontos} pts cada${n ? ` · ${n * i.pontos} pts` : ""}</small></span>${stepper(i.id, n, 0, 99)}</div>`;
     }
     return `<label class="dt-toggle"><input type="checkbox" data-sim="${i.id}" ${v[i.id] ? "checked" : ""}> <span>${esc(i.nome)} <b>+${i.pontos}</b></span></label>`;
   }).join("");
-  const c = calcular(r.dados);
+  const c = calcular(r.dados, r.nivel);
   $("pTotal").textContent = fmt(c.total);
   $("subItens").textContent = `${fmt(c.total)} pts`;
 }
@@ -247,6 +252,13 @@ function renderPontuar() {
 function mudou() { salvarRascunho(); renderPontuar(); }
 
 $("itens").addEventListener("click", (ev) => {
+  const op = ev.target.closest("button[data-opcao]");
+  if (op && st.r) {
+    const v = st.r.dados.itens, id = op.dataset.opcao;
+    v[id] = v[id] === op.dataset.valor ? "" : op.dataset.valor; // tocar de novo desmarca
+    navigator.vibrate?.(8);
+    return mudou();
+  }
   const s = ev.target.closest(".dt-step button");
   if (!s || s.disabled || !st.r) return;
   const id = s.closest(".dt-step").dataset.step, v = st.r.dados.itens;
@@ -318,8 +330,8 @@ function resumoHTML(c, meta) {
   const d = c.d;
   if (d.noShow) return `<div class="dt-res"><div class="dt-res-ns">NO-SHOW · 0 pontos</div>${meta ? `<p class="dt-res-meta">${meta}</p>` : ""}</div>`;
   const linhas = c.itens.map((i) => {
-    const marca = i.tipo === "qtd" ? ` × ${i.valor}` : i.valor ? " · sim" : " · não";
-    return `<tr class="${i.subtotal ? "" : "zero"}"><td>${esc(i.nome)}${marca}</td><td>${fmt(i.subtotal)}</td></tr>`;
+    const marca = i.tipo === "qtd" ? ` × ${i.valor}` : i.tipo === "opcao" ? ` · ${i.opcao ? i.opcao.nome : "não marcado"}` : i.valor ? " · sim" : " · não";
+    return `<tr class="${i.subtotal || (i.info && i.opcao) ? "" : "zero"}"><td>${esc(i.nome)}${esc(marca)}</td><td>${i.info ? "–" : fmt(i.subtotal)}</td></tr>`;
   }).join("");
   return `<div class="dt-res">
     <div class="dt-res-sec"><table>${linhas}</table></div>
@@ -333,7 +345,7 @@ $("fim").addEventListener("click", () => {
   const r = st.r; if (!r) return;
   if (r.timer.inicioTs) { r.timer.acumuladoMs += Date.now() - r.timer.inicioTs; r.timer.inicioTs = null; pararTimer(); }
   atualizarTimer(); salvarRascunho();
-  $("revCorpo").innerHTML = `<p class="dt-res-meta"><b>${esc(r.equipe)}</b> · Nível ${r.nivel} · Arena ${r.arena} · Round ${r.round}</p>${resumoHTML(calcular(r.dados))}`;
+  $("revCorpo").innerHTML = `<p class="dt-res-meta"><b>${esc(r.equipe)}</b> · Nível ${r.nivel} · Arena ${r.arena} · Round ${r.round}</p>${resumoHTML(calcular(r.dados, r.nivel))}`;
   $("revisao").showModal();
 });
 $("revisao").addEventListener("close", () => {
@@ -341,7 +353,7 @@ $("revisao").addEventListener("close", () => {
 });
 
 async function enviar(r) {
-  const payload = { equipe: r.equipe, nivel: r.nivel, arena: r.arena, round: r.round, envio: r.envio, dados: normalizarRound(r.dados) };
+  const payload = { equipe: r.equipe, nivel: r.nivel, arena: r.arena, round: r.round, envio: r.envio, dados: normalizarRound(r.dados, r.nivel) };
   try {
     const j = await api("registrar", payload);
     st.rounds = j.rounds;
@@ -407,7 +419,7 @@ function linhasRanking(nivel) {
 
 function cardRound(r, rotulo, melhor) {
   if (!r) return `<div class="dt-card"><div class="dt-card-topo"><strong>${rotulo}</strong></div><p class="vazio">Ainda não pontuado.</p></div>`;
-  const c = calcular(r.dados);
+  const c = calcular(r.dados, r.nivel);
   const meta = `Arena ${r.arena} · juiz ${esc(r.juizNome || r.juiz)} · ${hora(r.criadoEm)}`;
   return `<div class="dt-card ${melhor ? "melhor" : ""}">
     <div class="dt-card-topo"><strong>${rotulo}${melhor ? '<span class="dt-tag-melhor">vale</span>' : ""}</strong><span class="tot">${fmt(r.pontos)}</span></div>
@@ -501,9 +513,9 @@ $("jzLogin").addEventListener("input", () => { $("jzLogin").dataset.mexeu = "1";
 function linhasRounds() {
   const { rounds } = st.admin.dados;
   return [...rounds].sort((a, b) => a.nivel - b.nivel || a.equipe.localeCompare(b.equipe, "pt-BR") || a.round - b.round).map((r) => {
-    const c = calcular(r.dados), d = c.d;
+    const c = calcular(r.dados, r.nivel), d = c.d;
     const o = { "Nível": r.nivel, "Time": r.equipe, "Round": r.round, "Arena": r.arena, "No-show": d.noShow ? "sim" : "não" };
-    for (const i of c.itens) o[i.tipo === "qtd" ? `${i.nome} (qtd)` : i.nome] = i.tipo === "qtd" ? i.valor : i.valor ? "sim" : "não";
+    for (const i of c.itens) o[`N${r.nivel} · ${i.nome}${i.tipo === "qtd" ? " (qtd)" : ""}`] = i.tipo === "qtd" ? i.valor : i.tipo === "opcao" ? (i.opcao?.nome || "") : i.valor ? "sim" : "não";
     Object.assign(o, {
       "Total": r.pontos,
       "Tempo (s)": d.tempoSeg,
@@ -547,14 +559,14 @@ async function baixar(tipo) {
     const out = {
       geradoEm: new Date().toISOString(),
       ranking: { nivel1: linhasRanking(1).map(semRefs), nivel2: linhasRanking(2).map(semRefs) },
-      rounds: rounds.map((r) => ({ ...r, calculo: (({ d, ...c }) => c)(calcular(r.dados)) })),
+      rounds: rounds.map((r) => ({ ...r, calculo: (({ d, ...c }) => c)(calcular(r.dados, r.nivel)) })),
       equipes,
     };
     return salvarArquivo(JSON.stringify(out, null, 2), `${base}.json`, "application/json");
   }
   const rows = linhasRounds();
   if (tipo === "csv") {
-    const cols = Object.keys(rows[0] || { Time: "" });
+    const cols = rows.length ? [...new Set(rows.flatMap((r) => Object.keys(r)))] : ["Time"]; // N1 e N2 têm itens diferentes
     const cel = (v) => { const s = typeof v === "number" ? String(v).replace(".", ",") : String(v ?? ""); return /[;"\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
     const csv = "﻿" + [cols.join(";"), ...rows.map((r) => cols.map((c) => cel(r[c])).join(";"))].join("\r\n");
     return salvarArquivo(csv, `${base}.csv`, "text/csv;charset=utf-8");

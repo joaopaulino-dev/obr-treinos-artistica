@@ -201,3 +201,7 @@
 @media (prefers-reduced-motion: reduce) {
   .ab *, .ab *::before { animation-duration: .01s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important }
 }
+
+/* item de escolha (N2: cor sorteada e saída da sala) */
+.dt-item-op { grid-template-columns: 1fr; gap: 8px }
+.dt-item-op .dt-seg button { font-size: 14px }
