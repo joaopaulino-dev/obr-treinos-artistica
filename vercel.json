@@ -19,6 +19,10 @@
   ],
   "rewrites": [
     {
+      "source": "/ranking",
+      "destination": "/ranking/index.html"
+    },
+    {
       "source": "/admin",
       "has": [
         {

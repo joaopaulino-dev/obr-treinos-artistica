@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7A1C1C">
+<title>Ranking Resgate | OBR 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/estilo.css">
+<style>
+  .rk-info { color: var(--muted); font-size: 13.5px; margin: 0 }
+  .rk-busca { width: 100%; min-height: 44px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit }
+  .rk-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px }
+  .rk { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 14px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line) }
+  .rk-pos { font-family: var(--font-d); font-weight: 700; font-size: 18px; text-align: center; color: var(--muted) }
+  .rk.top .rk-pos { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); font-size: 16px }
+  .rk-nome { font-family: var(--font-d); font-weight: 700; font-size: 16px; overflow-wrap: anywhere }
+  .rk-rodadas { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px }
+  .rd { font-size: 12.5px; padding: 3px 8px; border-radius: 8px; background: var(--off); color: var(--off-ink); white-space: nowrap; font-variant-numeric: tabular-nums }
+  .rd b { font-weight: 600 }
+  .rd.conta { background: var(--accent-soft); color: var(--ink) }
+  .rd.conta b { color: var(--accent) }
+  .rk-total { text-align: right; font-family: var(--font-d); font-weight: 700; font-size: 20px; font-variant-numeric: tabular-nums }
+  .rk-total small { display: block; font-family: var(--font-b); font-weight: 500; font-size: 11px; color: var(--muted) }
+  .rk-vazio { text-align: center; color: var(--muted); padding: 24px 0 }
+  .rk-leg { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 12.5px; color: var(--muted) }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="topbar">
+    <a href="/" aria-label="Voltar ao menu">
+      <picture>
+        <source srcset="/assets/logo-obr-2026-branco.png" media="(prefers-color-scheme: dark)">
+        <img class="logo" src="/assets/logo-obr-2026-vinho.png" alt="OBR 2026" width="560" height="237">
+      </picture>
+    </a>
+    <div class="titles">
+      <span class="eyebrow">Etapa Nacional · João Pessoa/PB · 23 a 29/11</span>
+      <h1>Ranking do Resgate</h1>
+    </div>
+    <a class="back" href="/">Menu</a>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Nível">
+    <button role="tab" id="tab-n1" aria-controls="painel" data-nivel="n1" aria-selected="true">Nível 1</button>
+    <button role="tab" id="tab-n2" aria-controls="painel" data-nivel="n2" aria-selected="false">Nível 2</button>
+  </div>
+
+  <section class="docs" id="painel" role="tabpanel">
+    <p class="rk-info" id="info">Carregando…</p>
+    <div class="rk-leg"><span class="rd conta"><b>pts</b> · tempo</span><span>rodadas que entram no total (as 2 melhores)</span></div>
+    <input class="rk-busca" id="busca" type="search" placeholder="Buscar equipe" aria-label="Buscar equipe" autocomplete="off">
+    <ol class="rk-lista" id="lista"></ol>
+  </section>
+
+  <p class="foot">Ranking parcial, sem Desafio Técnico e Final. Em caso de diferença, vale o sistema oficial de pontuação da OBR.</p>
+</main>
+<script>
+(() => {
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const tempo = (s) => s == null ? "—" : Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+  const num = (n) => Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  const lista = document.getElementById("lista"), busca = document.getElementById("busca"), info = document.getElementById("info");
+  let dados = null, nivel = "n1";
+
+  function linhas(nv) {
+    // posição igual para total igual
+    let pos = 0, ant = null;
+    return dados[nv].map((r, i) => {
+      if (r[7] !== ant) { pos = i + 1; ant = r[7]; }
+      const pts = [r[1], r[3], r[5]];
+      const ordem = pts.map((p, k) => [p ?? -1, k]).sort((a, b) => b[0] - a[0]);
+      const contam = new Set(ordem.slice(0, 2).filter((x) => x[0] >= 0).map((x) => x[1]));
+      return { pos, nome: r[0], rodadas: [0, 1, 2].map((k) => ({ p: pts[k], t: r[2 + k * 2], conta: contam.has(k) })), total: r[7] };
+    });
+  }
+
+  function render() {
+    const q = busca.value.trim().toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
+    const ls = linhas(nivel).filter((l) => !q || l.nome.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "").includes(q));
+    info.textContent = dados[nivel].length + " equipes · atualizado " + dados.atualizado;
+    lista.innerHTML = ls.length ? ls.map((l) => `
+      <li class="rk${l.pos <= 3 ? " top" : ""}">
+        <span class="rk-pos" aria-label="Posição ${l.pos}">${l.pos}º</span>
+        <div><div class="rk-nome">${esc(l.nome)}</div>
+          <div class="rk-rodadas">${l.rodadas.map((d, k) => `<span class="rd${d.conta ? " conta" : ""}">R${k + 1} <b>${d.p == null ? "—" : num(d.p)}</b> · ${tempo(d.t)}</span>`).join("")}</div>
+        </div>
+        <span class="rk-total">${num(l.total)}<small>total</small></span>
+      </li>`).join("") : '<li class="rk-vazio">Nenhuma equipe encontrada.</li>';
+  }
+
+  function abrir(nv, foco) {
+    nivel = nv;
+    for (const t of tabs) { const on = t.dataset.nivel === nv; t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1; if (on && foco) t.focus(); }
+    history.replaceState(null, "", "#" + nv);
+    if (dados) render();
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => abrir(t.dataset.nivel));
+    t.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      abrir(tabs[(i + 1) % tabs.length].dataset.nivel, true);
+    });
+  });
+  busca.addEventListener("input", render);
+  const h = location.hash.slice(1);
+  if (h === "n2") abrir("n2");
+  fetch("/ranking/dados.json", { cache: "no-cache" }).then((r) => r.json()).then((d) => { dados = d; render(); })
+    .catch(() => { info.textContent = "Não foi possível carregar o ranking. Recarregue a página."; });
+})();
+</script>
+</body>
+</html>
