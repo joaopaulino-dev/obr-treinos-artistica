@@ -630,3 +630,8 @@ html.embed #adminSair, html.embed #agendaSair { display: none }
 .co-links { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none }
 .co-links li { display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; padding: 10px 12px; border-radius: 10px; background: var(--bg); font-size: 14px }
 .co-links code { font-size: 12.5px; overflow-wrap: anywhere }
+
+/* ---------- destaque do ranking (menu) ---------- */
+.rk-topo:hover { box-shadow: none }
+.rk-topo .sg-d-top { grid-template-columns: auto minmax(0, 1fr) }
+.rk-topo-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px }
