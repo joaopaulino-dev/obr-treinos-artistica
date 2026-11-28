@@ -34,94 +34,62 @@
   </header>
 
   <section class="praia" id="praia" aria-label="Boas-vindas do IF Robotic: João Pessoa, onde o sol nasce primeiro">
+    <div class="praia-palco">
     <svg class="praia-cena" viewBox="0 0 360 180" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <linearGradient id="pCeu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5EC8F2"/><stop offset=".7" stop-color="#BFE9F7"/><stop offset="1" stop-color="#FFE6A8"/></linearGradient>
-        <linearGradient id="pMar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1FA6C9"/><stop offset="1" stop-color="#0E7FA6"/></linearGradient>
-        <radialGradient id="pSol"><stop offset="0" stop-color="#FFF3B0"/><stop offset=".6" stop-color="#FFD23F"/><stop offset="1" stop-color="#FFB627"/></radialGradient>
-        <radialGradient id="pBrilho"><stop offset="0" stop-color="#FFE27A" stop-opacity=".75"/><stop offset="1" stop-color="#FFE27A" stop-opacity="0"/></radialGradient>
-      </defs>
-      <rect width="360" height="180" fill="url(#pCeu)"/>
-      <!-- sol nascendo primeiro (Ponta do Seixas) -->
+      <rect width="360" height="180" fill="#A8DDF0"/>
+      <!-- sol nascendo primeiro -->
       <g class="p-sol">
-        <circle cx="292" cy="44" r="46" fill="url(#pBrilho)" class="p-halo"/>
-        <g class="p-raios" stroke="#FFC93C" stroke-width="4" stroke-linecap="round">
-          <path d="M292 8v8M292 72v8M256 44h8M320 44h8M267 19l6 6M311 63l6 6M267 69l6-6M311 25l6-6"/>
+        <g class="p-raios" stroke="#FFC93C" stroke-width="3.5" stroke-linecap="round">
+          <path d="M292 12v7M292 69v7M260 44h7M317 44h7M269 21l5 5M310 62l5 5M269 67l5-5M310 26l5-5"/>
         </g>
-        <circle cx="292" cy="44" r="20" fill="url(#pSol)"/>
-        <g class="p-sol-rosto" fill="none" stroke="#C9741A" stroke-width="2" stroke-linecap="round">
-          <path d="M284 41q2-2 4 0M296 41q2-2 4 0"/><path d="M285 49q7 6 14 0"/>
-        </g>
+        <circle cx="292" cy="44" r="18" fill="#FFC93C"/>
       </g>
-      <!-- nuvem e gaivota -->
-      <g class="p-nuvem" fill="#fff" opacity=".9"><ellipse cx="70" cy="34" rx="22" ry="9"/><ellipse cx="86" cy="29" rx="14" ry="10"/><ellipse cx="56" cy="31" rx="10" ry="7"/></g>
-      <path class="p-gaivota" d="M0 0q5-6 10 0q5-6 10 0" fill="none" stroke="#2D3A4A" stroke-width="2" stroke-linecap="round"/>
-      <!-- calor: ondinhas subindo -->
-      <g class="p-calor" fill="none" stroke="#FF9F43" stroke-width="2" stroke-linecap="round" opacity=".7">
-        <path d="M150 92q4-5 0-10q-4-5 0-10"/><path d="M164 96q4-5 0-10q-4-5 0-10"/><path d="M178 92q4-5 0-10q-4-5 0-10"/>
-      </g>
-      <!-- farol do Cabo Branco na falésia -->
-      <path d="M300 120 L318 92 L360 92 L360 130 Z" fill="#E0A458"/>
-      <path d="M318 92 L360 92 L360 98 L314 99 Z" fill="#4CAF50"/>
-      <g class="p-farol">
-        <path d="M330 92 L336 56 L342 92 Z" fill="#F5F5F5" stroke="#9AA5B1" stroke-width="1"/>
-        <path d="M331.5 84 L340.5 84 M333 74 L339 74 M334.3 65 L337.7 65" stroke="#9AA5B1" stroke-width="1.2"/>
-        <rect x="333" y="50" width="6" height="7" rx="1" fill="#2D3A4A"/>
-        <circle cx="336" cy="53" r="2.4" fill="#FFE066" class="p-luz"/>
-      </g>
-      <!-- mar com ondas -->
-      <rect y="100" width="360" height="80" fill="url(#pMar)"/>
-      <g class="p-onda1"><path d="M0 104q15-7 30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0V112H0Z" fill="#5FD0E8" opacity=".8"/></g>
-      <!-- jangada -->
-      <g class="p-jangada">
-        <path d="M-14 0h28l-4 5h-20Z" fill="#8D5A2B"/>
-        <path d="M0 0V-26L13 -3Z" fill="#fff" stroke="#D9D9D9"/><path d="M0 -26L0 0" stroke="#5A3A1A" stroke-width="1.5"/>
-        <path d="M2 -18h6" stroke="#E4572E" stroke-width="2"/>
-      </g>
-      <g class="p-onda2"><path d="M0 124q15-6 30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0V134H0Z" fill="#2BB3D6" opacity=".9"/></g>
+      <!-- farol do Cabo Branco -->
+      <path d="M316 100 L322 92 H360 V100Z" fill="#7BC47F"/>
+      <path d="M334 92 L338 62 L342 92Z" fill="#fff"/>
+      <rect x="335.5" y="57" width="5" height="6" rx="1" fill="#33414F"/>
+      <circle cx="338" cy="60" r="1.8" fill="#FFC93C" class="p-luz"/>
+      <!-- mar -->
+      <rect y="100" width="360" height="80" fill="#2BA9CF"/>
+      <g class="p-onda1"><path d="M0 106q15-6 30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0V116H0Z" fill="#62C6E3"/></g>
       <!-- areia -->
-      <path d="M0 150 Q90 128 200 142 T360 140 V180 H0Z" fill="#F6D58E"/>
-      <path class="p-espuma" d="M0 150 Q90 128 200 142 T360 140" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".85"/>
-      <g fill="#E8BF6A"><circle cx="40" cy="166" r="1.5"/><circle cx="120" cy="160" r="1.5"/><circle cx="230" cy="166" r="1.5"/><circle cx="300" cy="158" r="1.5"/></g>
+      <path d="M0 148 Q100 132 200 142 T360 138 V180 H0Z" fill="#F3D89A"/>
       <!-- coqueiro -->
-      <path d="M44 162 C46 140 40 118 52 96" fill="none" stroke="#8D5A2B" stroke-width="6" stroke-linecap="round"/>
-      <g class="p-folhas" fill="#2E9E4F">
-        <path d="M52 96 C38 86 22 90 14 100 C28 92 40 94 52 96Z"/>
-        <path d="M52 96 C42 80 46 70 58 66 C50 76 50 86 52 96Z"/>
-        <path d="M52 96 C64 82 80 82 88 92 C76 88 64 90 52 96Z"/>
-        <path d="M52 96 C66 96 74 106 74 116 C68 106 60 100 52 96Z"/>
-        <path d="M52 96 C38 98 32 110 34 118 C38 108 44 102 52 96Z"/>
-        <circle cx="50" cy="99" r="3.4" fill="#6B4423"/><circle cx="56" cy="99" r="3.4" fill="#6B4423"/>
+      <path d="M46 164 C48 142 42 120 54 98" fill="none" stroke="#8D6240" stroke-width="5" stroke-linecap="round"/>
+      <g class="p-folhas" fill="#3FA463">
+        <path d="M54 98 C40 88 24 92 16 102 C30 94 42 96 54 98Z"/>
+        <path d="M54 98 C44 82 48 72 60 68 C52 78 52 88 54 98Z"/>
+        <path d="M54 98 C66 84 82 84 90 94 C78 90 66 92 54 98Z"/>
+        <path d="M54 98 C68 98 76 108 76 118 C70 108 62 102 54 98Z"/>
       </g>
-      <!-- guarda-sol e bóia -->
-      <path d="M262 166 L268 128" stroke="#5A3A1A" stroke-width="2"/>
-      <path d="M244 134 Q268 112 292 126 Z" fill="#E4572E"/><path d="M256 128 Q268 116 280 122 L268 128Z" fill="#fff" opacity=".85"/>
-      <!-- robozinho de óculos escuros -->
+      <!-- calor -->
+      <g class="p-calor" fill="none" stroke="#F2994A" stroke-width="2" stroke-linecap="round">
+        <path d="M168 84q4-5 0-10q-4-5 0-10"/><path d="M190 84q4-5 0-10q-4-5 0-10"/>
+      </g>
+      <!-- robô com o logo da OBR na barriga -->
       <g class="p-robo">
-        <ellipse cx="0" cy="34" rx="20" ry="3.5" fill="#000" opacity=".12" class="p-sombra"/>
+        <ellipse cx="0" cy="36" rx="20" ry="3" fill="#000" opacity=".1"/>
         <g class="p-robo-corpo">
-          <line x1="0" y1="-30" x2="0" y2="-22" stroke="#4A5568" stroke-width="2"/>
-          <circle cx="0" cy="-32" r="3.2" fill="#E4572E" class="p-antena"/>
-          <rect x="-15" y="-22" width="30" height="22" rx="6" fill="#E9EEF3" stroke="#4A5568" stroke-width="2"/>
-          <rect x="-12" y="-16" width="11" height="7" rx="2.5" fill="#1F2933"/><rect x="1" y="-16" width="11" height="7" rx="2.5" fill="#1F2933"/>
+          <line x1="0" y1="-30" x2="0" y2="-22" stroke="#33414F" stroke-width="2"/>
+          <circle cx="0" cy="-32" r="3" fill="#E4572E" class="p-antena"/>
+          <rect x="-15" y="-22" width="30" height="21" rx="6" fill="#fff" stroke="#33414F" stroke-width="2"/>
+          <rect x="-11.5" y="-16" width="10.5" height="6.5" rx="2.5" fill="#1F2933"/><rect x="1" y="-16" width="10.5" height="6.5" rx="2.5" fill="#1F2933"/>
           <path d="M-1 -13h2" stroke="#1F2933" stroke-width="2"/>
-          <path d="M-5 -5q5 4 10 0" fill="none" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
-          <path class="p-suor" d="M16 -18q2.5 4 0 5.5q-2.5-1.5 0-5.5Z" fill="#7FD3F2"/>
-          <rect x="-13" y="2" width="26" height="20" rx="5" fill="#7A1C1C"/>
-          <text x="0" y="16" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="8" fill="#fff">IF</text>
-          <g class="p-braco"><path d="M13 6 L24 -4" stroke="#4A5568" stroke-width="4" stroke-linecap="round"/><circle cx="25" cy="-5" r="3.5" fill="#E9EEF3" stroke="#4A5568" stroke-width="1.5"/></g>
-          <path d="M-13 6 L-20 15" stroke="#4A5568" stroke-width="4" stroke-linecap="round"/>
-          <rect x="-11" y="22" width="22" height="9" rx="4.5" fill="#4A5568"/>
-          <circle cx="-6" cy="26.5" r="2.4" fill="#CBD2D9" class="p-roda"/><circle cx="6" cy="26.5" r="2.4" fill="#CBD2D9" class="p-roda"/>
+          <path d="M-4.5 -5.5q4.5 3.5 9 0" fill="none" stroke="#33414F" stroke-width="2" stroke-linecap="round"/>
+          <path class="p-suor" d="M16 -18q2.5 4 0 5.5q-2.5-1.5 0-5.5Z" fill="#62C6E3"/>
+          <rect x="-16" y="1" width="32" height="22" rx="5" fill="#7A1C1C"/>
+          <svg x="-13" y="6" width="26" height="11" viewBox="0 0 560 190" preserveAspectRatio="xMidYMin meet">
+            <image href="/assets/logo-obr-2026-branco.png" width="560" height="237"/>
+          </svg>
+          <g class="p-braco"><path d="M15 6 L25 -4" stroke="#33414F" stroke-width="4" stroke-linecap="round"/><circle cx="26" cy="-5" r="3.3" fill="#fff" stroke="#33414F" stroke-width="1.5"/></g>
+          <path d="M-15 6 L-21 15" stroke="#33414F" stroke-width="4" stroke-linecap="round"/>
+          <rect x="-11" y="23" width="22" height="9" rx="4.5" fill="#33414F"/>
+          <circle cx="-6" cy="27.5" r="2.2" fill="#CBD2D9"/><circle cx="6" cy="27.5" r="2.2" fill="#CBD2D9"/>
         </g>
-      </g>
-      <!-- termômetro -->
-      <g transform="translate(20 20)">
-        <rect x="-4" y="0" width="8" height="34" rx="4" fill="#fff" stroke="#C0392B" stroke-width="1.5"/>
-        <circle cx="0" cy="38" r="6.5" fill="#E74C3C" stroke="#C0392B" stroke-width="1.5"/>
-        <rect class="p-merc" x="-1.8" y="6" width="3.6" height="30" rx="1.8" fill="#E74C3C"/>
       </g>
     </svg>
+    <pre class="praia-code" id="praiaCode" aria-hidden="true"><code id="praiaCodeTxt"></code></pre>
+    </div>
     <div class="praia-txt">
       <span class="praia-tag">IF Robotic <span aria-hidden="true">✕</span> João Pessoa</span>
       <strong class="praia-tit">Onde o sol nasce primeiro ☀️</strong>
@@ -378,6 +346,29 @@
       "Brisa do mar não vale como desculpa pra seguidor de linha 🌊",
       "O IF Robotic tá na torcida por todas as equipes! 💪",
     ];
+    // Abertura: "programa" digitado, depois o sol nasce.
+    const code = document.getElementById("praiaCodeTxt");
+    const COD = [["if", "k"], [" (", ""], ["joaoPessoa", "v"], [" == ", ""], ["true", "b"], [") {\n  ", ""], ["sol", "v"], [".nascer(", ""], ["\"primeiro\"", "s"],
+      [");\n  ", ""], ["robo", "v"], [".oculos = ", ""], ["true", "b"], [";\n}", ""]];
+    const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const comecar = () => praia.classList.add("rodando");
+    if (reduz) comecar();
+    else {
+      const chars = COD.flatMap(([t, c]) => [...t].map((ch) => [ch, c]));
+      let k = 0, span = null, cls = null;
+      const digita = () => {
+        if (k >= chars.length) { setTimeout(comecar, 900); return; }
+        const [ch, c] = chars[k++];
+        if (c !== cls || !span) { span = document.createElement("span"); if (c) span.className = c; code.appendChild(span); cls = c; }
+        span.textContent += ch;
+        setTimeout(digita, ch === "\n" ? 160 : 38);
+      };
+      const intro = () => { const i = document.getElementById("intro"); if (!i) return false;
+        const cs = getComputedStyle(i); return cs.display !== "none" && cs.visibility !== "hidden" && !i.classList.contains("fora"); };
+      const t0 = Date.now();
+      const esperar = () => intro() && Date.now() - t0 < 6000 ? setTimeout(esperar, 300) : setTimeout(digita, 300);
+      esperar();
+    }
     let i = 0, t = 0;
     const prox = () => {
       el.classList.add("troca");
