@@ -52,16 +52,16 @@
     const div = (t) => adm && t.equipes.length >= 4 ? `<button class="st-x" type="button" data-dividir="${esc(t.nome)}">Dividir em 2</button>` : "";
     if (RESGATE) return times.map((t) => `
         <article class="st-time">
-          <header><strong>${esc(t.nome)}</strong><span>${t.pessoas} pessoa${t.pessoas === 1 ? "" : "s"}</span>${div(t)}</header>${t.apresentacao ? `<p class="st-dia">📅 ${esc(t.apresentacao)}</p>` : ""}
-          <ul>${t.equipes.map((e) => `<li>${esc(e.equipe)} <span>N${e.nivel} · ${e.integrantes}</span></li>`).join("")}</ul>
+          <header><strong>${esc(t.nome)}</strong>${t.pessoas ? `<span>${t.pessoas} pessoa${t.pessoas === 1 ? "" : "s"}</span>` : ""}${div(t)}</header>${t.apresentacao ? `<p class="st-dia">📅 ${esc(t.apresentacao)}</p>` : ""}
+          <ul>${t.equipes.map((e) => `<li>${esc(e.equipe)} <span>N${e.nivel}${e.integrantes ? " · " + e.integrantes : ""}</span></li>`).join("")}</ul>
         </article>`).join("");
     return [1, 2].map((n) => {
       const doNivel = times.filter((t) => t.nivel === n);
       if (!doNivel.length) return "";
       return `<h3 class="st-nivel">Nível ${n}</h3>` + doNivel.map((t) => `
         <article class="st-time">
-          <header><strong>${esc(t.nome)}</strong><span>${t.pessoas} pessoa${t.pessoas === 1 ? "" : "s"}</span>${div(t)}</header>${t.apresentacao ? `<p class="st-dia">📅 ${esc(t.apresentacao)}</p>` : ""}
-          <ul>${t.equipes.map((e) => `<li>${esc(e.equipe)} <span>${e.integrantes}</span></li>`).join("")}</ul>
+          <header><strong>${esc(t.nome)}</strong>${t.pessoas ? `<span>${t.pessoas} pessoa${t.pessoas === 1 ? "" : "s"}</span>` : ""}${div(t)}</header>${t.apresentacao ? `<p class="st-dia">📅 ${esc(t.apresentacao)}</p>` : ""}
+          <ul>${t.equipes.map((e) => `<li>${esc(e.equipe)} ${e.integrantes ? `<span>${e.integrantes}</span>` : ""}</li>`).join("")}</ul>
         </article>`).join("");
     }).join("");
   }
