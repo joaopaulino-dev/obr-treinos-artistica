@@ -102,6 +102,16 @@
     </div>
   </section>
 
+  <a class="sg-destaque st-topo" href="/materiais/pdf/superteams-resgate-regras.pdf" target="_blank" rel="noopener" id="strRegrasTopo">
+    <span class="sg-d-top">
+      <span class="sg-d-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      </span>
+      <span class="sg-d-t"><span class="st-conv-tag">Resgate · Super Teams</span><strong>Saíram as regras do Super Teams <span class="tag-at">Novo</span></strong><span class="sub">Robô A guia, robô B resgata · 8 min por rodada</span></span>
+      <span class="sg-d-cta">Ler ›</span>
+    </span>
+  </a>
+
   <a class="sg-destaque st-topo" href="/superteams#cronograma" id="stHoraTopo">
     <span class="sg-d-top">
       <span class="sg-d-ico" aria-hidden="true">
@@ -217,7 +227,7 @@
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c.6-.3 1.3-.5 2-.5 2.2 0 4 1.8 4 4"/></svg>
       </span>
-      <span class="item-t"><strong>Quero participar do Super Teams</strong><span class="sub">N1 e N2 juntos · sem caráter classificatório · proposta em 28/11</span></span>
+      <span class="item-t"><strong>Quero participar do Super Teams</strong><span class="sub">N1 e N2 juntos · sem caráter classificatório · regras divulgadas <span class="tag-at">Novo</span></span></span>
       <span class="go" aria-hidden="true">›</span>
     </a>
     <details class="item submenu">
@@ -300,14 +310,14 @@
 <aside class="convite st-conv" id="ptConv" role="dialog" aria-labelledby="ptConvT" aria-describedby="ptConvTxt" hidden>
   <button type="button" class="convite-x" id="ptConvX" aria-label="Fechar">×</button>
   <span class="convite-ico st-conv-ico" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
   </span>
   <div class="convite-corpo">
-    <span class="st-conv-tag">Artística · Super Teams</span>
-    <strong id="ptConvT">Horários de apresentação disponíveis</strong>
-    <p id="ptConvTxt">O primeiro time do Nível 1 sobe ao palco às 17h10 e os demais a cada 8 minutos, na ordem do sorteio. Confira o horário do seu time.</p>
+    <span class="st-conv-tag">Resgate · Super Teams</span>
+    <strong id="ptConvT">Saíram as regras do Super Teams!</strong>
+    <p id="ptConvTxt">Um robô guia, o outro resgata a vítima: os dois precisam trabalhar juntos para atravessar a ponte. Veja a arena, o percurso de cada robô e a pontuação.</p>
     <div class="convite-acts">
-      <a class="btn primary" href="/superteams#cronograma" data-pt-ir>Ver horários</a>
+      <a class="btn primary" href="/materiais/pdf/superteams-resgate-regras.pdf" target="_blank" rel="noopener" data-pt-ir>Ver regras</a>
       <button type="button" class="btn" id="ptConvDepois">Agora não</button>
     </div>
   </div>
@@ -665,9 +675,9 @@
       esperar();
     }).catch(() => {});
   }
-  // Aviso prioritário (28/11): horários do Super Teams da Artística. Substitui os outros avisos da tela inicial.
+  // Aviso prioritário (28/11): regras do Super Teams do Resgate (antes: horários do Super Teams da Artística, v1). Substitui os outros avisos da tela inicial.
   // Para um novo aviso, trocar a versão da chave.
-  const PT_AVISO = "obr-aviso-st-horarios-v1";
+  const PT_AVISO = "obr-aviso-str-regras-v1";
   let ptVisto = false;
   try { ptVisto = !!localStorage.getItem(PT_AVISO); } catch (e) {}
   const pt = document.getElementById("ptConv");
@@ -682,7 +692,7 @@
       : setTimeout(() => { pt.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => pt.classList.add("on"))); }, 1200);
     esperar();
   }
-  // Convite de sugestões pausado enquanto o aviso do Super Teams é a prioridade (voltar para false depois).
+  // Convite de sugestões pausado enquanto os avisos do Super Teams são a prioridade (voltar para false depois).
   const PAUSA_SUGESTOES = true;
   if (!PAUSA_SUGESTOES && !stAtivo && ptVisto && Date.now() > ate) {
     const mostrar = () => { conv.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => conv.classList.add("on"))); };
