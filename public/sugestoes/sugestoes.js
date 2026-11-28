@@ -97,7 +97,7 @@
     const semVotos = state.equipe && meusVotos() >= VOTOS();
     // Implementadas vêm primeiro (servidor); o "Top N" conta só as que ainda estão em votação.
     const emVotacao = itens.filter((s) => !s.implementada);
-    $("sgLista").innerHTML = itens.map((s) => {
+    const card = (s) => {
       const i = s.implementada ? 99 : emVotacao.indexOf(s);
       const minha = s.autor === state.equipe;
       const votei = state.equipe && s.votantes.includes(state.equipe);
@@ -127,7 +127,18 @@
         ${s.implementada ? "" : `<div class="sg-pe">${conta}${voto}</div>`}
         ${adm}
       </article>`;
-    }).join("");
+    };
+    // Implementadas ficam compiladas num bloco recolhido (fixadas pela organização continuam soltas no topo).
+    const fixadas = itens.filter((s) => s.fixada);
+    const feitas = itens.filter((s) => !s.fixada && s.implementada);
+    const resto = itens.filter((s) => !s.fixada && !s.implementada);
+    const bloco = feitas.length ? `<details class="sg-feitas" id="sgFeitas"${state.feitasAbertas ? " open" : ""}>
+        <summary><span class="sg-impl">✓ ${feitas.length} sugest${feitas.length === 1 ? "ão implementada" : "ões implementadas"}</span><span class="sg-feitas-cta" aria-hidden="true"></span></summary>
+        <div class="sg-feitas-lista">${feitas.map(card).join("")}</div>
+      </details>` : "";
+    $("sgLista").innerHTML = fixadas.map(card).join("") + bloco + resto.map(card).join("");
+    const det = $("sgFeitas");
+    if (det) det.addEventListener("toggle", () => { state.feitasAbertas = det.open; });
     state.pop = null;
   }
 
