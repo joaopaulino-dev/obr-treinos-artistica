@@ -419,7 +419,7 @@
   const pSug = json("/api/sugestoes");
   pSug.then((d) => {
     if (!d || !d.sugestoes) return;
-    const l = d.sugestoes.filter((x) => !x.implementada).sort((a, b) => b.votos - a.votos);
+    const l = d.sugestoes.filter((x) => !x.implementada).sort((a, b) => (b.fixada === true) - (a.fixada === true) || b.votos - a.votos);
     const top = l.find((x) => x.votos > 0);
     if (top) {
       const t = document.getElementById("conviteTop");
