@@ -78,6 +78,22 @@
     const minha = lembrada();
     $("stOk").hidden = !minha;
     if (minha) $("stOk").innerHTML = `<strong>Interesse registrado: ${esc(minha)}.</strong> ${esc(MSG_OK)}`;
+    // Cronograma: times com horário, na ordem do sorteio, por nível.
+    const comHora = (d.times || []).filter((t) => t.horario);
+    $("cronograma").hidden = RESGATE || !comHora.length;
+    if (comHora.length) {
+      const minhaEq = (window.OBR_EQUIPE && window.OBR_EQUIPE.get() || {}).nome || lembrada();
+      $("stCrono").innerHTML = [1, 2].map((n) => {
+        const l = comHora.filter((t) => t.nivel === n);
+        if (!l.length) return "";
+        const dia = (l[0].apresentacao.match(/no (.+), às/) || [])[1] || "";
+        return `<h3 class="st-nivel">Nível ${n}${dia ? " · " + esc(dia) : ""}</h3><ol class="st-crono-l">` + l.map((t) => {
+          const minha = t.equipes.some((e) => e.equipe === minhaEq);
+          return `<li${minha ? ' class="minha"' : ""}><b>${esc(t.horario)}</b><span><strong>${esc(t.nome.replace(/^Super Team /, ""))}</strong>${minha ? ' <em>sua equipe</em>' : ""}<small>${t.equipes.map((e) => esc(e.equipe)).join(" · ")}</small></span></li>`;
+        }).join("") + "</ol>";
+      }).join("") + '<p class="hint">Cada time tem cerca de 8 minutos. Chegue ao palco antes do seu horário.</p>';
+      if (location.hash === "#cronograma") setTimeout(() => $("cronograma").scrollIntoView({ block: "start" }), 50);
+    }
     $("stResultado").hidden = !d.times;
     if (d.times) $("stTimes").innerHTML = cardsTimes(d.times);
   }

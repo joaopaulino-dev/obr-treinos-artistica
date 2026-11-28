@@ -144,3 +144,14 @@ test("apresentação: N1 no sábado, N2 no domingo", async () => {
   assert.match(r[1].apresentacao, /domingo, 29\/11/);
   assert.equal(r[2].apresentacao, undefined);
 });
+
+test("apresentação N1: 17h10 e +8 min por time, na ordem do sorteio", async () => {
+  const { marcarApresentacao } = await import("../lib/superteams.js");
+  const r = marcarApresentacao([
+    { nome: "N1-A", nivel: 1, equipes: [] }, { nome: "N2-A", nivel: 2, equipes: [] },
+    { nome: "N1-B", nivel: 1, equipes: [] }, { nome: "N1-C", nivel: 1, equipes: [], horario: "velho" },
+  ]);
+  assert.deepEqual(r.filter((t) => t.nivel === 1).map((t) => t.horario), ["17h10", "17h18", "17h26"]);
+  assert.match(r[0].apresentacao, /sábado, 28\/11, às 17h10/);
+  assert.equal(r[1].horario, undefined);
+});

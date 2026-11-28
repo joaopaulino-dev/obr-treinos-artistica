@@ -102,18 +102,15 @@
     </div>
   </section>
 
-  <div class="sg-destaque st-topo rk-topo">
+  <a class="sg-destaque st-topo" href="/superteams#cronograma" id="stHoraTopo">
     <span class="sg-d-top">
       <span class="sg-d-ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>
       </span>
-      <span class="sg-d-t"><span class="st-conv-tag">Resgate</span><strong>Ranking e pontuação <span class="tag-at">Atualizada</span></strong><span class="sub">Nota final de N1 e N2 com o Desafio Técnico</span></span>
+      <span class="sg-d-t"><span class="st-conv-tag">Artística · Super Teams</span><strong>Horários de apresentação disponíveis <span class="tag-at">Novo</span></strong><span class="sub">Nível 1 hoje, a partir das 17h10</span></span>
+      <span class="sg-d-cta">Ver ›</span>
     </span>
-    <div class="pair rk-topo-pair">
-      <a class="pill solid" href="/ranking#n1">Nível 1</a>
-      <a class="pill solid" href="/ranking#n2">Nível 2</a>
-    </div>
-  </div>
+  </a>
 
   <a class="sg-destaque st-topo" href="/superteams" id="stTopo" hidden>
     <span class="sg-d-top">
@@ -303,15 +300,14 @@
 <aside class="convite st-conv" id="ptConv" role="dialog" aria-labelledby="ptConvT" aria-describedby="ptConvTxt" hidden>
   <button type="button" class="convite-x" id="ptConvX" aria-label="Fechar">×</button>
   <span class="convite-ico st-conv-ico" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>
   </span>
   <div class="convite-corpo">
-    <span class="st-conv-tag">Resgate · Pontuação atualizada</span>
-    <strong id="ptConvT">Saíram as notas do Resgate</strong>
-    <p id="ptConvTxt">A pontuação de N1 e N2 foi atualizada com o Desafio Técnico. Veja o ranking e a nota final da sua equipe.</p>
+    <span class="st-conv-tag">Artística · Super Teams</span>
+    <strong id="ptConvT">Horários de apresentação disponíveis</strong>
+    <p id="ptConvTxt">O primeiro time do Nível 1 sobe ao palco às 17h10 e os demais a cada 8 minutos, na ordem do sorteio. Confira o horário do seu time.</p>
     <div class="convite-acts">
-      <a class="btn primary" href="/ranking#n1" data-pt-ir>Nível 1</a>
-      <a class="btn primary" href="/ranking#n2" data-pt-ir>Nível 2</a>
+      <a class="btn primary" href="/superteams#cronograma" data-pt-ir>Ver horários</a>
       <button type="button" class="btn" id="ptConvDepois">Agora não</button>
     </div>
   </div>
@@ -669,9 +665,9 @@
       esperar();
     }).catch(() => {});
   }
-  // Pontuação do Resgate atualizada (27/11): aviso no lugar do convite de sugestões até a pessoa abrir ou dispensar.
+  // Aviso prioritário (28/11): horários do Super Teams da Artística. Substitui os outros avisos da tela inicial.
   // Para um novo aviso, trocar a versão da chave.
-  const PT_AVISO = "obr-aviso-pt-resgate-v2";
+  const PT_AVISO = "obr-aviso-st-horarios-v1";
   let ptVisto = false;
   try { ptVisto = !!localStorage.getItem(PT_AVISO); } catch (e) {}
   const pt = document.getElementById("ptConv");
@@ -686,7 +682,9 @@
       : setTimeout(() => { pt.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => pt.classList.add("on"))); }, 1200);
     esperar();
   }
-  if (!stAtivo && ptVisto && Date.now() > ate) {
+  // Convite de sugestões pausado enquanto o aviso do Super Teams é a prioridade (voltar para false depois).
+  const PAUSA_SUGESTOES = true;
+  if (!PAUSA_SUGESTOES && !stAtivo && ptVisto && Date.now() > ate) {
     const mostrar = () => { conv.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => conv.classList.add("on"))); };
     // Espera a abertura terminar (quando já foi vista na sessão ela fica escondida e não conta).
     const abrindo = () => { const i = document.getElementById("intro"); return i && getComputedStyle(i).display !== "none" && !i.classList.contains("fora"); };
