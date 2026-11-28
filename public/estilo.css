@@ -677,3 +677,7 @@ html.embed #adminSair, html.embed #agendaSair { display: none }
 @keyframes p-suor { 0% { transform: translateY(0); opacity: 0 } 20% { opacity: 1 } 100% { transform: translateY(14px); opacity: 0 } }
 @keyframes p-pula { 0% { transform: none } 40% { transform: translateY(-22px) rotate(-8deg) } 100% { transform: none } }
 @media (prefers-reduced-motion: reduce) { .praia svg *, .praia-frase { animation: none !important; transition: none } .p-sol { transform: none; opacity: 1 } .praia-code { display: none } }
+.p-barco { animation: p-barco 22s linear infinite }
+.p-barco-balanca { animation: p-boia 2.4s ease-in-out infinite }
+@keyframes p-barco { from { transform: translate(-30px, 116px) } to { transform: translate(390px, 116px) } }
+@keyframes p-boia { 50% { transform: translateY(-1.5px) rotate(-3deg) } }
