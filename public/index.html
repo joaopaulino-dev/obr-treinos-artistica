@@ -38,7 +38,7 @@
       <span class="sg-d-ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>
       </span>
-      <span class="sg-d-t"><span class="st-conv-tag">Resgate</span><strong>Ranking após a 3ª rodada</strong><span class="sub">Classificação parcial de N1 e N2</span></span>
+      <span class="sg-d-t"><span class="st-conv-tag">Resgate</span><strong>Ranking e pontuação <span class="tag-at">Atualizada</span></strong><span class="sub">Nota final de N1 e N2 com o Desafio Técnico</span></span>
     </span>
     <div class="pair rk-topo-pair">
       <a class="pill solid" href="/ranking#n1">Nível 1</a>
@@ -159,25 +159,12 @@
         <span class="ico" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V12M10 20V6M16 20v-9M22 20H2"/></svg>
         </span>
-        <span class="item-t"><strong>Ranking</strong><span class="sub">Classificação após a 3ª rodada</span></span>
+        <span class="item-t"><strong>Ranking e pontuação <span class="tag-at">Atualizada</span></strong><span class="sub">Nota final com o Desafio Técnico · 27/11</span></span>
         <span class="go" aria-hidden="true">›</span>
       </summary>
       <div class="pair">
         <a class="pill solid" href="/ranking#n1">Nível 1</a>
         <a class="pill solid" href="/ranking#n2">Nível 2</a>
-      </div>
-    </details>
-    <details class="item submenu" id="ptResgate">
-      <summary>
-        <span class="ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>
-        </span>
-        <span class="item-t"><strong>Pontuação <span class="tag-at">Atualizada</span></strong><span class="sub">Notas com o Desafio Técnico · 27/11</span></span>
-        <span class="go" aria-hidden="true">›</span>
-      </summary>
-      <div class="pair">
-        <a class="pill solid" href="/materiais/pdf/pontuacao-resgate-n1.pdf" target="_blank" rel="noopener">Nível 1</a>
-        <a class="pill solid" href="/materiais/pdf/pontuacao-resgate-n2.pdf" target="_blank" rel="noopener">Nível 2</a>
       </div>
     </details>
     <details class="item submenu">
@@ -252,10 +239,10 @@
   <div class="convite-corpo">
     <span class="st-conv-tag">Resgate · Pontuação atualizada</span>
     <strong id="ptConvT">Saíram as notas do Resgate</strong>
-    <p id="ptConvTxt">A pontuação de N1 e N2 foi atualizada com o Desafio Técnico. Confira a nota final da sua equipe.</p>
+    <p id="ptConvTxt">A pontuação de N1 e N2 foi atualizada com o Desafio Técnico. Veja o ranking e a nota final da sua equipe.</p>
     <div class="convite-acts">
-      <a class="btn primary" href="/materiais/pdf/pontuacao-resgate-n1.pdf" target="_blank" rel="noopener" data-pt-ir>Nível 1</a>
-      <a class="btn primary" href="/materiais/pdf/pontuacao-resgate-n2.pdf" target="_blank" rel="noopener" data-pt-ir>Nível 2</a>
+      <a class="btn primary" href="/ranking#n1" data-pt-ir>Nível 1</a>
+      <a class="btn primary" href="/ranking#n2" data-pt-ir>Nível 2</a>
       <button type="button" class="btn" id="ptConvDepois">Agora não</button>
     </div>
   </div>
@@ -569,7 +556,7 @@
   }
   // Pontuação do Resgate atualizada (27/11): aviso no lugar do convite de sugestões até a pessoa abrir ou dispensar.
   // Para um novo aviso, trocar a versão da chave.
-  const PT_AVISO = "obr-aviso-pt-resgate-v1";
+  const PT_AVISO = "obr-aviso-pt-resgate-v2";
   let ptVisto = false;
   try { ptVisto = !!localStorage.getItem(PT_AVISO); } catch (e) {}
   const pt = document.getElementById("ptConv");

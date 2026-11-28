@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#7A1C1C">
-<title>Ranking Resgate | OBR 2026</title>
+<title>Ranking e Pontuação Resgate | OBR 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
@@ -25,6 +25,8 @@
   .rk-total { text-align: right; font-family: var(--font-d); font-weight: 700; font-size: 20px; font-variant-numeric: tabular-nums }
   .rk-total small { display: block; font-family: var(--font-b); font-weight: 500; font-size: 11px; color: var(--muted) }
   .rk-vazio { text-align: center; color: var(--muted); padding: 24px 0 }
+  .rd.ex { background: transparent; border: 1px solid var(--line) }
+  .rk-pdf { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
   .rk-leg { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 12.5px; color: var(--muted) }
 </style>
 </head>
@@ -39,7 +41,7 @@
     </a>
     <div class="titles">
       <span class="eyebrow">Etapa Nacional · João Pessoa/PB · 23 a 29/11</span>
-      <h1>Ranking do Resgate</h1>
+      <h1>Ranking e pontuação · Resgate</h1>
     </div>
     <a class="back" href="/">Menu</a>
   </header>
@@ -51,45 +53,48 @@
 
   <section class="docs" id="painel" role="tabpanel">
     <p class="rk-info" id="info">Carregando…</p>
-    <div class="rk-leg"><span class="rd conta"><b>pts</b> · tempo</span><span>rodadas que entram no total (as 2 melhores)</span></div>
+    <div class="rk-leg"><span class="rd conta"><b>pts</b> · tempo</span><span>2 melhores rodadas</span><span class="rd ex">Pôster · Relatório · Desafio Técnico</span></div>
+    <div class="rk-pdf"><span class="tag-at">Atualizada</span><a class="pill" id="pdf" href="/materiais/pdf/pontuacao-resgate-n1.pdf" target="_blank" rel="noopener">Baixar tabela em PDF</a></div>
     <input class="rk-busca" id="busca" type="search" placeholder="Buscar equipe" aria-label="Buscar equipe" autocomplete="off">
     <ol class="rk-lista" id="lista"></ol>
   </section>
 
-  <p class="foot">Ranking parcial, sem Desafio Técnico e Final. Em caso de diferença, vale o sistema oficial de pontuação da OBR.</p>
+  <p class="foot">Nota final com rodadas, pôster, relatório e Desafio Técnico. Em caso de diferença, vale o sistema oficial de pontuação da OBR.</p>
 </main>
 <script>
 (() => {
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const tempo = (s) => s == null ? "—" : Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
-  const num = (n) => Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+  const num = (n) => Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 2 });
   const tabs = [...document.querySelectorAll('[role="tab"]')];
   const lista = document.getElementById("lista"), busca = document.getElementById("busca"), info = document.getElementById("info");
   let dados = null, nivel = "n1";
 
   function linhas(nv) {
-    // posição igual para total igual
+    // posição igual para nota final igual
     let pos = 0, ant = null;
     return dados[nv].map((r, i) => {
-      if (r[7] !== ant) { pos = i + 1; ant = r[7]; }
-      const pts = [r[1], r[3], r[5]];
-      const ordem = pts.map((p, k) => [p ?? -1, k]).sort((a, b) => b[0] - a[0]);
+      if (r.final !== ant) { pos = i + 1; ant = r.final; }
+      const ordem = r.r.map((x, k) => [x[0] ?? -1, k]).sort((a, b) => b[0] - a[0]);
       const contam = new Set(ordem.slice(0, 2).filter((x) => x[0] >= 0).map((x) => x[1]));
-      return { pos, nome: r[0], rodadas: [0, 1, 2].map((k) => ({ p: pts[k], t: r[2 + k * 2], conta: contam.has(k) })), total: r[7] };
+      return { ...r, pos, rodadas: r.r.map((x, k) => ({ p: x[0], t: x[1], conta: contam.has(k) })) };
     });
   }
+  const v = (n) => n == null ? "—" : num(n);
 
   function render() {
     const q = busca.value.trim().toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
     const ls = linhas(nivel).filter((l) => !q || l.nome.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "").includes(q));
     info.textContent = dados[nivel].length + " equipes · atualizado " + dados.atualizado;
+    document.getElementById("pdf").href = "/materiais/pdf/pontuacao-resgate-" + nivel + ".pdf";
     lista.innerHTML = ls.length ? ls.map((l) => `
       <li class="rk${l.pos <= 3 ? " top" : ""}">
         <span class="rk-pos" aria-label="Posição ${l.pos}">${l.pos}º</span>
         <div><div class="rk-nome">${esc(l.nome)}</div>
-          <div class="rk-rodadas">${l.rodadas.map((d, k) => `<span class="rd${d.conta ? " conta" : ""}">R${k + 1} <b>${d.p == null ? "—" : num(d.p)}</b> · ${tempo(d.t)}</span>`).join("")}</div>
+          <div class="rk-rodadas">${l.rodadas.map((d, k) => `<span class="rd${d.conta ? " conta" : ""}">R${k + 1} <b>${v(d.p)}</b> · ${tempo(d.t)}</span>`).join("")}</div>
+          <div class="rk-rodadas"><span class="rd ex">Pôster <b>${v(l.poster)}</b></span><span class="rd ex">Relatório <b>${v(l.relatorio)}</b></span><span class="rd ex">Desafio Técnico <b>${v(l.desafio)}</b></span></div>
         </div>
-        <span class="rk-total">${num(l.total)}<small>total</small></span>
+        <span class="rk-total">${num(l.final)}<small>nota final</small></span>
       </li>`).join("") : '<li class="rk-vazio">Nenhuma equipe encontrada.</li>';
   }
 
