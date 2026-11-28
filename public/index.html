@@ -33,6 +33,102 @@
     <p class="hero-eyebrow">Etapa Nacional · João Pessoa/PB · 23 a 29/11</p>
   </header>
 
+  <section class="praia" id="praia" aria-label="Boas-vindas do IF Robotic: João Pessoa, onde o sol nasce primeiro">
+    <svg class="praia-cena" viewBox="0 0 360 180" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="pCeu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5EC8F2"/><stop offset=".7" stop-color="#BFE9F7"/><stop offset="1" stop-color="#FFE6A8"/></linearGradient>
+        <linearGradient id="pMar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1FA6C9"/><stop offset="1" stop-color="#0E7FA6"/></linearGradient>
+        <radialGradient id="pSol"><stop offset="0" stop-color="#FFF3B0"/><stop offset=".6" stop-color="#FFD23F"/><stop offset="1" stop-color="#FFB627"/></radialGradient>
+        <radialGradient id="pBrilho"><stop offset="0" stop-color="#FFE27A" stop-opacity=".75"/><stop offset="1" stop-color="#FFE27A" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="360" height="180" fill="url(#pCeu)"/>
+      <!-- sol nascendo primeiro (Ponta do Seixas) -->
+      <g class="p-sol">
+        <circle cx="292" cy="44" r="46" fill="url(#pBrilho)" class="p-halo"/>
+        <g class="p-raios" stroke="#FFC93C" stroke-width="4" stroke-linecap="round">
+          <path d="M292 8v8M292 72v8M256 44h8M320 44h8M267 19l6 6M311 63l6 6M267 69l6-6M311 25l6-6"/>
+        </g>
+        <circle cx="292" cy="44" r="20" fill="url(#pSol)"/>
+        <g class="p-sol-rosto" fill="none" stroke="#C9741A" stroke-width="2" stroke-linecap="round">
+          <path d="M284 41q2-2 4 0M296 41q2-2 4 0"/><path d="M285 49q7 6 14 0"/>
+        </g>
+      </g>
+      <!-- nuvem e gaivota -->
+      <g class="p-nuvem" fill="#fff" opacity=".9"><ellipse cx="70" cy="34" rx="22" ry="9"/><ellipse cx="86" cy="29" rx="14" ry="10"/><ellipse cx="56" cy="31" rx="10" ry="7"/></g>
+      <path class="p-gaivota" d="M0 0q5-6 10 0q5-6 10 0" fill="none" stroke="#2D3A4A" stroke-width="2" stroke-linecap="round"/>
+      <!-- calor: ondinhas subindo -->
+      <g class="p-calor" fill="none" stroke="#FF9F43" stroke-width="2" stroke-linecap="round" opacity=".7">
+        <path d="M150 92q4-5 0-10q-4-5 0-10"/><path d="M164 96q4-5 0-10q-4-5 0-10"/><path d="M178 92q4-5 0-10q-4-5 0-10"/>
+      </g>
+      <!-- farol do Cabo Branco na falésia -->
+      <path d="M300 120 L318 92 L360 92 L360 130 Z" fill="#E0A458"/>
+      <path d="M318 92 L360 92 L360 98 L314 99 Z" fill="#4CAF50"/>
+      <g class="p-farol">
+        <path d="M330 92 L336 56 L342 92 Z" fill="#F5F5F5" stroke="#9AA5B1" stroke-width="1"/>
+        <path d="M331.5 84 L340.5 84 M333 74 L339 74 M334.3 65 L337.7 65" stroke="#9AA5B1" stroke-width="1.2"/>
+        <rect x="333" y="50" width="6" height="7" rx="1" fill="#2D3A4A"/>
+        <circle cx="336" cy="53" r="2.4" fill="#FFE066" class="p-luz"/>
+      </g>
+      <!-- mar com ondas -->
+      <rect y="100" width="360" height="80" fill="url(#pMar)"/>
+      <g class="p-onda1"><path d="M0 104q15-7 30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0V112H0Z" fill="#5FD0E8" opacity=".8"/></g>
+      <!-- jangada -->
+      <g class="p-jangada">
+        <path d="M-14 0h28l-4 5h-20Z" fill="#8D5A2B"/>
+        <path d="M0 0V-26L13 -3Z" fill="#fff" stroke="#D9D9D9"/><path d="M0 -26L0 0" stroke="#5A3A1A" stroke-width="1.5"/>
+        <path d="M2 -18h6" stroke="#E4572E" stroke-width="2"/>
+      </g>
+      <g class="p-onda2"><path d="M0 124q15-6 30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0V134H0Z" fill="#2BB3D6" opacity=".9"/></g>
+      <!-- areia -->
+      <path d="M0 150 Q90 128 200 142 T360 140 V180 H0Z" fill="#F6D58E"/>
+      <path class="p-espuma" d="M0 150 Q90 128 200 142 T360 140" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+      <g fill="#E8BF6A"><circle cx="40" cy="166" r="1.5"/><circle cx="120" cy="160" r="1.5"/><circle cx="230" cy="166" r="1.5"/><circle cx="300" cy="158" r="1.5"/></g>
+      <!-- coqueiro -->
+      <path d="M44 162 C46 140 40 118 52 96" fill="none" stroke="#8D5A2B" stroke-width="6" stroke-linecap="round"/>
+      <g class="p-folhas" fill="#2E9E4F">
+        <path d="M52 96 C38 86 22 90 14 100 C28 92 40 94 52 96Z"/>
+        <path d="M52 96 C42 80 46 70 58 66 C50 76 50 86 52 96Z"/>
+        <path d="M52 96 C64 82 80 82 88 92 C76 88 64 90 52 96Z"/>
+        <path d="M52 96 C66 96 74 106 74 116 C68 106 60 100 52 96Z"/>
+        <path d="M52 96 C38 98 32 110 34 118 C38 108 44 102 52 96Z"/>
+        <circle cx="50" cy="99" r="3.4" fill="#6B4423"/><circle cx="56" cy="99" r="3.4" fill="#6B4423"/>
+      </g>
+      <!-- guarda-sol e bóia -->
+      <path d="M262 166 L268 128" stroke="#5A3A1A" stroke-width="2"/>
+      <path d="M244 134 Q268 112 292 126 Z" fill="#E4572E"/><path d="M256 128 Q268 116 280 122 L268 128Z" fill="#fff" opacity=".85"/>
+      <!-- robozinho de óculos escuros -->
+      <g class="p-robo">
+        <ellipse cx="0" cy="34" rx="20" ry="3.5" fill="#000" opacity=".12" class="p-sombra"/>
+        <g class="p-robo-corpo">
+          <line x1="0" y1="-30" x2="0" y2="-22" stroke="#4A5568" stroke-width="2"/>
+          <circle cx="0" cy="-32" r="3.2" fill="#E4572E" class="p-antena"/>
+          <rect x="-15" y="-22" width="30" height="22" rx="6" fill="#E9EEF3" stroke="#4A5568" stroke-width="2"/>
+          <rect x="-12" y="-16" width="11" height="7" rx="2.5" fill="#1F2933"/><rect x="1" y="-16" width="11" height="7" rx="2.5" fill="#1F2933"/>
+          <path d="M-1 -13h2" stroke="#1F2933" stroke-width="2"/>
+          <path d="M-5 -5q5 4 10 0" fill="none" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
+          <path class="p-suor" d="M16 -18q2.5 4 0 5.5q-2.5-1.5 0-5.5Z" fill="#7FD3F2"/>
+          <rect x="-13" y="2" width="26" height="20" rx="5" fill="#7A1C1C"/>
+          <text x="0" y="16" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="8" fill="#fff">IF</text>
+          <g class="p-braco"><path d="M13 6 L24 -4" stroke="#4A5568" stroke-width="4" stroke-linecap="round"/><circle cx="25" cy="-5" r="3.5" fill="#E9EEF3" stroke="#4A5568" stroke-width="1.5"/></g>
+          <path d="M-13 6 L-20 15" stroke="#4A5568" stroke-width="4" stroke-linecap="round"/>
+          <rect x="-11" y="22" width="22" height="9" rx="4.5" fill="#4A5568"/>
+          <circle cx="-6" cy="26.5" r="2.4" fill="#CBD2D9" class="p-roda"/><circle cx="6" cy="26.5" r="2.4" fill="#CBD2D9" class="p-roda"/>
+        </g>
+      </g>
+      <!-- termômetro -->
+      <g transform="translate(20 20)">
+        <rect x="-4" y="0" width="8" height="34" rx="4" fill="#fff" stroke="#C0392B" stroke-width="1.5"/>
+        <circle cx="0" cy="38" r="6.5" fill="#E74C3C" stroke="#C0392B" stroke-width="1.5"/>
+        <rect class="p-merc" x="-1.8" y="6" width="3.6" height="30" rx="1.8" fill="#E74C3C"/>
+      </g>
+    </svg>
+    <div class="praia-txt">
+      <span class="praia-tag">IF Robotic <span aria-hidden="true">✕</span> João Pessoa</span>
+      <strong class="praia-tit">Onde o sol nasce primeiro ☀️</strong>
+      <p class="praia-frase" id="praiaFrase" aria-live="polite">Calor de 31°C lá fora e 100% de foco na arena!</p>
+    </div>
+  </section>
+
   <div class="sg-destaque st-topo rk-topo">
     <span class="sg-d-top">
       <span class="sg-d-ico" aria-hidden="true">
@@ -270,6 +366,30 @@
   document.addEventListener("keydown", fechar, { once: true });
   intro.addEventListener("animationend", (e) => { if (e.animationName === "intro-sai") intro.remove(); });
   try { sessionStorage.setItem("obr-intro", "1"); } catch (e) {}
+
+  // Cena da praia: frases alternando; tocar faz o robô pular e passa a frase.
+  (() => {
+    const praia = document.getElementById("praia"), el = document.getElementById("praiaFrase");
+    const FRASES = [
+      "Calor de 31°C lá fora e 100% de foco na arena!",
+      "Robô bom é robô hidratado. Equipe também: bebe água! 💧",
+      "Aqui o sol nasce primeiro nas Américas… e os robôs acordam cedo 🤖",
+      "Sensor calibrado, protetor solar passado. Bora!",
+      "Brisa do mar não vale como desculpa pra seguidor de linha 🌊",
+      "O IF Robotic tá na torcida por todas as equipes! 💪",
+    ];
+    let i = 0, t = 0;
+    const prox = () => {
+      el.classList.add("troca");
+      setTimeout(() => { i = (i + 1) % FRASES.length; el.textContent = FRASES[i]; el.classList.remove("troca"); }, 350);
+    };
+    const ciclo = () => { clearInterval(t); t = setInterval(prox, 5000); };
+    praia.addEventListener("click", () => {
+      praia.classList.remove("pula"); void praia.offsetWidth; praia.classList.add("pula");
+      prox(); ciclo();
+    });
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) ciclo();
+  })();
 
   // Abas Artística / Resgate, lembradas pelo endereço (#resgate).
   const tabs = [...document.querySelectorAll('[role="tab"]')];
